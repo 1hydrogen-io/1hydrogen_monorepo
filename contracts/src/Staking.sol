@@ -73,6 +73,6 @@ contract Staking is Ownable {
     }
 
     function claimYield() external onlyOwner {
-        IBlast(blastYield).claimAllYield(address(0), msg.sender);
+        IBlast(blastYield).claimAllYield(address(this), msg.sender);
     }
 }
