@@ -5,13 +5,13 @@ async function main() {
   await initConfig()
   const network = hardhatArguments.network ? hardhatArguments.network : 'dev'
 
-  const staking = await ethers.deployContract('Staking', [
+  const vaultFactory = await ethers.deployContract('VaultFactory', [
     '0x55Ee887dB181B41f69b3313065b1eD6BEE3336A1'
   ])
 
-  await staking.waitForDeployment()
-  console.log(`staking with address: ${await staking.getAddress()}`)
-  setConfig(`${network}.staking`, await staking.getAddress())
+  await vaultFactory.waitForDeployment()
+  console.log(`vaultFactory with address: ${await vaultFactory.getAddress()}`)
+  setConfig(`${network}.vaultFactory`, await vaultFactory.getAddress())
   await updateConfig()
 }
 
