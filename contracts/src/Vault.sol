@@ -13,6 +13,7 @@ contract Vault is Ownable {
 
     error InvalidAmount();
     error InvalidApprovalAmount();
+    error InsufficientBalance();
 
     event Staked(address staker, uint256 amount);
     event UnStaked(address staker, uint256 amount);
@@ -20,14 +21,13 @@ contract Vault is Ownable {
     constructor(address liqETH, address owner) {
         _transferOwnership(owner);
         sLiqETH = ILiqETH(liqETH);
-        //        IBlast(blastYield).configureClaimableYield();
+        IBlast(blastYield).configureClaimableYield();
     }
 
     receive() external payable {}
 
     function stake() public payable {
         sStaker[msg.sender] += msg.value;
-        sLiqETH.mint(msg.sender, msg.value);
         emit Staked(msg.sender, msg.value);
     }
 
@@ -38,9 +38,15 @@ contract Vault is Ownable {
             revert InvalidAmount();
         }
         uint256 approvedAmount = sLiqETH.allowance(msg.sender, address(this));
+
         if (approvedAmount < stakedAmount) {
             revert InvalidApprovalAmount();
         }
+        uint256 liqEthBalance = sLiqETH.balanceOf(msg.sender);
+        if (liqEthBalance < stakedAmount) {
+            revert InsufficientBalance();
+        }
+
         sLiqETH.burnFrom(msg.sender, stakedAmount);
 
         payable(msg.sender).transfer(stakedAmount);
@@ -50,6 +56,14 @@ contract Vault is Ownable {
 
     function stakedBalance(address staker) public view returns (uint256 amount) {
         return sStaker[staker];
+    }
+
+    function withdraw(uint256 amount) public {
+        uint256 stakedAmount = sStaker[msg.sender];
+        if (amount > stakedAmount) {
+            revert InvalidAmount();
+        }
+        sLiqETH.mint(msg.sender, amount);
     }
 
     function claimYield() external onlyOwner {

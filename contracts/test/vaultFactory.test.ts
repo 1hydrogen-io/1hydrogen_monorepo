@@ -36,6 +36,9 @@ describe('Staking deploy', function () {
 
       const vault = await ethers.getContractAt('Vault', vaultAddress)
       await (await vault.stake({ value: stakeAmount })).wait()
+      expect(await liqETH.balanceOf(deployer.address)).to.be.equal(0)
+
+      await (await vault.withdraw(stakeAmount)).wait()
       expect(await liqETH.balanceOf(deployer.address)).to.be.equal(stakeAmount)
     })
   })
