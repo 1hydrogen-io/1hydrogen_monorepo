@@ -10,6 +10,7 @@ contract Vault is Ownable {
     address public blastYield = 0x4300000000000000000000000000000000000002;
 
     mapping(address => uint256) sStaker;
+    mapping(address => uint256) sBalance;
 
     error InvalidAmount();
     error InvalidApprovalAmount();
@@ -21,13 +22,14 @@ contract Vault is Ownable {
     constructor(address liqETH, address owner) {
         _transferOwnership(owner);
         sLiqETH = ILiqETH(liqETH);
-        IBlast(blastYield).configureClaimableYield();
+        //IBlast(blastYield).configureClaimableYield();
     }
 
     receive() external payable {}
 
     function stake() public payable {
         sStaker[msg.sender] += msg.value;
+        sBalance[msg.sender] += msg.value;
         emit Staked(msg.sender, msg.value);
     }
 
@@ -38,7 +40,6 @@ contract Vault is Ownable {
             revert InvalidAmount();
         }
         uint256 approvedAmount = sLiqETH.allowance(msg.sender, address(this));
-
         if (approvedAmount < stakedAmount) {
             revert InvalidApprovalAmount();
         }
@@ -47,9 +48,10 @@ contract Vault is Ownable {
             revert InsufficientBalance();
         }
 
-        sLiqETH.burnFrom(msg.sender, stakedAmount);
-
-        payable(msg.sender).transfer(stakedAmount);
+        sLiqETH.burnFrom(msg.sender, amount);
+        sStaker[msg.sender] -= amount;
+        sBalance[msg.sender] = sBalance[msg.sender] - amount;
+        payable(msg.sender).transfer(amount);
 
         emit UnStaked(msg.sender, stakedAmount);
     }
@@ -58,11 +60,16 @@ contract Vault is Ownable {
         return sStaker[staker];
     }
 
-    function withdraw(uint256 amount) public {
-        uint256 stakedAmount = sStaker[msg.sender];
-        if (amount > stakedAmount) {
+    function liqBalance(address staker) public view returns (uint256 amount) {
+        return sBalance[staker];
+    }
+
+    function claimLiqEth(uint256 amount) public {
+        uint256 balance = sBalance[msg.sender];
+        if (amount > balance) {
             revert InvalidAmount();
         }
+        sBalance[msg.sender] -= amount;
         sLiqETH.mint(msg.sender, amount);
     }
 

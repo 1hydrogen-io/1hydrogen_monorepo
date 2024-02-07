@@ -38,17 +38,24 @@ describe('Staking deploy', function () {
 
       expect(stakedAmount).to.be.equal(stakeAmount)
 
-      await expect(vault.unStake(0)).revertedWithCustomError(vault, 'InvalidApprovalAmount')
+      expect(await vault.liqBalance())
+
+      await expect(vault.unStake(stakeAmount)).revertedWithCustomError(
+        vault,
+        'InvalidApprovalAmount'
+      )
 
       await liqETH.approve(await vault.getAddress(), stakeAmount)
 
-      await expect(vault.unStake(0)).revertedWithCustomError(vault, 'InsufficientBalance')
+      await expect(vault.unStake(stakeAmount)).revertedWithCustomError(vault, 'InsufficientBalance')
 
-      await vault.withdraw(stakeAmount)
+      await vault.claimLiqEth(stakeAmount)
+      await expect(vault.claimLiqEth(stakeAmount)).revertedWithCustomError(vault, 'InvalidAmount')
 
-      await (await vault.unStake(0)).wait()
+      await (await vault.unStake(stakeAmount)).wait()
 
       stakedAmount = await vault.stakedBalance(deployer.address)
+      expect(stakedAmount).to.be.equal(0)
     })
   })
 })

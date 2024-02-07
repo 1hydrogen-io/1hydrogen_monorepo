@@ -38,7 +38,7 @@ describe('Staking deploy', function () {
       await (await vault.stake({ value: stakeAmount })).wait()
       expect(await liqETH.balanceOf(deployer.address)).to.be.equal(0)
 
-      await (await vault.withdraw(stakeAmount)).wait()
+      await (await vault.claimLiqEth(stakeAmount)).wait()
       expect(await liqETH.balanceOf(deployer.address)).to.be.equal(stakeAmount)
     })
   })
