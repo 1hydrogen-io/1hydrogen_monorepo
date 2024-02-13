@@ -3,7 +3,7 @@ pragma solidity ^0.8.9;
 import "@openzeppelin/contracts/interfaces/IERC20.sol";
 import "@openzeppelin/contracts/access/IAccessControl.sol";
 
-interface ILiqETH is IERC20, IAccessControl {
+interface IHsETH is IERC20, IAccessControl {
     function mint(address to, uint256 amount) external;
 
     function burn(uint256 amount) external;

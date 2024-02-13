@@ -5,11 +5,11 @@ async function main() {
   await initConfig()
   const network = hardhatArguments.network ? hardhatArguments.network : 'dev'
 
-  const liqETH = await ethers.deployContract('LiqETH')
+  const hsETH = await ethers.deployContract('LiqETH')
 
-  await liqETH.waitForDeployment()
-  console.log(`liqETH with address: ${await liqETH.getAddress()}`)
-  setConfig(`${network}.liqETH`, await liqETH.getAddress())
+  await hsETH.waitForDeployment()
+  console.log(`hsETH with address: ${await hsETH.getAddress()}`)
+  setConfig(`${network}.hsETH`, await hsETH.getAddress())
   await updateConfig()
 }
 

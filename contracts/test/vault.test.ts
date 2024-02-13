@@ -7,7 +7,7 @@ describe('Staking deploy', function () {
   async function deployFixture() {
     const [deployer, otherAccount, player2] = await ethers.getSigners()
 
-    const LiqETH = await ethers.getContractFactory('LiqETH')
+    const LiqETH = await ethers.getContractFactory('HsETH')
     const liqETH = await LiqETH.deploy()
 
     const Vault = await ethers.getContractFactory('Vault')
@@ -38,7 +38,7 @@ describe('Staking deploy', function () {
 
       expect(stakedAmount).to.be.equal(stakeAmount)
 
-      expect(await vault.liqBalance())
+      expect(await vault.hsEthBalance(deployer.address))
 
       await expect(vault.unStake(stakeAmount)).revertedWithCustomError(
         vault,
@@ -49,8 +49,8 @@ describe('Staking deploy', function () {
 
       await expect(vault.unStake(stakeAmount)).revertedWithCustomError(vault, 'InsufficientBalance')
 
-      await vault.claimLiqEth(stakeAmount)
-      await expect(vault.claimLiqEth(stakeAmount)).revertedWithCustomError(vault, 'InvalidAmount')
+      await vault.claimHsEth(stakeAmount)
+      await expect(vault.claimHsEth(stakeAmount)).revertedWithCustomError(vault, 'InvalidAmount')
 
       await (await vault.unStake(stakeAmount)).wait()
 

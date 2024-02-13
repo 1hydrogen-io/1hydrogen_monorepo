@@ -1,18 +1,18 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.20;
 import "@openzeppelin/contracts/access/Ownable.sol";
-import "./interfaces/ILiqETH.sol";
+import "./interfaces/IHsETH.sol";
 import "./interfaces/IBlast.sol";
 import "./Vault.sol";
 
 contract VaultFactory is Ownable {
-    ILiqETH public sLiqETH;
+    IHsETH public sLiqETH;
     uint256 public totalSupply;
 
     event VaultCreated(address indexed vault);
 
     constructor(address _liqETHAddress) {
-        sLiqETH = ILiqETH(_liqETHAddress);
+        sLiqETH = IHsETH(_liqETHAddress);
     }
 
     function createVault() public {
