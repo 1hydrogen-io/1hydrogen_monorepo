@@ -34,8 +34,7 @@ contract Staking is Ownable {
     event Staked(address staker, uint256 amount);
     event UnStaked(address staker, uint256 amount);
 
-    constructor(address hsETH, address owner) {
-        _transferOwnership(owner);
+    constructor(address hsETH) {
         sHsETH = IHsETH(hsETH);
         initPackage();
     }

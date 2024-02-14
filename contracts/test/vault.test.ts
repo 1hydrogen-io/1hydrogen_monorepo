@@ -25,37 +25,39 @@ describe('Staking deploy', function () {
     }
   }
 
-  describe('Staking', function () {
+  describe('Vault', function () {
     it('stake, unstake', async function () {
       const { deployer, liqETH, vault } = await loadFixture(deployFixture)
-      const stakeAmount = parseEther('2')
+      const stakeAmount = parseEther('10')
+      const mintHsEth = parseEther('7')
+      const repay = parseEther('1')
+      const unstake = parseEther('4')
+
       await (await vault.stake({ value: stakeAmount })).wait()
       expect(await liqETH.balanceOf(deployer.address)).to.be.equal(0)
 
-      await expect(vault.unStake(parseEther('3'))).revertedWithCustomError(vault, 'InvalidAmount')
+      await vault.claimHsEth(mintHsEth)
+
+      expect(await liqETH.balanceOf(deployer.address)).to.be.equal(mintHsEth)
+      expect(await vault.availableBalance(deployer.address)).to.be.equal(stakeAmount - mintHsEth)
 
       let stakedAmount = await vault.stakedBalance(deployer.address)
-
       expect(stakedAmount).to.be.equal(stakeAmount)
 
-      expect(await vault.hsEthBalance(deployer.address))
+      await expect(vault.unStake(unstake)).revertedWithCustomError(vault, 'InvalidAmount')
 
-      await expect(vault.unStake(stakeAmount)).revertedWithCustomError(
-        vault,
-        'InvalidApprovalAmount'
-      )
-
+      await expect(vault.repayHsEth(repay)).revertedWithCustomError(vault, 'InvalidApprovalAmount')
       await liqETH.approve(await vault.getAddress(), stakeAmount)
 
-      await expect(vault.unStake(stakeAmount)).revertedWithCustomError(vault, 'InsufficientBalance')
+      await vault.repayHsEth(repay)
 
-      await vault.claimHsEth(stakeAmount)
-      await expect(vault.claimHsEth(stakeAmount)).revertedWithCustomError(vault, 'InvalidAmount')
-
-      await (await vault.unStake(stakeAmount)).wait()
+      await vault.unStake(unstake)
 
       stakedAmount = await vault.stakedBalance(deployer.address)
-      expect(stakedAmount).to.be.equal(0)
+      expect(stakedAmount).to.be.equal(stakeAmount - unstake)
+      expect(await vault.availableBalance(deployer.address)).to.be.equal(
+        stakeAmount - mintHsEth + repay - unstake
+      )
     })
   })
 })

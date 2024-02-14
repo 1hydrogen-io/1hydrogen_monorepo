@@ -18,6 +18,7 @@ contract Vault is Ownable {
 
     event Staked(address staker, uint256 amount);
     event UnStaked(address staker, uint256 amount);
+    event HsETHRepaid(address staker, uint256 amount);
 
     constructor(address hsETH, address owner) {
         _transferOwnership(owner);
@@ -34,33 +35,44 @@ contract Vault is Ownable {
     }
 
     function unStake(uint256 amount) public {
-        uint256 stakedAmount = sStaker[msg.sender];
+        uint256 availableAmount = sBalance[msg.sender];
 
-        if (amount > stakedAmount) {
+        if (amount > availableAmount) {
+            revert InvalidAmount();
+        }
+        sStaker[msg.sender] -= amount;
+        sBalance[msg.sender] = sBalance[msg.sender] - amount;
+        payable(msg.sender).transfer(amount);
+        emit UnStaked(msg.sender, amount);
+    }
+
+    function repayHsEth(uint256 amount) public {
+        uint256 amountLeft = sStaker[msg.sender] - sBalance[msg.sender];
+
+        if (amount > amountLeft) {
             revert InvalidAmount();
         }
         uint256 approvedAmount = sHsETH.allowance(msg.sender, address(this));
-        if (approvedAmount < stakedAmount) {
+        if (approvedAmount < amount) {
             revert InvalidApprovalAmount();
         }
         uint256 liqEthBalance = sHsETH.balanceOf(msg.sender);
-        if (liqEthBalance < stakedAmount) {
+        if (liqEthBalance < amount) {
             revert InsufficientBalance();
         }
 
         sHsETH.burnFrom(msg.sender, amount);
-        sStaker[msg.sender] -= amount;
-        sBalance[msg.sender] = sBalance[msg.sender] - amount;
+        sBalance[msg.sender] = sBalance[msg.sender] + amount;
         payable(msg.sender).transfer(amount);
 
-        emit UnStaked(msg.sender, stakedAmount);
+        emit HsETHRepaid(msg.sender, amount);
     }
 
     function stakedBalance(address staker) public view returns (uint256 amount) {
         return sStaker[staker];
     }
 
-    function hsEthBalance(address staker) public view returns (uint256 amount) {
+    function availableBalance(address staker) public view returns (uint256 amount) {
         return sBalance[staker];
     }
 

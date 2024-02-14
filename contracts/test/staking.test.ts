@@ -12,7 +12,7 @@ describe('Staking deploy', function () {
     liqETH.grantRole(await liqETH.MINTER_ROLE(), deployer.address)
 
     const Staking = await ethers.getContractFactory('Staking')
-    const staking = await Staking.deploy(await liqETH.getAddress(), deployer.address)
+    const staking = await Staking.deploy(await liqETH.getAddress())
 
     return {
       deployer,
