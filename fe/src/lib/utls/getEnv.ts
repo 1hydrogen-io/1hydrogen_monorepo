@@ -9,7 +9,7 @@ export const getApiEndpoint = (): string =>{
 }
 
 export const getRPC = () => {
-  return ''
+  return 'https://rpc.ankr.com/blast_testnet_sepolia'
 }
 
 export const getBaseRPC = () => {

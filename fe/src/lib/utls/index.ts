@@ -110,8 +110,6 @@ export function parseBalance(balanceWei: number | string, decimals = 18) {
   return parseFloat(`${beforeDecimal}.${afterDecimal}`)
 }
 
-
-
 export const getEthBalance = async(walletAddress: string) => {
   const provider = new providers.JsonRpcProvider('https://rpc.ankr.com/blast_testnet_sepolia');
   const wei = await provider.getBalance(walletAddress);
@@ -120,3 +118,30 @@ export const getEthBalance = async(walletAddress: string) => {
 }
 
 export const parseNumber = (val: string) => val.replace(/^\$/, '')
+
+export const balanceFormat = (balance: number) => {
+  return numberFormat(balance.toFixed(1))
+}
+
+export const balanceFormatWithPrefix = (num: number): string => {
+  num = parseFloat(num.toString().replace(/[^0-9.]/g, ''));
+  if (num < 1000) {
+      return balanceFormat(num);
+  }
+  const si = [
+      { v: 1E3, s: "K" },
+      { v: 1E6, s: "M" },
+      { v: 1E9, s: "B" },
+      { v: 1E12, s: "T" },
+      { v: 1E15, s: "P" },
+      { v: 1E18, s: "E" }
+  ];
+
+  let index: number;
+  for (index = si.length - 1; index > 0; index--) {
+      if (num >= si[index].v) {
+          break;
+      }
+  }
+  return `${(num / si[index].v).toFixed(2).replace(/\.0+$|(\.[0-9]*[1-9])0+$/, "$1") + si[index].s}`;
+};

@@ -23,7 +23,7 @@ export default function Footer() {
       </SubText>
       <Accordion mt="48px" gap="24px" allowMultiple defaultIndex={0}>
         {footerData.map((item) => (
-          <AccordionItem border="none">
+          <AccordionItem border="none" key={item.title}>
             {({ isExpanded }) => (
               <Flex w="full" flexDirection="column">
                 <AccordionButton>
