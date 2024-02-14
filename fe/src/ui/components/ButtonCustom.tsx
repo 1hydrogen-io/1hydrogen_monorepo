@@ -7,11 +7,13 @@ interface IProps extends ButtonProps {
   disable?: boolean;
 }
 export default function ButtonCustom({children, isProcessing, disable, ...props}:IProps) {
+  
+  
   return (
     <Button 
-    bgColor='#0075FF'
+    bgColor={disable ? '#344767' : '#0075FF'}
     borderRadius='12px'
-    color='white'
+    color={disable ? '#ffffff50' : 'white'}
     fontFamily={plus_jakarta_san.style.fontFamily}
     fontSize='10px'
     fontWeight='800'

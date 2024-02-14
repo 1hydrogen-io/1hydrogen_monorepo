@@ -7,6 +7,7 @@ import StakePackageContainer from './StakePackageContainer'
 import MintButton from './MintButton'
 import InputHsEthStake from './InputHsEthStake'
 import BalanceInfo from './BalanceInfo'
+import LockedPosition from './LockedPosition'
 
 export default function StakeContainer() {
   return (
@@ -32,6 +33,9 @@ export default function StakeContainer() {
         <LabelValueColumn label="Reward Balance" value="--" />
       </Flex>
       <MintButton />
+
+
+      <LockedPosition />
     </CardCus>
   );
 }

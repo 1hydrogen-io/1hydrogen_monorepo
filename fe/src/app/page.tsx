@@ -1,7 +1,6 @@
-import { MyPoint } from "@/ui/components";
 import AppWrapper from "@/ui/components/AppWrapper";
-import StakeCard from "@/ui/components/StakeCard";
 import SideBarMenu from "@/ui/views/Commons/SideBarMenu";
+import LockedPosition from "@/ui/views/Stakes/LockedPosition";
 import StakeContainer from "@/ui/views/Stakes/StakeContainer";
 import StakeInfoContainer from "@/ui/views/Stakes/StakeInfoContainer";
 import { Flex } from "@chakra-ui/react";
