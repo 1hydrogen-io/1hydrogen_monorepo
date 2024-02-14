@@ -1,55 +1,117 @@
+import { liner_bg } from '@/themes'
 import { MyPoint } from '@/ui/components'
 import AppWrapper from '@/ui/components/AppWrapper'
+import ButtonCustom from '@/ui/components/ButtonCustom'
+import LabelValueColumn from '@/ui/components/LabelValueColumn'
 import StakeCard from '@/ui/components/StakeCard'
-import { MainTitle } from '@/ui/components/Text'
+import { MainTitle, TextCus } from '@/ui/components/Text'
+import SubText from '@/ui/components/Text/SubText'
+import HowToEarnPoints from '@/ui/views/Commons/HowToEarnPoints'
 import AvatarCard from '@/ui/views/Points/AvatarCard'
 import Leaderboard from '@/ui/views/Points/Leaderboard'
-import { Flex } from '@chakra-ui/react'
+import { Flex, Image, VStack } from '@chakra-ui/react'
 import React from 'react'
 
 export default function HPoints() {
   return (
-    <AppWrapper gap="20px" wrapStyle={{mb: 200}}>
-      <Flex w="full" flexDirection="column" gap="22px">
-        <MyPoint />
-        <Flex w="full" gap="24px">
-          <StakeCard
-            subLabel={"Supply point"}
-            value={"131290"}
-            percent="+55%"
-            minH="80px"
-          />
-          <StakeCard
-            subLabel={"Borrow point"}
-            value={"131290"}
-            percent="+55%"
-            minH="80px"
-          />
-          <StakeCard
-            subLabel={"Borrow point"}
-            value={"131290"}
-            percent="+55%"
-            minH="80px"
-          />
-          <StakeCard
-            subLabel={"Borrow point"}
-            value={"131290"}
-            percent="+55%"
-            minH="80px"
-          />
+    <AppWrapper gap="20px" wrapStyle={{ mb: 200, mt: '24px' }}>
+      <Flex w="full" flexDirection="row" gap="24px">
+        <MyPoint isLager />
+     
+        <Flex flexDirection="column" w="222px" gap="24px">
+          <Flex
+            w="full"
+            h="226px"
+            bg={liner_bg}
+            borderRadius="20px"
+            p="20px 24px"
+            flexDir="column"
+            justifyContent="space-between"
+          >
+            <LabelValueColumn
+              label={"Supply points"}
+              labelFontSize="12px"
+              value={"131290"}
+            />
+            <LabelValueColumn
+              label={"Borrow points"}
+              labelFontSize="12px"
+              value={"131290"}
+            />
+            <LabelValueColumn
+              label={"Staking points"}
+              labelFontSize="12px"
+              value={"131290"}
+            />
+          </Flex>
+
+          <Flex
+            w="full"
+            h="80px"
+            bg={liner_bg}
+            borderRadius="20px"
+            p="20px 24px"
+            justifyContent="space-between"
+          >
+            <LabelValueColumn
+              labelFontSize="12px"
+              label={"Daily points"}
+              value={"131290"}
+            />
+            <ButtonCustom h="35px">CLAIM</ButtonCustom>
+          </Flex>
+        </Flex>
+        <Flex
+          flexDirection="column"
+          w="222px"
+          h="330px"
+          borderRadius="20px"
+          bg={liner_bg}
+          p="24px"
+          justifyContent="space-between"
+        >
+          <Flex w="full" flexDirection="column" gap="24px">
+            <LabelValueColumn
+              label={"Referral points"}
+              value={"323323"}
+              labelProps={{ color: "#FFF", fontSize: "12px" }}
+              valProps={{ fontSize: "32px" }}
+            />
+
+            <Flex gap="11px">
+              <Image src="/user-group.svg" />
+
+              <VStack alignItems="flex-start">
+                <TextCus color="white" fontSize="18px" fontWeight="550">
+                  4
+                </TextCus>
+                <SubText fontSize="12px">People invited</SubText>
+              </VStack>
+            </Flex>
+            <SubText fontSize="12px" lineHeight="150%">
+              You’ll earn 25% of invited users points.
+            </SubText>
+          </Flex>
+
+          <ButtonCustom w="full">COPY LINK</ButtonCustom>
         </Flex>
       </Flex>
-      <Flex w='full' flexDirection='column' mt='120px'>
-        <MainTitle fontSize='24px'>Points leaderboard</MainTitle>
-        <Flex w='full' gap='24px' mt='37px'>
-          <Flex w='222px' flexDirection='column' gap='24px'>
+
+      <HowToEarnPoints />
+
+      <Flex w="full" flexDirection="column" mt="140px">
+        <MainTitle fontSize="24px" alignSelf="center">
+          Points leaderboard
+        </MainTitle>
+        <Flex w="full" gap="24px" mt="37px">
+          <Flex w="222px" flexDirection="column" gap="24px">
             <AvatarCard />
-            <StakeCard subLabel={'Daily Snapshot Time'} value={'131290'}
-              minH='80px'
+            <StakeCard
+              subLabel={"Daily Snapshot Time"}
+              value={"131290"}
+              minH="80px"
             />
-            <StakeCard subLabel={'Total Days'} value={'131290'}
-              minH='80px'
-            />
+            <StakeCard subLabel={"Total Days"} value={"131290"} minH="80px" />
           </Flex>
           <Leaderboard />
         </Flex>

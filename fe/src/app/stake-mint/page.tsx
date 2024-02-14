@@ -7,6 +7,7 @@ import LabelValueColumn from '@/ui/components/LabelValueColumn'
 import StakeCard from '@/ui/components/StakeCard'
 import { TextCus } from '@/ui/components/Text'
 import CardCus from '@/ui/views/Commons/CardCus'
+import StakedLockedAPR from '@/ui/views/Commons/StakedLockedAPR'
 import { Flex } from '@chakra-ui/react'
 import React from 'react'
 
@@ -20,43 +21,8 @@ export default function RePayUnStake() {
         </Flex>
 
         <CardCus gap="40px">
-          <Flex w="full" justifyContent="space-between">
-            <LabelValueColumn
-              label={"hsETH Balance"}
-              value={"YYY hsETH"}
-              subLabel="$XX"
-              labelFontSize="10px"
-            />
-            <LabelValueColumn
-              label={"Staked hsETH Balance"}
-              value={"YYY hsETH"}
-              subLabel="$XX"
-              labelFontSize="10px"
-            />
-            <LabelValueColumn
-              label={"Staked hsETH Balance"}
-              value={"YYY hsETH"}
-              subLabel="$XX"
-              labelFontSize="10px"
-            />
-          </Flex>
-          <Flex w="full" gap="20px">
-            <LabelValueColumn
-              flex={1}
-              label={"hsETH Staked APR"}
-              value={"ZZZZ %"}
-              subLabel="$XX"
-              labelFontSize="10px"
-            />
-
-            <LabelValueColumn
-              flex={1}
-              label={"hsETH Locked APR"}
-              value={"ZZZZ - FFFF %"}
-              subLabel="$XX"
-              labelFontSize="10px"
-            />
-          </Flex>
+         
+          <StakedLockedAPR isHideSubLabel />
 
           <Flex w="full" justifyContent="space-between" flexDirection="column">
             <TextCus mb="10px">

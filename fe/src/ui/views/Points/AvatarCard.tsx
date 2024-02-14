@@ -14,6 +14,7 @@ export default function AvatarCard({...props}: IProps) {
       bgRepeat="no-repeat"
       bgPosition="center"
       bgSize="contain"
+      borderRadius='20px'
       p='24px'
       {...props}
     >
