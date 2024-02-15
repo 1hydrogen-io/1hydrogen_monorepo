@@ -1,7 +1,7 @@
 'use client'
 import { useAppSelector } from '@/lib/reduxs/hooks';
 import { LabelValueItem } from '@/ui/components'
-import { Flex } from '@chakra-ui/react'
+import { Flex, Image } from '@chakra-ui/react'
 import React, { useMemo } from 'react'
 
 export default function BalanceInfo() {
@@ -16,7 +16,10 @@ export default function BalanceInfo() {
 
   return (
     <Flex w="full" flexDirection="column" gap="16px">
-      <LabelValueItem label="Current APR Rate" value={stakedAprRate} />
+      <Flex w='full'>
+        <LabelValueItem label="Current APR Rate" value={stakedAprRate} />
+        <Image src='/h-point.svg' ml='5px' />
+      </Flex>
       <LabelValueItem label="Staked Amount" value={`${stakedAmount} $hsETH`} />
       <LabelValueItem label="Wallet Balance" value={`${balance.hsEth} $hsETH`} />
     </Flex>

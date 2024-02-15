@@ -1,11 +1,6 @@
-import { LabelValueItem, MyPoint } from '@/ui/components'
+import { MyPoint } from '@/ui/components'
 import AppWrapper from '@/ui/components/AppWrapper'
-import ButtonCustom from '@/ui/components/ButtonCustom'
 import ButtonTab from '@/ui/components/ButtonTab'
-import DropdownCustom from '@/ui/components/DropdownCustom'
-import InputCustom from '@/ui/components/InputCustom'
-import LabelValueColumn from '@/ui/components/LabelValueColumn'
-import { TextCus } from '@/ui/components/Text'
 import CardCus from '@/ui/views/Commons/CardCus'
 import StakedLockedAPR from '@/ui/views/Commons/StakedLockedAPR'
 import RepayContainer from '@/ui/views/RepayUnStacks/RepayContainer'
@@ -23,7 +18,7 @@ export default function RePayUnStake() {
         </Flex>
 
         <CardCus gap="40px">
-           <StakedLockedAPR />
+           <StakedLockedAPR isShowPoint />
            <UnstackContainer />
           <RepayContainer />
         </CardCus>

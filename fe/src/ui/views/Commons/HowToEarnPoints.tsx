@@ -1,7 +1,7 @@
 import { liner_bg } from '@/themes'
 import { MainTitle, TextCus } from '@/ui/components/Text'
 import SubText from '@/ui/components/Text/SubText'
-import { Flex, Spacer } from '@chakra-ui/react'
+import { Flex, HStack, Image, Spacer } from '@chakra-ui/react'
 import React from 'react'
 
 const data = [
@@ -20,7 +20,12 @@ export default function HowToEarnPoints() {
       flexDirection='column'
       alignItems='center'
     >
-      <MainTitle fontSize='24px'>How to earn points?</MainTitle>
+      <HStack w='full' justifyContent='center'>
+      <MainTitle fontSize='24px'>How to earn </MainTitle>
+      <Image src='/h-point.svg' />
+      <MainTitle fontSize='24px'>?</MainTitle>
+
+      </HStack>
       <TextCus
         fontSize='14px'
         fontWeight='450'

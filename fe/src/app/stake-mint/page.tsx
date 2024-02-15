@@ -20,7 +20,7 @@ export default function RePayUnStake() {
         </Flex>
 
         <CardCus gap="40px">
-          <StakedLockedAPR isHideSubLabel />
+          <StakedLockedAPR isShow />
           <StakeContainer />
           <MintVaulContainer />
          
