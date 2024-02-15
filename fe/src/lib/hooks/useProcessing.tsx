@@ -1,9 +1,10 @@
 import React from 'react'
-import { useAppDispatch } from '../reduxs/hooks'
+import { useAppDispatch, useAppSelector } from '../reduxs/hooks'
 import { setProcessingAction } from '../reduxs/globals/global.slices';
 
 export default function useProcessing() {
   const dispatch = useAppDispatch();
+  const {isProcessing} = useAppSelector(p => p.global)
 
   const onOpenProcessing = () => {
     dispatch(setProcessingAction(true));
@@ -14,6 +15,7 @@ export default function useProcessing() {
   }
 
   return {
+    isProcessing,
     onCloseProcessing,
     onOpenProcessing,
   }

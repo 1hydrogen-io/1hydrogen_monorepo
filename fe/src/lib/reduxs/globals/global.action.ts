@@ -17,7 +17,6 @@ export const getEthPriceAction = createAsyncThunk<number, void>(
   async () => {
     const baseContract = new BaseEthContract();
     const price = await baseContract.getPrice();
-    console.log({price})
     return price;
   }
 )

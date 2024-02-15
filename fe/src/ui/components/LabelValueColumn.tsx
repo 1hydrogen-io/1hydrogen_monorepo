@@ -5,7 +5,7 @@ import { TextCus } from './Text';
 
 interface IProps extends FlexProps {
   label: string;
-  value: string;
+  value: string | number;
   subLabel?: string;
   labelFontSize?: string;
   subLabelFontSize?: string;

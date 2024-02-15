@@ -1,7 +1,7 @@
 
 import { providers, utils } from "ethers";
 import { UseToastOptions } from '@chakra-ui/react';
-import moment from 'moment';
+import moment, { isDate } from 'moment';
 export * as rem from './remCalc';
 
 const DATE_TIME_FORMAT = 'DD/MM/YYYY HH:mm:ss';
@@ -51,7 +51,7 @@ export const endDate = (date: Date, days: number) => {
  return moment(date).add(days, 'days').format(DATE_TIME_FORMAT);
 }
 
-export function isAfter(dateNum: number): boolean {
+export function isDateAfter(dateNum: number): boolean {
   const currentDate = moment();
   const date = moment.unix(dateNum);  
   return date.isAfter(currentDate);
@@ -74,7 +74,8 @@ export function getDaysFromCurrent(dateNum: number): string {
   return '0';
 }
 
-export const getDays = (dateNum: number) => {
+export const getDays = (dateNum: number, defaultReturn?: string) => {
+  if (!isDateAfter(dateNum)) return defaultReturn || 0;
   const today  = new Date();
   const toDate = new Date(dateNum * 1000);
   const diffTime = Math.abs(toDate.valueOf() - today.valueOf());
