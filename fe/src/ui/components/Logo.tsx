@@ -4,7 +4,7 @@ import React from 'react'
 
 export default function Logo() {
   return (
-    <Link href='/'>
+    <Link href='/landing'>
       <Image src='/logo.svg' alt='Hydrogen' />
     </Link>
   )

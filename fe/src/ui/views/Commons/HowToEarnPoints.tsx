@@ -14,7 +14,7 @@ export default function HowToEarnPoints() {
   return (
     <Flex w='full'
       borderRadius='20px'
-      bg={liner_bg}
+      background= 'linear-gradient(163deg, rgba(6, 11, 40, 0.94) 11.89%, rgba(10, 14, 35, 0.49) 99.97%)'
       h='261px'
       p='20px'
       flexDirection='column'
