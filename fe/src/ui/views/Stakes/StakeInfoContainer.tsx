@@ -6,6 +6,7 @@ import { MyPoint } from '@/ui/components';
 import StakeCard from '@/ui/components/StakeCard';
 import { Flex } from '@chakra-ui/react';
 import React from 'react'
+import TotalHsEthStakedAndLocked from '../Commons/TotalHsEthStakedAndLocked';
 
 export default function StakeInfoContainer() {
   const  {ethUsdt} = useBaseEthContract();
@@ -14,18 +15,7 @@ export default function StakeInfoContainer() {
   return (
     <Flex flexDirection="column" w="full" gap="25px">
       <MyPoint />
-      <StakeCard
-        subLabel={"Total hsETH Staked:"}
-        value={totalHsEthStaked}
-        percent=""
-        totalVal={`$${balanceFormatWithPrefix(totalHsEthStaked * ethUsdt)}`}
-      />
-      <StakeCard
-        subLabel={"Total hsETH Locked:"}
-        value={totalHsEthLocked}
-        percent=""
-        totalVal={`$${balanceFormatWithPrefix(totalHsEthLocked * ethUsdt)}`}
-      />
+      <TotalHsEthStakedAndLocked />
     </Flex>
   );
 }

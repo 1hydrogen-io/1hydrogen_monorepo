@@ -5,6 +5,11 @@
         "internalType": "address",
         "name": "hsETH",
         "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "owner",
+        "type": "address"
       }
     ],
     "stateMutability": "nonpayable",
@@ -27,13 +32,27 @@
   },
   {
     "inputs": [],
-    "name": "InvalidIndex",
+    "name": "InvalidFee",
     "type": "error"
   },
   {
-    "inputs": [],
-    "name": "InvalidReleaseDate",
-    "type": "error"
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
+        "internalType": "address",
+        "name": "staker",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "amount",
+        "type": "uint256"
+      }
+    ],
+    "name": "HsETHRepaid",
+    "type": "event"
   },
   {
     "anonymous": false,
@@ -68,12 +87,6 @@
         "internalType": "uint256",
         "name": "amount",
         "type": "uint256"
-      },
-      {
-        "indexed": false,
-        "internalType": "uint256",
-        "name": "package",
-        "type": "uint256"
       }
     ],
     "name": "Staked",
@@ -93,12 +106,6 @@
         "internalType": "uint256",
         "name": "amount",
         "type": "uint256"
-      },
-      {
-        "indexed": false,
-        "internalType": "uint256",
-        "name": "package",
-        "type": "uint256"
       }
     ],
     "name": "UnStaked",
@@ -106,12 +113,57 @@
   },
   {
     "inputs": [],
-    "name": "getPackage",
+    "name": "MAX_FEE",
     "outputs": [
       {
-        "internalType": "uint256[]",
+        "internalType": "uint256",
         "name": "",
-        "type": "uint256[]"
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "MIN_FEE",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "staker",
+        "type": "address"
+      }
+    ],
+    "name": "availableBalance",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "amount",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "blastYield",
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
       }
     ],
     "stateMutability": "view",
@@ -121,19 +173,20 @@
     "inputs": [
       {
         "internalType": "uint256",
-        "name": "package",
+        "name": "amount",
         "type": "uint256"
       }
     ],
-    "name": "getTerm",
-    "outputs": [
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      }
-    ],
-    "stateMutability": "pure",
+    "name": "claimHsEth",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "claimYield",
+    "outputs": [],
+    "stateMutability": "nonpayable",
     "type": "function"
   },
   {
@@ -151,22 +204,35 @@
   },
   {
     "inputs": [],
-    "name": "poolInfor",
-    "outputs": [
+    "name": "renounceOwnership",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
       {
-        "internalType": "uint256[4]",
-        "name": "",
-        "type": "uint256[4]"
+        "internalType": "uint256",
+        "name": "amount",
+        "type": "uint256"
       }
     ],
-    "stateMutability": "view",
+    "name": "repayHsEth",
+    "outputs": [],
+    "stateMutability": "nonpayable",
     "type": "function"
   },
   {
     "inputs": [],
-    "name": "renounceOwnership",
-    "outputs": [],
-    "stateMutability": "nonpayable",
+    "name": "sFee",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
     "type": "function"
   },
   {
@@ -183,39 +249,49 @@
     "type": "function"
   },
   {
-    "inputs": [
+    "inputs": [],
+    "name": "sTotalStaked",
+    "outputs": [
       {
         "internalType": "uint256",
-        "name": "package",
-        "type": "uint256"
-      },
-      {
-        "internalType": "uint256",
-        "name": "apr",
+        "name": "",
         "type": "uint256"
       }
     ],
-    "name": "setPackage",
-    "outputs": [],
-    "stateMutability": "nonpayable",
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "sTotalUnStaked",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
     "type": "function"
   },
   {
     "inputs": [
       {
         "internalType": "uint256",
-        "name": "package",
-        "type": "uint256"
-      },
-      {
-        "internalType": "uint256",
-        "name": "amount",
+        "name": "newFee",
         "type": "uint256"
       }
     ],
-    "name": "stake",
+    "name": "setFee",
     "outputs": [],
     "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "stake",
+    "outputs": [],
+    "stateMutability": "payable",
     "type": "function"
   },
   {
@@ -241,71 +317,6 @@
     "inputs": [
       {
         "internalType": "address",
-        "name": "staker",
-        "type": "address"
-      }
-    ],
-    "name": "stakedInfors",
-    "outputs": [
-      {
-        "components": [
-          {
-            "internalType": "uint256",
-            "name": "amount",
-            "type": "uint256"
-          },
-          {
-            "internalType": "uint256",
-            "name": "startTime",
-            "type": "uint256"
-          },
-          {
-            "internalType": "uint256",
-            "name": "releaseDate",
-            "type": "uint256"
-          },
-          {
-            "internalType": "uint256",
-            "name": "rewardDebt",
-            "type": "uint256"
-          },
-          {
-            "internalType": "uint256",
-            "name": "package",
-            "type": "uint256"
-          }
-        ],
-        "internalType": "struct Staking.StakeInfo[]",
-        "name": "",
-        "type": "tuple[]"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "address",
-        "name": "staker",
-        "type": "address"
-      }
-    ],
-    "name": "stakedLength",
-    "outputs": [
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "address",
         "name": "newOwner",
         "type": "address"
       }
@@ -319,7 +330,7 @@
     "inputs": [
       {
         "internalType": "uint256",
-        "name": "index",
+        "name": "amount",
         "type": "uint256"
       }
     ],

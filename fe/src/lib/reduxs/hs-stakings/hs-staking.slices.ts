@@ -1,7 +1,7 @@
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
 import { PackageType } from "./hs-staking.type";
-import { getHsEthStakingInfoAction } from "./hs-staking.actions";
-import { IStakedInfo } from "@/lib/contracts/types";
+import { getHsEthStakingInfoAction, getPackageAction } from "./hs-staking.actions";
+import { IPackage, IStakedInfo } from "@/lib/contracts/types";
 
 
 interface HsStakingState {
@@ -11,9 +11,12 @@ interface HsStakingState {
   stakedAmount: number;
 
   stakedInfos: IStakedInfo[];
+  lockedHsETHBalance: number;
 
   packageSelected: PackageType;
   hsEthAmount: string;
+
+  packages: IPackage[];
   
 }
 
@@ -23,9 +26,12 @@ const initialState: HsStakingState = {
   myPoint: 0,
   stakedAmount: 0,
   stakedInfos: [],
+  lockedHsETHBalance: 0,
 
   packageSelected: '0',
   hsEthAmount: '0',
+
+  packages: [],
 };
 
 export const hsStakingSlice = createSlice({
@@ -50,6 +56,12 @@ export const hsStakingSlice = createSlice({
       state.totalHsEthLocked = locked;
       state.totalHsEthStaked = totalStaked;
       state.stakedInfos = stakedInfos;
+      state.lockedHsETHBalance = stakedInfos.filter(p => p.package > 0).reduce((pre, cur) => pre + cur.amount, 0);
+
+     })
+
+     builder.addCase(getPackageAction.fulfilled, (state, {payload}) => {
+      state.packages = payload;
      })
   },
 });

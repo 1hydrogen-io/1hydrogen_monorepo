@@ -2,7 +2,7 @@ import { createAsyncThunk } from "@reduxjs/toolkit";
 import { getEthersSigner } from "@/lib/hooks/useEtherSigner";
 import { getEthBalance } from "@/lib/utls";
 import HsEthStakingContract from "@/lib/contracts/HsEthStakingContract";
-import { IStakedInfo } from "@/lib/contracts/types";
+import { IPackage, IStakedInfo } from "@/lib/contracts/types";
 
 const default_response = {
   locked: 0,
@@ -28,10 +28,20 @@ export const getHsEthStakingInfoAction = createAsyncThunk<{
 
       const poolInfor = await hsEthStakingContact.getPoolInfo();
       const stakedInfos = await hsEthStakingContact.getStakedInfo(address);
-      console.log({stakedInfos})
       return {...poolInfor, stakedAmount, stakedInfos}
     } catch (ex) {
       return default_response
     }
   }
 );
+
+
+export const getPackageAction = createAsyncThunk<IPackage[], void>(
+  'hs-staking/getPackageAction',
+  async() => {
+    const stakingContract = new HsEthStakingContract();
+    const rp = await stakingContract.getPackage();
+    return rp;
+  }
+)
+

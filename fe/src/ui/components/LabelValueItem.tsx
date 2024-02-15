@@ -4,7 +4,7 @@ import SubText from './Text/SubText'
 
 interface IProps extends FlexProps {
   label: string;
-  value: string;
+  value: string | number;
   fontSize?: string;
 }
 

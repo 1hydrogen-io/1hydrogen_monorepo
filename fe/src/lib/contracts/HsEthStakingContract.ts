@@ -3,12 +3,12 @@ import { getRPC, isProduction } from '../utls';
 import { Erc20 } from './interfaces'
 import Abi from "./abis/hs_eth_staking.json";
 import { TransactionResponse } from '@ethersproject/abstract-provider';
-import { IStakedInfo } from './types';
+import { IPackage, IStakedInfo } from './types';
 
 export const ADDRESS = () =>
   isProduction()
     ? ""
-    : "0x533E71D397835e1B412B6EFE63528a65bbacCE4B";
+    : "0xae5930A3b434666a5bcBd100dB8Fa7D8E94e9241";
 
 export default class HsEthStakingContract extends Erc20 {
   constructor(signer?: ethers.providers.JsonRpcSigner) {
@@ -53,4 +53,13 @@ export default class HsEthStakingContract extends Erc20 {
     return this._handleTransactionResponse(rp)
   }
 
+  getPackage = async(): Promise<IPackage[]> => {
+    const rp: any[] = await this._contract.getPackage();
+    const result = rp.map((item, index) => ({
+      index,
+      value: this._toNumber(item),
+      percent: this._toNumber(item) / 100,
+    }))
+    return result;
+  }
 } 

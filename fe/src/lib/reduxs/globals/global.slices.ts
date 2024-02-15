@@ -1,5 +1,5 @@
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
-import { getEthPriceAction } from "./global.action";
+import { getPackageAction } from "../hs-stakings/hs-staking.actions";
 
 interface GlobalState {
   isProcessing?: boolean;
@@ -12,7 +12,7 @@ const initialState: GlobalState = {
 };
 
 export const globalSlice = createSlice({
-  name: "global",
+  name: "global-reducer",
   initialState,
   reducers: {
     setProcessingAction: (state, { payload }: PayloadAction<boolean | undefined>) => {
@@ -20,6 +20,7 @@ export const globalSlice = createSlice({
     },
   }
 });
+
 export default globalSlice.reducer;
 
 export const { 

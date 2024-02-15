@@ -1,11 +1,28 @@
+'use client'
+import useBaseEthContract from '@/lib/hooks/useBaseEthContract';
+import { useAppSelector } from '@/lib/reduxs/hooks';
 import LabelValueColumn from '@/ui/components/LabelValueColumn'
 import { Flex, Image } from '@chakra-ui/react'
-import React from 'react'
+import React, { useMemo } from 'react'
 
 interface IProps {
   isHideSubLabel?: boolean;
 }
 export default function StakedLockedAPR({isHideSubLabel}: IProps) {
+  const {packages, stakedAmount, lockedHsETHBalance} = useAppSelector(p => p.hsStake);
+  const {balance} = useAppSelector(p => p.wallet);
+  const {ethUsdt} = useBaseEthContract();
+
+  const stakedAPR = useMemo(() => {
+    if (packages.length < 1) return 0;
+    return packages[0].percent;
+  }, [packages]);
+
+  const lockedAPR = useMemo(() => {
+    if (packages.length < 1) return '0 - 0';
+    return `${packages[1].percent} - ${packages[3].percent}`;
+  }, [packages]);
+
   return (
     <>
       <Flex w="full" justifyContent="space-between" gap="10px">
@@ -26,7 +43,7 @@ export default function StakedLockedAPR({isHideSubLabel}: IProps) {
           <LabelValueColumn
             label={"hsETH Staked APR"}
             labelFontSize="10px"
-            value={"ZZZZ %"}
+            value={`${stakedAPR} %`}
             subLabel={isHideSubLabel ? '' : '$XX'} 
           />
         </Flex>
@@ -44,7 +61,7 @@ export default function StakedLockedAPR({isHideSubLabel}: IProps) {
           <LabelValueColumn
             label={"hsETH Locked APR"}
             labelFontSize="10px"
-            value={"ZZZZ - FFFF %"}
+            value={`${lockedAPR} %`}
             subLabel={isHideSubLabel ? '' : '$XX'} 
             ml='22px'
           />
@@ -53,23 +70,23 @@ export default function StakedLockedAPR({isHideSubLabel}: IProps) {
       <Flex w="full" justifyContent="space-between">
         <LabelValueColumn
           subLabel={"hsETH Balance"}
-          value={"YYY hsETH"}
-          label="$XX"
+          value={`${balance.hsEth} hsETH`}
+          label={`$${balance.hsEth * ethUsdt}`}
           labelFontSize="12px"
           subLabelFontSize='10px'
         />
         <LabelValueColumn
           subLabel={"Staked hsETH Balance"}
-          value={"YYY hsETH"}
-          label="$XX"
+          value={`${stakedAmount} hsETH`}
+          label={`$${stakedAmount * ethUsdt}`}
           labelFontSize="12px"
           subLabelFontSize='10px'        />
         <LabelValueColumn
-          subLabel={"Staked hsETH Balance"}
-          value={"YYY hsETH"}
-          label="$XX"
+          subLabel={"Locked hsETH Balance"}
+          value={`${lockedHsETHBalance} hsETH`}
+          label={`$${lockedHsETHBalance * ethUsdt}`}
           labelFontSize="12px"
-          subLabelFontSize='10px'        />
+          subLabelFontSize='10px'/>
       </Flex>
     </>
   );

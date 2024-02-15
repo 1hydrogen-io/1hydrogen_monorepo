@@ -6,3 +6,10 @@ export interface IStakedInfo {
   rewardDebt: number;
   package: number;
 }
+
+
+export interface IPackage {
+    index: number;
+    value: number;
+    percent: number;
+  }

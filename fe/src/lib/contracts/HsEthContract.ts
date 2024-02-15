@@ -6,7 +6,7 @@ import Abi from "./abis/hs_eth.json";
 export const ADDRESS = () =>
   isProduction()
     ? ""
-    : "0x55Ee887dB181B41f69b3313065b1eD6BEE3336A1";
+    : "0x7C84156e5f873dB9f544459cb4aA6eC5fc45f67a";
 
 export default class HsEthContract extends Erc20 {
   constructor(signer?: ethers.providers.JsonRpcSigner) {
