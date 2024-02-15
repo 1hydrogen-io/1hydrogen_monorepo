@@ -22,7 +22,7 @@ export default function StakeContainer() {
       <BalanceInfo />
       <InputHsEthStake />
       
-      <Flex justifyContent="space-between">
+      {/* <Flex justifyContent="space-between">
         <LabelValueColumn label="Current APR Rate" value="1%" />
         <LabelValueColumn
           label="Maturity Date"
@@ -31,7 +31,7 @@ export default function StakeContainer() {
           alignItems="center"
         />
         <LabelValueColumn label="Reward Balance" value="--" />
-      </Flex>
+      </Flex> */}
       <MintButton />
 
 
