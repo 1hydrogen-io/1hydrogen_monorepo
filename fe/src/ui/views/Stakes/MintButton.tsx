@@ -1,4 +1,5 @@
 'use client'
+import { addPointApi } from '@/lib/apis/account.api';
 import HsEthContract from '@/lib/contracts/HsEthContract';
 import HsEthStakingContract from '@/lib/contracts/HsEthStakingContract';
 import { getEthersSigner } from '@/lib/hooks/useEtherSigner';
@@ -49,14 +50,15 @@ export default function MintButton() {
       const hsEthStakingContract = new HsEthStakingContract(signer);
       await hsEthContract.approve(hsEthStakingContract._contractAddress, amount)
       const tx = await hsEthStakingContract.stake(packageSelected, amount);
+      await addPointApi(tx as string);
       await dispatch(fetchWalletInfoGlobalAction()).unwrap();
+      toast(getToast(`Stake successfully `, 'success', 'Stake HsEth'))
       dispatch(resetUserValue());
     } catch (ex) {
       toast(getToast('Something went wrong'))
     }
     onCloseProcessing();
     onClose();
-    toast(getToast(`Stake successfully `, 'success', 'Stake HsEth'))
   }
 
   return (

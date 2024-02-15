@@ -57,7 +57,6 @@ export const hsStakingSlice = createSlice({
       state.totalHsEthStaked = totalStaked;
       state.stakedInfos = stakedInfos;
       state.lockedHsETHBalance = stakedInfos.filter(p => p.package > 0).reduce((pre, cur) => pre + cur.amount, 0);
-
      })
 
      builder.addCase(getPackageAction.fulfilled, (state, {payload}) => {

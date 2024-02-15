@@ -1,4 +1,5 @@
 'use client'
+import { addPointApi } from '@/lib/apis/account.api'
 import VaultContract from '@/lib/contracts/VaultContract'
 import { getEthersSigner } from '@/lib/hooks/useEtherSigner'
 import useProcessing from '@/lib/hooks/useProcessing'
@@ -39,6 +40,7 @@ export default function StakeContainer() {
       onOpenProcessing();
       const vaultContract = new VaultContract(signer);
       const tx = await vaultContract.stakeMutation(amountNum);
+      await addPointApi(tx as string);
       setAmount('');
       await onRefetch();
       await onReFetchVaul();

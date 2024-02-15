@@ -4,7 +4,7 @@ import { setPackageAction } from '@/lib/reduxs/hs-stakings/hs-staking.slices';
 import { PackageType } from '@/lib/reduxs/hs-stakings/hs-staking.type';
 import StakePackage from '@/ui/components/StakePackage'
 import { Flex } from '@chakra-ui/react'
-import React, { useState } from 'react';
+import React from 'react';
 
 const packages = [
   {

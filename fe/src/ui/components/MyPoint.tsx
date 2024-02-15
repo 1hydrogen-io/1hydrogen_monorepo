@@ -1,14 +1,15 @@
+'use client'
 import { Flex, FlexProps, HStack, Image } from '@chakra-ui/react'
 import React from 'react'
 import { MainTitle, TextCus } from './Text'
+import { useAppSelector } from '@/lib/reduxs/hooks';
 
 interface IProps   extends FlexProps {
-  point?: number;
   isLager?: boolean;
 }
 
-export default function MyPoint({point = 0, isLager,  ...props}: IProps) {
-  
+export default function MyPoint({isLager,  ...props}: IProps) {
+    const {balance: {point}} = useAppSelector(p => p.wallet);
   
   if (!isLager) {
     return (
@@ -73,7 +74,7 @@ export default function MyPoint({point = 0, isLager,  ...props}: IProps) {
       {...props}
     >
       <MainTitle fontSize="22px" lineHeight="100%">
-        My hPoints
+        My Points
       </MainTitle>
       <MainTitle fontSize="44px" fontWeight="800" lineHeight="100%">
         {point}

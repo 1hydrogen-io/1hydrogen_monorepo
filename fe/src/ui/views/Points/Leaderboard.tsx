@@ -1,9 +1,27 @@
+'use client'
+import { IWalletPoint, getLeaderboardApi } from '@/lib/apis/account.api';
+import { numberFormat, showSortAddress } from '@/lib/utls';
 import { TextCus } from '@/ui/components/Text';
 import SubText from '@/ui/components/Text/SubText';
 import { Flex, Image } from '@chakra-ui/react'
-import React from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 
 export default function Leaderboard() {
+  const [data, setData] = useState<IWalletPoint[]>([]);
+
+  const onFetchLeaderboard = useCallback(async() => {
+    try {
+      const rs = await getLeaderboardApi();
+      setData(rs)
+    } catch(ex) {
+      setData([])
+    }
+  }, []);
+
+  useEffect(() => {
+    onFetchLeaderboard();
+  }, []);
+
   return (
     <Flex
       w="full"
@@ -24,7 +42,7 @@ export default function Leaderboard() {
           <SubText fontSize="10px">TOTAL</SubText>
         </Flex>
       </Flex>
-      {new Array(7).fill(0).map((_, index) => (
+      {data.map((lead, index) => (
         <Flex justifyContent="space-between" py="22px" key={index}  borderTop='1px solid #56577A'>
           <Flex flex={1} gap="5px" alignItems="center">
             <TextCus fontSize="14px" fontWeight="550">
@@ -34,12 +52,12 @@ export default function Leaderboard() {
           </Flex>
           <Flex flex={1}>
             <TextCus fontSize="14px" fontWeight="550">
-              0x161111111...588F
+              {showSortAddress(lead.address)}
             </TextCus>
           </Flex>
           <Flex flex={1} justifyContent="flex-end">
             <TextCus fontSize="14px" fontWeight="550">
-              903,204.99
+              {numberFormat(lead.point)}
             </TextCus>
           </Flex>
         </Flex>
