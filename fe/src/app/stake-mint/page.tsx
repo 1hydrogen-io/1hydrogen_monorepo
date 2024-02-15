@@ -1,7 +1,5 @@
-import { MyPoint } from '@/ui/components'
 import AppWrapper from '@/ui/components/AppWrapper'
 import ButtonTab from '@/ui/components/ButtonTab'
-import StakeCard from '@/ui/components/StakeCard'
 import CardCus from '@/ui/views/Commons/CardCus'
 import StakedLockedAPR from '@/ui/views/Commons/StakedLockedAPR'
 import MintVaulContainer from '@/ui/views/MintAndStakes/MintVaulContainer'
