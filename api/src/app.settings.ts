@@ -19,9 +19,9 @@ export function setAppSetting(app: INestApplication) {
       'http://localhost:3005',
       'http://localhost:3006',
       'http://localhost:3007',
-      'https://landtorn.com',
+      'https://1hydrogen.io',
 
-      /\.landtorn.com$/
+      /\.1hydrogen.io$/
     ],
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
     preflightContinue: false,
