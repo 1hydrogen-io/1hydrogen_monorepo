@@ -31,8 +31,8 @@ contract Staking is Ownable {
     error InvalidReleaseDate();
     error InvalidIndex();
 
-    event Staked(address staker, uint256 amount);
-    event UnStaked(address staker, uint256 amount);
+    event Staked(address staker, uint256 amount, uint256 package);
+    event UnStaked(address staker, uint256 amount, uint256 package);
 
     constructor(address hsETH) {
         sHsETH = IHsETH(hsETH);
@@ -78,7 +78,7 @@ contract Staking is Ownable {
         sStaker[msg.sender].push(stakeInfor);
         sStakedBalance[msg.sender] += amount;
         sStakedPool[package] += amount;
-        emit Staked(msg.sender, amount);
+        emit Staked(msg.sender, amount, package);
     }
 
     function unStake(uint256 index) public {
@@ -103,14 +103,16 @@ contract Staking is Ownable {
         if (sHsETH.balanceOf(address(this)) < unStakeAmount) {
             revert InsufficientBalance();
         }
+        uint256 package = stakeInfo.package;
 
         stakeInfors[index] = stakeInfors[stakeInfors.length - 1];
         stakeInfors.pop();
         sStakedPool[stakeInfo.package] -= stakeInfo.amount;
+        sStakedBalance[msg.sender] -= stakeInfo.amount;
 
         SafeERC20.safeTransfer(sHsETH, msg.sender, unStakeAmount);
 
-        emit UnStaked(msg.sender, stakeInfo.amount);
+        emit UnStaked(msg.sender, stakeInfo.amount, package);
     }
 
     function stakedBalance(address staker) public view returns (uint256 amount) {
@@ -123,5 +125,13 @@ contract Staking is Ownable {
 
     function poolInfor() public view returns (uint256[4] memory) {
         return sStakedPool;
+    }
+
+    function stakedLength(address staker) public view returns (uint256) {
+        return sStaker[staker].length;
+    }
+
+    function stakedInfors(address staker) public view returns (StakeInfo[] memory) {
+        return sStaker[staker];
     }
 }

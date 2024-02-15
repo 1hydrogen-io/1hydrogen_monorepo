@@ -8,13 +8,20 @@ import "./interfaces/IBlast.sol";
 contract Vault is Ownable {
     IHsETH public sHsETH;
     address public blastYield = 0x4300000000000000000000000000000000000002;
+    uint256 public constant MIN_FEE = 0; //0%
+    uint256 public constant MAX_FEE = 2; //2%
+    uint256 public sFee;
+    uint256 public sTotalStaked;
+    uint256 public sTotalUnStaked;
 
     mapping(address => uint256) sStaker;
     mapping(address => uint256) sBalance;
+    mapping(address => uint256) sUnStaked;
 
     error InvalidAmount();
     error InvalidApprovalAmount();
     error InsufficientBalance();
+    error InvalidFee();
 
     event Staked(address staker, uint256 amount);
     event UnStaked(address staker, uint256 amount);
@@ -23,14 +30,20 @@ contract Vault is Ownable {
     constructor(address hsETH, address owner) {
         _transferOwnership(owner);
         sHsETH = IHsETH(hsETH);
-        //IBlast(blastYield).configureClaimableYield();
+        IBlast(blastYield).configureClaimableYield();
     }
 
     receive() external payable {}
 
+    function setFee(uint256 newFee) public onlyOwner {
+        if (sFee < MIN_FEE && sFee > MAX_FEE) revert InvalidFee();
+        sFee = newFee;
+    }
+
     function stake() public payable {
         sStaker[msg.sender] += msg.value;
         sBalance[msg.sender] += msg.value;
+        sTotalStaked += msg.value;
         emit Staked(msg.sender, msg.value);
     }
 
@@ -41,14 +54,16 @@ contract Vault is Ownable {
             revert InvalidAmount();
         }
         sStaker[msg.sender] -= amount;
-        sBalance[msg.sender] = sBalance[msg.sender] - amount;
+        sUnStaked[msg.sender] += amount;
+        sBalance[msg.sender] = availableAmount - amount;
+        sTotalStaked -= amount;
+        sTotalUnStaked += amount;
         payable(msg.sender).transfer(amount);
         emit UnStaked(msg.sender, amount);
     }
 
     function repayHsEth(uint256 amount) public {
         uint256 amountLeft = sStaker[msg.sender] - sBalance[msg.sender];
-
         if (amount > amountLeft) {
             revert InvalidAmount();
         }
@@ -62,14 +77,17 @@ contract Vault is Ownable {
         }
 
         sHsETH.burnFrom(msg.sender, amount);
-        sBalance[msg.sender] = sBalance[msg.sender] + amount;
-        payable(msg.sender).transfer(amount);
-
+        uint256 amountWithFee = amount - ((amount * sFee) / 100);
+        sBalance[msg.sender] = sBalance[msg.sender] + amountWithFee;
         emit HsETHRepaid(msg.sender, amount);
     }
 
     function stakedBalance(address staker) public view returns (uint256 amount) {
         return sStaker[staker];
+    }
+
+    function unStakedBalance(address staker) public view returns (uint256 amount) {
+        return sUnStaked[staker];
     }
 
     function availableBalance(address staker) public view returns (uint256 amount) {

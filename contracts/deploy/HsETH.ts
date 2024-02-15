@@ -5,7 +5,7 @@ async function main() {
   await initConfig()
   const network = hardhatArguments.network ? hardhatArguments.network : 'dev'
 
-  const hsETH = await ethers.deployContract('LiqETH')
+  const hsETH = await ethers.deployContract('HsETH')
 
   await hsETH.waitForDeployment()
   console.log(`hsETH with address: ${await hsETH.getAddress()}`)
