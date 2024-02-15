@@ -8,7 +8,14 @@ import { getWalletPointApi } from "@/lib/apis/account.api";
 export const default_balance: IWalletBalance = {
   eth: 0,
   hsEth: 0,
-  point: 0,
+  point: {
+    address: "",
+    supplyPoint: 0,
+    stakingPoint: 0,
+    point: 0,
+    updatedTime: "",
+    latestTx: ""
+  },
 }
 
 export const fetchWalletBalanceAction = createAsyncThunk<IWalletBalance, void>("wallet/fetchWalletBalanceAction",async () => {
@@ -24,7 +31,7 @@ export const fetchWalletBalanceAction = createAsyncThunk<IWalletBalance, void>("
   return {
     eth: toNumberBalance(ethBalance),
     hsEth: hsBalance,
-    point: yourPoint.point
+    point: yourPoint
   };
  } catch(ex) {
     return default_balance;

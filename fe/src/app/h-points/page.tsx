@@ -9,6 +9,7 @@ import SubText from '@/ui/components/Text/SubText'
 import HowToEarnPoints from '@/ui/views/Commons/HowToEarnPoints'
 import AvatarCard from '@/ui/views/Points/AvatarCard'
 import Leaderboard from '@/ui/views/Points/Leaderboard'
+import StatPointContainer from '@/ui/views/Points/StatPointContainer'
 import { Flex, Image, VStack } from '@chakra-ui/react'
 import React from 'react'
 
@@ -17,50 +18,9 @@ export default function HPoints() {
     <AppWrapper gap="20px" wrapStyle={{ mb: 200, mt: '24px' }}>
       <Flex w="full" flexDirection="row" gap="24px">
         <MyPoint isLager />
-     
-        <Flex flexDirection="column" w="222px" gap="24px">
-          <Flex
-            w="full"
-            h="226px"
-            bg={liner_bg}
-            borderRadius="20px"
-            p="20px 24px"
-            flexDir="column"
-            justifyContent="space-between"
-          >
-            <LabelValueColumn
-              label={"Supply points"}
-              labelFontSize="12px"
-              value={"131290"}
-            />
-            <LabelValueColumn
-              label={"Borrow points"}
-              labelFontSize="12px"
-              value={"131290"}
-            />
-            <LabelValueColumn
-              label={"Staking points"}
-              labelFontSize="12px"
-              value={"131290"}
-            />
-          </Flex>
 
-          <Flex
-            w="full"
-            h="80px"
-            bg={liner_bg}
-            borderRadius="20px"
-            p="20px 24px"
-            justifyContent="space-between"
-          >
-            <LabelValueColumn
-              labelFontSize="12px"
-              label={"Daily points"}
-              value={"131290"}
-            />
-            <ButtonCustom h="35px">CLAIM</ButtonCustom>
-          </Flex>
-        </Flex>
+        <StatPointContainer />
+
         <Flex
           flexDirection="column"
           w="222px"
