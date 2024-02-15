@@ -25,10 +25,9 @@ export default function HeaderSession() {
         <Spacer />
         <ButtonCustom w='239px' h='45px' onClick={onOpenWalletModal}>CONNECT WALLET</ButtonCustom>
       </Flex>
-
+      
       <Flex
         w="410px"
-        flex={1}
         bgImage="/headers/icon.png"
         bgSize="contain"
         bgPosition="center"

@@ -50,7 +50,9 @@ export default function MintButton() {
       const hsEthStakingContract = new HsEthStakingContract(signer);
       await hsEthContract.approve(hsEthStakingContract._contractAddress, amount)
       const tx = await hsEthStakingContract.stake(packageSelected, amount);
-      await addPointApi(tx as string);
+      try {
+        await addPointApi(tx as string);
+      } catch {}
       await dispatch(fetchWalletInfoGlobalAction()).unwrap();
       toast(getToast(`Stake successfully `, 'success', 'Stake HsEth'))
       dispatch(resetUserValue());

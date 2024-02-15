@@ -40,7 +40,9 @@ export default function StakeContainer() {
       onOpenProcessing();
       const vaultContract = new VaultContract(signer);
       const tx = await vaultContract.stakeMutation(amountNum);
-      await addPointApi(tx as string);
+      try {
+        await addPointApi(tx as string);
+      } catch {}
       setAmount('');
       await onRefetch();
       await onReFetchVaul();
