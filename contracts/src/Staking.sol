@@ -60,9 +60,9 @@ contract Staking is Ownable {
         if (package == 1) {
             return 30;
         } else if (package == 2) {
-            return 60;
-        } else if (package == 3) {
             return 90;
+        } else if (package == 3) {
+            return 180;
         } else return 0;
     }
 
