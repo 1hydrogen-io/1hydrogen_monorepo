@@ -22,7 +22,7 @@ export default function UnstackContainer() {
   const {onErrorToast, onSuccessToast} = useToastCustom();
   const {onRefetch, onReFetchVaul} = useRefetchBalance();
   const [amount, setAmount] = useState<string>('');
-  
+
   const isLocked = useMemo(() => {
     if (!isConnected) return true;
     if (!vaulStaked.availableBalance) return true;
@@ -42,7 +42,7 @@ export default function UnstackContainer() {
       return onErrorToast('Invalid amount.')
     }
     try {
-      onOpenProcessing();
+      onOpenProcessing('UNSTAKE');
       const vaultContract = new VaultContract(signer);
       const tx = await vaultContract.unStakeMutation(amountNum);
       setAmount('');
@@ -54,7 +54,6 @@ export default function UnstackContainer() {
     }
     onCloseProcessing();
   }
-
 
   return (
     <Flex w="full" justifyContent="space-between" flexDirection="column">

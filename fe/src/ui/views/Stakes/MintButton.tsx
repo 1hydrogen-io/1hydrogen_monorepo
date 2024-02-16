@@ -43,7 +43,7 @@ export default function MintButton() {
       toast(getToast(`Invalid amount`));
       return;
     }
-    onOpenProcessing();
+    onOpenProcessing('STAKING_HS_ETH');
     onOpen();
     try {
       const hsEthContract = new HsEthContract(signer);

@@ -39,7 +39,7 @@ export default function MintVaulContainer() {
         return onErrorToast('Invalid amount');
       const signer = await getEthersSigner();
       if (!signer) return;
-      onOpenProcessing();
+      onOpenProcessing('MINT');
       const vaulContract = new VaultContract(signer);
       const tx = await vaulContract.claimHsEthMutation(amountNumber);
       await onReFetchVaul();

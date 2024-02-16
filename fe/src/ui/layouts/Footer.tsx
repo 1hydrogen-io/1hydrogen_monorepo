@@ -80,12 +80,12 @@ export default function Footer() {
       <VStack pt="206px" pb="80px" w="full">
         <Flex>
           {menus.map((menu) => (
-            <MenuItem lable={menu.lable} url={menu.url} />
+            <MenuItem key={JSON.stringify(menu)} lable={menu.lable} url={menu.url} />
           ))}
         </Flex>
         <Flex gap="18px" justifyContent="center" mt="21px" mb="27px">
           {["facebook", "github", "instagram", "twitter"].map((so, index) => (
-            <Link href="#" target="_blank">
+            <Link href="#" target="_blank" key={so}>
               <Image src={`/socials/${so}.svg`} alt={so} />
             </Link>
           ))}

@@ -51,7 +51,7 @@ export default function RepayContainer() {
       return onErrorToast('Invalid amount.')
     }
     try {
-      onOpenProcessing();
+      onOpenProcessing('REPAY');
       const vaultContract = new VaultContract(signer);
       const hsEthContract = new HsEthContract(signer);
       await hsEthContract.approve(vaultContract._contractAddress, amountNum);

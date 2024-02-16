@@ -38,7 +38,7 @@ export default function StakeContainer() {
       return onErrorToast('Invalid amount.')
     }
     try {
-      onOpenProcessing('MINT');
+      onOpenProcessing('STAKE');
       const vaultContract = new VaultContract(signer);
       const tx = await vaultContract.stakeMutation(amountNum);
       try {
