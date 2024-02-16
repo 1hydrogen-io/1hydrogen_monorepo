@@ -1,9 +1,9 @@
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
-import { getPackageAction } from "../hs-stakings/hs-staking.actions";
 
 interface GlobalState {
   isProcessing?: boolean;
   ethPrice: number;
+  processName?: string;
 }
 
 const initialState: GlobalState = {
@@ -18,6 +18,9 @@ export const globalSlice = createSlice({
     setProcessingAction: (state, { payload }: PayloadAction<boolean | undefined>) => {
       state.isProcessing = payload;
     },
+    setProcessNameAction: (state, {payload}: PayloadAction<string | undefined>) => {
+      state.processName = payload;
+    }
   }
 });
 
@@ -25,4 +28,5 @@ export default globalSlice.reducer;
 
 export const { 
   setProcessingAction,
+  setProcessNameAction,
 } = globalSlice.actions;

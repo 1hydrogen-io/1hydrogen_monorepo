@@ -18,7 +18,7 @@ export default function RePayUnStake() {
         </Flex>
 
         <CardCus gap="40px">
-          <StakedLockedAPR isShow />
+          <StakedLockedAPR  isShowPoint/>
           <StakeContainer />
           <MintVaulContainer />
          

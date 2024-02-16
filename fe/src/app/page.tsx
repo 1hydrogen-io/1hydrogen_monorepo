@@ -1,19 +1,24 @@
-import AppWrapper from "@/ui/components/AppWrapper";
-import SideBarMenu from "@/ui/views/Commons/SideBarMenu";
-import StakeContainer from "@/ui/views/Stakes/StakeContainer";
-import StakeInfoContainer from "@/ui/views/Stakes/StakeInfoContainer";
-import { Flex } from "@chakra-ui/react";
+import AppWrapper from '@/ui/components/AppWrapper'
+import HowToEarnPoints from '@/ui/views/Commons/HowToEarnPoints'
+import HeaderSession from '@/ui/views/Landings/HeaderSession'
+import WhyHydrogen from '@/ui/views/Landings/WhyHydrogen'
+import { Flex } from '@chakra-ui/react'
+import React from 'react'
 
-
-export default function Home() {
- 
+export default function LandingPage() {
   return (
-    <AppWrapper gap="20px">
-      <Flex w="full" gap="25px" mt="35px">
-        <SideBarMenu />
-        <StakeContainer />
-        <StakeInfoContainer />
-      </Flex>
+    <AppWrapper
+      gap='50px'
+    >
+      <HeaderSession />
+      <Flex w='full' h='206px'
+        bgImage='/task-graph.png'
+        bgRepeat='no-repeat'
+        bgSize='cover'
+        mt='50px'
+      />
+      <WhyHydrogen />
+      <HowToEarnPoints />
     </AppWrapper>
-  );
+  )
 }

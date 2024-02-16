@@ -10,7 +10,7 @@ export default function LayoutBackground({children, ...props}: IProps) {
   
   const pathname = usePathname()
   const getBackgroundImage = useMemo(() => {
-    if (pathname === '/landing') return '/bg-1.png';
+    if (pathname === '/') return '/bg-1.png';
     return '/bg.png';
   }, [pathname]);  
 

@@ -1,5 +1,5 @@
 'use client'
-import React from 'react'
+import React, { useMemo } from 'react'
 import AppWrapper from '../components/AppWrapper'
 import { Accordion, AccordionButton, AccordionItem, AccordionPanel, Flex, Image, VStack } from '@chakra-ui/react'
 import { footerData, menus } from '@/lib/constans'
@@ -8,10 +8,20 @@ import SubText from '../components/Text/SubText'
 import { motion } from 'framer-motion'
 import Link from 'next/link'
 import MenuItem from '../components/MenuItem'
+import { usePathname } from 'next/navigation'
 
 const ImageMotion = motion(Image);
 
 export default function Footer() {
+
+  const pathname = usePathname();
+  
+  const dataRender = useMemo(() => {
+    if (pathname !== '/h-points') return footerData;
+    return footerData.filter((p) => !Boolean(p.link));
+  }, [pathname]);
+
+
   return (
     <>
       <AppWrapper
@@ -29,13 +39,13 @@ export default function Footer() {
         <SubText color="white" fontSize="14px" fontWeight="450">
           I'm not trying my hardest, and I'm not trying to do
         </SubText>
-        <Accordion mt="48px" gap="24px" allowMultiple defaultIndex={0}>
-          {footerData.map((item) => (
+        <Accordion w='full' mt="48px" gap="24px" allowMultiple defaultIndex={0}>
+          {dataRender.map((item) => (
             <AccordionItem border="none" key={item.title}>
               {({ isExpanded }) => (
                 <Flex w="full" flexDirection="column">
                   <AccordionButton>
-                    <Flex w="full" justifyContent="space-between">
+                    <Flex w="full" justifyContent="space-between" alignItems='center' pt='10px'>
                       <MainTitle fontSize="16px">{item.title}</MainTitle>
                       <ImageMotion
                         src="/arrow-up.svg"
@@ -54,6 +64,11 @@ export default function Footer() {
                   />
                   <AccordionPanel>
                     <SubText>{item.des}</SubText>
+                    {Boolean(item.link) && <Link href={item.link}>
+                      <SubText color='white'>
+                        {item.link}
+                        </SubText>
+                    </Link>}
                   </AccordionPanel>
                 </Flex>
               )}
@@ -62,7 +77,7 @@ export default function Footer() {
         </Accordion>
       </AppWrapper>
 
-      <VStack pt="206px" pb="80px" w='full'>
+      <VStack pt="206px" pb="80px" w="full">
         <Flex>
           {menus.map((menu) => (
             <MenuItem lable={menu.lable} url={menu.url} />

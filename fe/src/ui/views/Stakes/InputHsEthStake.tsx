@@ -1,6 +1,7 @@
 'use client'
 import { useAppDispatch, useAppSelector } from '@/lib/reduxs/hooks'
 import { setHsEthAmountAction } from '@/lib/reduxs/hs-stakings/hs-staking.slices'
+import { subtract } from '@/lib/utls/numberHelper'
 import ButtonCustom from '@/ui/components/ButtonCustom'
 import InputCustom from '@/ui/components/InputCustom'
 import { Flex } from '@chakra-ui/react'
@@ -12,6 +13,8 @@ export default function InputHsEthStake() {
   const {balance} = useAppSelector(p => p.wallet);
 
   const handleChange = (val: string) => {
+    const amount = Number(val);
+    if(subtract(balance.hsEth, amount) < 0) return;
     dispatch(setHsEthAmountAction(val));
   }
   

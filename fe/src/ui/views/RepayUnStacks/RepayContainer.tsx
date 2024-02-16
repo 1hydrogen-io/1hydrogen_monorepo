@@ -7,6 +7,7 @@ import useRefetchBalance from '@/lib/hooks/useRefetchBalance'
 import useToastCustom from '@/lib/hooks/useToastCustom'
 import { useAppSelector } from '@/lib/reduxs/hooks'
 import { numberFormat1 } from '@/lib/utls'
+import { subtract } from '@/lib/utls/numberHelper'
 import { LabelValueItem } from '@/ui/components'
 import ButtonCustom from '@/ui/components/ButtonCustom'
 import InputCustom from '@/ui/components/InputCustom'
@@ -24,11 +25,17 @@ export default function RepayContainer() {
   const [amount, setAmount] = useState<string>('');
 
   const availableRepay = useMemo(() => {
-    return vaulStaked.stakedBalance -  vaulStaked.availableBalance;
+    return subtract(vaulStaked.stakedBalance, vaulStaked.availableBalance);
   }, [vaulStaked]);
+
+  const isLocked = useMemo(() => {
+    if (!isConnected) return true;
+    if (availableRepay <= 0) return true;
+    return false;
+  }, [availableRepay, isConnected]);
   
   const onAmountChange = (val: string) => {
-    if ((availableRepay - Number(val) ) <= 0) return;
+    if (subtract(availableRepay, Number(val)) < 0) return;
     setAmount(val)
   }
 
@@ -48,7 +55,7 @@ export default function RepayContainer() {
       const vaultContract = new VaultContract(signer);
       const hsEthContract = new HsEthContract(signer);
       await hsEthContract.approve(vaultContract._contractAddress, amountNum);
-      const tx = await vaultContract.unStakeMutation(amountNum);
+      const tx = await vaultContract.repayHsEthMutation(amountNum);
       setAmount('');
       await onRefetch();
       await onReFetchVaul();
@@ -110,6 +117,7 @@ export default function RepayContainer() {
         onClick={onHandleRepay}
         isLoading={isProcessing}
         disable={!isConnected || isProcessing}
+        isLock={isLocked}
       >
         REPAY
       </ButtonCustom>

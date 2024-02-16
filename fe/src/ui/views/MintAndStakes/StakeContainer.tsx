@@ -7,12 +7,13 @@ import useRefetchBalance from '@/lib/hooks/useRefetchBalance'
 import useToastCustom from '@/lib/hooks/useToastCustom'
 import { useAppSelector } from '@/lib/reduxs/hooks'
 import { balanceFormat, numberFormat, numberFormat1 } from '@/lib/utls'
+import { subtract } from '@/lib/utls/numberHelper'
 import { LabelValueItem } from '@/ui/components'
 import ButtonCustom from '@/ui/components/ButtonCustom'
 import InputCustom from '@/ui/components/InputCustom'
 import { TextCus } from '@/ui/components/Text'
 import { Flex, useToast } from '@chakra-ui/react'
-import React, { useState } from 'react'
+import React, { useMemo, useState } from 'react'
 import { useAccount } from 'wagmi'
 
 export default function StakeContainer() {
@@ -23,9 +24,9 @@ export default function StakeContainer() {
   const {onRefetch, onReFetchVaul} = useRefetchBalance();
 
   const [amount, setAmount] = useState<string>('');
-  
+
   const onAmountChange = (val: string) => {
-    if ((balance.eth - Number(val) ) <= 0) return;
+    if (subtract(balance.eth, Number(val) ) < 0) return;
     setAmount(val)
   }
 
@@ -37,7 +38,7 @@ export default function StakeContainer() {
       return onErrorToast('Invalid amount.')
     }
     try {
-      onOpenProcessing();
+      onOpenProcessing('MINT');
       const vaultContract = new VaultContract(signer);
       const tx = await vaultContract.stakeMutation(amountNum);
       try {
@@ -52,6 +53,12 @@ export default function StakeContainer() {
     }
     onCloseProcessing();
   }
+
+  const isLocked = useMemo(() => {
+    if (!isConnected) return true;
+    if (!balance.eth) return true;
+    return false;
+  }, [isConnected, balance]);
 
 
   return (
@@ -77,6 +84,7 @@ export default function StakeContainer() {
         onClick={onHandleStake}
         isLoading={isProcessing}
         disable={!isConnected || isProcessing}
+        isLock={isLocked}
       >STAKE</ButtonCustom>
     </Flex>
   );

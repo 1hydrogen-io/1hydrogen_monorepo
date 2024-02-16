@@ -6,12 +6,13 @@ import useRefetchBalance from '@/lib/hooks/useRefetchBalance'
 import useToastCustom from '@/lib/hooks/useToastCustom'
 import { useAppSelector } from '@/lib/reduxs/hooks'
 import { numberFormat } from '@/lib/utls'
+import { subtract } from '@/lib/utls/numberHelper'
 import { LabelValueItem } from '@/ui/components'
 import ButtonCustom from '@/ui/components/ButtonCustom'
 import InputCustom from '@/ui/components/InputCustom'
 import { TextCus } from '@/ui/components/Text'
 import { Flex } from '@chakra-ui/react'
-import React, { useState } from 'react'
+import React, { useMemo, useState } from 'react'
 import { useAccount } from 'wagmi'
 
 export default function UnstackContainer() {
@@ -22,8 +23,14 @@ export default function UnstackContainer() {
   const {onRefetch, onReFetchVaul} = useRefetchBalance();
   const [amount, setAmount] = useState<string>('');
   
+  const isLocked = useMemo(() => {
+    if (!isConnected) return true;
+    if (!vaulStaked.availableBalance) return true;
+    return false;
+  }, [isConnected, vaulStaked]);
+
   const onAmountChange = (val: string) => {
-    if ((vaulStaked.availableBalance - Number(val) ) <= 0) return;
+    if (subtract(vaulStaked.availableBalance, Number(val) ) < 0) return;
     setAmount(val)
   }
 
@@ -72,6 +79,7 @@ export default function UnstackContainer() {
         onClick={onHandleUnStake}
         isLoading={isProcessing}
         disable={!isConnected || isProcessing}
+        isLock={isLocked}
       >UNSTAKE</ButtonCustom>
     </Flex>
   );

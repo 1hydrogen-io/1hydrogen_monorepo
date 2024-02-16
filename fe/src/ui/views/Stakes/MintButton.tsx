@@ -64,7 +64,8 @@ export default function MintButton() {
   }
 
   return (
-    <ButtonCustom w="full" isLoading={isLoading} onClick={handleClick}>
+    <ButtonCustom w="full" isLoading={isLoading}
+      onClick={handleClick}>
       {title}
     </ButtonCustom>
   );

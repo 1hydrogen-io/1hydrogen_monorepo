@@ -6,13 +6,14 @@ import useProcessing from '@/lib/hooks/useProcessing'
 import useRefetchBalance from '@/lib/hooks/useRefetchBalance'
 import useToastCustom from '@/lib/hooks/useToastCustom'
 import { useAppSelector } from '@/lib/reduxs/hooks'
-import { numberFormat1 } from '@/lib/utls'
+import { numberFormat, numberFormat1 } from '@/lib/utls'
+import { subtract } from '@/lib/utls/numberHelper'
 import { LabelValueItem } from '@/ui/components'
 import ButtonCustom from '@/ui/components/ButtonCustom'
 import InputCustom from '@/ui/components/InputCustom'
 import { TextCus } from '@/ui/components/Text'
 import { Flex } from '@chakra-ui/react'
-import React, { useState } from 'react'
+import React, { useMemo, useState } from 'react'
 import { useAccount } from 'wagmi'
 
 export default function MintVaulContainer() {
@@ -25,8 +26,9 @@ export default function MintVaulContainer() {
   const [amount, setAmount] = useState<string>();
 
   const onHandleAmountChange = (val: string) => {
-    const amountNumber = Number(amount);
-    if ((vaulStaked.availableBalance - amountNumber) < 0) return;
+    const amountNumber = Number(val);
+    const result = subtract(vaulStaked.availableBalance, amountNumber);
+    if (result < 0) return;
     setAmount(val);
   }
 
@@ -35,10 +37,8 @@ export default function MintVaulContainer() {
       const amountNumber = Number(amount);
       if (!amountNumber)
         return onErrorToast('Invalid amount');
-      
       const signer = await getEthersSigner();
       if (!signer) return;
-
       onOpenProcessing();
       const vaulContract = new VaultContract(signer);
       const tx = await vaulContract.claimHsEthMutation(amountNumber);
@@ -51,6 +51,13 @@ export default function MintVaulContainer() {
     }
     onCloseProcessing();
   }
+
+  const isLocked = useMemo(() => {
+    if (!isConnected) return true;
+    if (vaulStaked.stakedBalance <= 0) return true;
+    if (vaulStaked.availableBalance <= 0) return true;
+    return false;
+  }, [isConnected, vaulStaked]);
 
   return (
     <Flex
@@ -71,21 +78,21 @@ export default function MintVaulContainer() {
       />
       <LabelValueItem
         label={"Staked ETH"}
-        value={`${numberFormat1(vaulStaked.stakedBalance)} ETH`}
+        value={`${numberFormat(vaulStaked.stakedBalance)} ETH`}
       />
       <LabelValueItem
         label={"Available amount to mint"}
-        value={`${numberFormat1(vaulStaked.availableBalance)} ETH`}
+        value={`${numberFormat(vaulStaked.availableBalance)} ETH`}
       />
       <LabelValueItem
         label={"Staked ETH Locked"}
-        value={`${numberFormat1(
+        value={`${numberFormat(
           vaulStaked.stakedBalance - vaulStaked.availableBalance
         )} ETH`}
       />
       <LabelValueItem
         label={"Minted hsETH"}
-        value={`${numberFormat1(
+        value={`${numberFormat(
           vaulStaked.stakedBalance - vaulStaked.availableBalance
         )} ETH`}
       />
@@ -94,6 +101,7 @@ export default function MintVaulContainer() {
         isLoading={isProcessing}
         onClick={onMint}
         disable={!isConnected}
+        isLock={isLocked}
       >
         MINT
       </ButtonCustom>

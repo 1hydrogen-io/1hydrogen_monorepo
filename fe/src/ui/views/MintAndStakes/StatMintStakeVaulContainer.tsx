@@ -11,18 +11,18 @@ import TotalHsEthStakedAndLocked from '../Commons/TotalHsEthStakedAndLocked'
 export default function StatMintStakeVaulContainer() {
   const {sTotalStaked} = useAppSelector(p => p.vaul);
   const {ethUsdt} = useBaseEthContract();
-  const {totalHsEthLocked, totalHsEthStaked} = useAppSelector(p => p.hsStake);
+  useAppSelector(p => p.hsStake);
 
   return (
     <Flex flexDirection="column" w="full" gap="25px">
-          <MyPoint />
-          <StakeCard
-            subLabel={"Total ETH Staked:"}
-            value={sTotalStaked}
-            percent=""
-            totalVal={`$${balanceFormatWithPrefix(sTotalStaked * ethUsdt)}`}
-          />
-          <TotalHsEthStakedAndLocked />
-        </Flex>
+      <MyPoint />
+      <StakeCard
+        subLabel={"Total ETH Staked:"}
+        value={sTotalStaked}
+        percent=""
+        totalVal={`$${balanceFormatWithPrefix(sTotalStaked * ethUsdt)}`}
+      />
+      <TotalHsEthStakedAndLocked />
+    </Flex>
   )
 }

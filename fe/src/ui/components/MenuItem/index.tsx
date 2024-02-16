@@ -1,6 +1,6 @@
 'use client'
-import { colors, plus_jakarta_san } from '@/themes';
-import { Flex, FlexProps } from '@chakra-ui/react'
+import { plus_jakarta_san } from '@/themes';
+import { Flex } from '@chakra-ui/react'
 import React, { useMemo } from 'react'
 
 import { usePathname } from 'next/navigation'
