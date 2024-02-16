@@ -1,9 +1,11 @@
 'use client'
+import { getToast } from '@/lib/utls';
 import ButtonTab from '@/ui/components/ButtonTab'
-import { Flex } from '@chakra-ui/react'
+import { Flex, useToast } from '@chakra-ui/react'
 import React, { useState } from 'react'
 
 export default function SideBarMenu() {
+  const toast = useToast();
   const [active, setActive] = useState<string>('eth');
   return (
     <Flex gap="8px" flexDirection="column">
@@ -15,9 +17,9 @@ export default function SideBarMenu() {
       />
       <ButtonTab
         img="/coins/usdb.svg"
-        title="hsETH"
+        title="hsUSDB"
         active={active === "usdb"}
-        onClick={() => setActive("usdb")}
+        onClick={() => toast(getToast('Coming soon', 'warning', 'Oh!'))}
       />
     </Flex>
   );

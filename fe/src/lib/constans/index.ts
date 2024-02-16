@@ -1,7 +1,7 @@
 export const menus = [
   {lable: 'STAKE & MINT', url: '/stake-mint'},
   {lable: 'REPAY & UNSTAKE', url: '/repay-unstake'},
-  {lable: 'hsETH STAKING', url: '/'},
+  {lable: 'hsETH STAKING', url: '/hseth-staking'},
   {lable: 'hPOINTS', url: '/h-points'},
 
 ]
@@ -19,9 +19,12 @@ export const parseNumber = (val: string) => val.replace(/^\$/, '')
 
 
 export const footerData = [
-  {title: 'How do I order?', des: 'We’re not always in the position that we want to be at. We’re constantly growing. We’re constantly making mistakes. We’re constantly trying to express ourselves and actualize our dreams. If you have the opportunity to play this game of life you need to appreciate every moment. A lot of people don’t appreciate the moment until it’s passed.'},
-  {title: 'How can I make the payment?', des: 'We’re not always in the position that we want to be at. We’re constantly growing. We’re constantly making mistakes. We’re constantly trying to express ourselves and actualize our dreams. If you have the opportunity to play this game of life you need to appreciate every moment. A lot of people don’t appreciate the moment until it’s passed.'},
-  {title: 'How much time does it take to receive the order?', des: 'We’re not always in the position that we want to be at. We’re constantly growing. We’re constantly making mistakes. We’re constantly trying to express ourselves and actualize our dreams. If you have the opportunity to play this game of life you need to appreciate every moment. A lot of people don’t appreciate the moment until it’s passed.'},
-  {title: 'Can I resell the products?', des: 'We’re not always in the position that we want to be at. We’re constantly growing. We’re constantly making mistakes. We’re constantly trying to express ourselves and actualize our dreams. If you have the opportunity to play this game of life you need to appreciate every moment. A lot of people don’t appreciate the moment until it’s passed.'},
-  {title: 'Where do I find the shipping details?', des: 'We’re not always in the position that we want to be at. We’re constantly growing. We’re constantly making mistakes. We’re constantly trying to express ourselves and actualize our dreams. If you have the opportunity to play this game of life you need to appreciate every moment. A lot of people don’t appreciate the moment until it’s passed.'},
+  {title: 'What is Hydrogen?', des: '=Hydrogen Protocol is the first liquid staking solution on Blast, powered by native yield functionality, and innovating the LSDfi space via integrating DAPP staking as collateral for LSD mint. For a detailed explanation of how Hydrogen works, please refer to (gitbook link).', link: ''},
+  {title: 'What are hPoints?', des: `hPoints are used for the upcoming airdrop of Hydrogen Protocol native token $HH.
+  You can earn hPoints by doing the following actions - Supplying ETH/USDB, Staking and Locking hsETH/hsUSDB. For a detailed explanation of how hPoints are calculated, please refer to `, link: 'https://1hydrogen.io/h-points'},
+  {title: 'What is hsETH/hsUSDB?', des: `hsETH is a Liquid Staking Token that you can mint after staking any amount of ETH on Hydrogen Protocol with a 1:1 ratio. For example, if you stake 1 ETH, you can mint 1hsETH. Same process can be completed with USDB.`, link: ''},
+  {title: 'What is Liquid Staking?', des:`Liquid staking enables users to stake their native tokens without the need to lock them up for a specific period of time. This is accomplished by providing users with a liquid token in exchange for their staked tokens. The liquid token can then be used in various DeFi applications, including lending and borrowing. When users want to withdraw their tokens instantly, they can do so by swapping the liquid token for the native token on a decentralized exchange (DEX).`, link:''},
+  {title: 'Why is Hydrogen on Blast?', des:`We've decided to build on Blast, because it has proven to be a liquidity blackhole with $1.5B bridged and it offers an interesting opportunity to innovate on the LSDfi concept via native yield.`, link:''},
+  // {title: 'What is hsETH/hsUSDB?', des:`hsETH is a Liquid Staking Token that you can mint after staking any amount of ETH on Hydrogen Protocol with a 1:1 ratio. For example, if you stake 1 ETH, you can mint 1hsETH. Same process can be completed with USDB.`, link:''},
+  {title: 'Are there any costs to use Hydrogen Protocol?', des:`The only cost you will incur using Hydrogen Protocol is the cost of gas fees from Blast Blockchain. Using DAPPxLSD, minting hsETH/hsUSDB tokens via staking on other platforms will have a small fee in the future.`, link:''},
 ]

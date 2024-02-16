@@ -1,7 +1,7 @@
 
 import { providers, utils } from "ethers";
 import { UseToastOptions } from '@chakra-ui/react';
-import moment from 'moment';
+import moment, { isDate } from 'moment';
 export * as rem from './remCalc';
 
 const DATE_TIME_FORMAT = 'DD/MM/YYYY HH:mm:ss';
@@ -31,7 +31,11 @@ export const numberFormat1 = (number: number | string) => {
 }
 
 
-export const numberFormat = (number: number | string) =>Number(number).toFixed(2);
+export const numberFormat = (number: number | string) => {
+  const valNum = Number(number);
+  if (!valNum || valNum === 0) return '0';
+  return Number(number).toFixed(4);
+}
 
 
 export const getToast = (description: string, status: UseToastOptions["status"] = 'error', title = 'Error'): UseToastOptions => {
@@ -51,7 +55,7 @@ export const endDate = (date: Date, days: number) => {
  return moment(date).add(days, 'days').format(DATE_TIME_FORMAT);
 }
 
-export function isAfter(dateNum: number): boolean {
+export function isDateAfter(dateNum: number): boolean {
   const currentDate = moment();
   const date = moment.unix(dateNum);  
   return date.isAfter(currentDate);
@@ -74,7 +78,8 @@ export function getDaysFromCurrent(dateNum: number): string {
   return '0';
 }
 
-export const getDays = (dateNum: number) => {
+export const getDays = (dateNum: number, defaultReturn?: string) => {
+  if (!isDateAfter(dateNum)) return defaultReturn || 0;
   const today  = new Date();
   const toDate = new Date(dateNum * 1000);
   const diffTime = Math.abs(toDate.valueOf() - today.valueOf());
@@ -110,8 +115,6 @@ export function parseBalance(balanceWei: number | string, decimals = 18) {
   return parseFloat(`${beforeDecimal}.${afterDecimal}`)
 }
 
-
-
 export const getEthBalance = async(walletAddress: string) => {
   const provider = new providers.JsonRpcProvider('https://rpc.ankr.com/blast_testnet_sepolia');
   const wei = await provider.getBalance(walletAddress);
@@ -120,3 +123,30 @@ export const getEthBalance = async(walletAddress: string) => {
 }
 
 export const parseNumber = (val: string) => val.replace(/^\$/, '')
+
+export const balanceFormat = (balance: number) => {
+  return numberFormat(balance.toFixed(1))
+}
+
+export const balanceFormatWithPrefix = (num: number): string => {
+  num = parseFloat(num.toString().replace(/[^0-9.]/g, ''));
+  if (num < 1000) {
+      return balanceFormat(num);
+  }
+  const si = [
+      { v: 1E3, s: "K" },
+      { v: 1E6, s: "M" },
+      { v: 1E9, s: "B" },
+      { v: 1E12, s: "T" },
+      { v: 1E15, s: "P" },
+      { v: 1E18, s: "E" }
+  ];
+
+  let index: number;
+  for (index = si.length - 1; index > 0; index--) {
+      if (num >= si[index].v) {
+          break;
+      }
+  }
+  return `${(num / si[index].v).toFixed(2).replace(/\.0+$|(\.[0-9]*[1-9])0+$/, "$1") + si[index].s}`;
+};

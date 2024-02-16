@@ -1,3 +1,5 @@
+import { BigNumber, ethers } from "ethers";
+
 export type AddressType  = {
   97: string;
   56: string;
@@ -13,7 +15,6 @@ export default function getChainIdFromEnv(): number {
   if (!env) { return 97;}
   return parseInt(env);
 }
-
 
 export const getRPC = () => {
   if (getChainIdFromEnv() === CHAIN_ID.MAINNET)
@@ -41,3 +42,13 @@ export function fromStructToObject<T extends object>(struct : [] & T) : T{
   }
   return struct;
 }
+
+export const toNumberBalance = (bigNumber: BigNumber, decimal?: number) => {
+  try {
+    const strVal =  ethers.utils.formatUnits(bigNumber, decimal || 18);
+    return Number.parseFloat(strVal);
+  } catch (er) {
+    const strVal =  ethers.utils.formatUnits(bigNumber, decimal || 18);
+    return Number.parseFloat(strVal);
+  }
+};
