@@ -6,7 +6,7 @@ import useProcessing from '@/lib/hooks/useProcessing'
 import useRefetchBalance from '@/lib/hooks/useRefetchBalance'
 import useToastCustom from '@/lib/hooks/useToastCustom'
 import { useAppSelector } from '@/lib/reduxs/hooks'
-import { numberFormat1 } from '@/lib/utls'
+import { numberFormat, numberFormat1 } from '@/lib/utls'
 import { subtract } from '@/lib/utls/numberHelper'
 import { LabelValueItem } from '@/ui/components'
 import ButtonCustom from '@/ui/components/ButtonCustom'
@@ -89,25 +89,25 @@ export default function RepayContainer() {
       </Flex>
       <LabelValueItem
         label={"Total Value to be Repaid for full unlock"}
-        value={`${numberFormat1(
+        value={`${numberFormat(
           vaulStaked.stakedBalance - vaulStaked.availableBalance
         )} ETH`}
       />
 
       <LabelValueItem
         label={"Available hsETH"}
-        value={`${numberFormat1(
+        value={`${numberFormat(
           vaulStaked.stakedBalance - vaulStaked.availableBalance
         )} ETH`}
       />
       <LabelValueItem
         label={"Available ETH"}
-        value={numberFormat1(vaulStaked.availableBalance)}
+        value={numberFormat(vaulStaked.availableBalance)}
       />
       <LabelValueItem label={"Available USDB"} value={"--- USDB"} />
       <LabelValueItem
         label={"Stake ETH Locked"}
-        value={`${numberFormat1(
+        value={`${numberFormat(
           vaulStaked.stakedBalance - vaulStaked.availableBalance
         )} ETH`}
       />

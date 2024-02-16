@@ -31,7 +31,11 @@ export const numberFormat1 = (number: number | string) => {
 }
 
 
-export const numberFormat = (number: number | string) =>Number(number).toFixed(4);
+export const numberFormat = (number: number | string) => {
+  const valNum = Number(number);
+  if (!valNum || valNum === 0) return '0';
+  return Number(number).toFixed(4);
+}
 
 
 export const getToast = (description: string, status: UseToastOptions["status"] = 'error', title = 'Error'): UseToastOptions => {
