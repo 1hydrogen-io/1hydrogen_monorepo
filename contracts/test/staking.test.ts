@@ -7,13 +7,12 @@ describe('Staking deploy', function () {
   async function deployFixture() {
     const [deployer, otherAccount, player2] = await ethers.getSigners()
 
-    const LiqETH = await ethers.getContractFactory('LiqETH')
+    const LiqETH = await ethers.getContractFactory('HsETH')
     const liqETH = await LiqETH.deploy()
+    liqETH.grantRole(await liqETH.MINTER_ROLE(), deployer.address)
 
     const Staking = await ethers.getContractFactory('Staking')
     const staking = await Staking.deploy(await liqETH.getAddress())
-
-    await liqETH.grantRole(await liqETH.MINTER_ROLE(), await staking.getAddress())
 
     return {
       deployer,
@@ -26,31 +25,50 @@ describe('Staking deploy', function () {
   }
 
   describe('Staking', function () {
+    it('init package, set package', async function () {
+      const { deployer, liqETH, staking } = await loadFixture(deployFixture)
+      expect((await staking.getPackage()).length).to.be.equal(4)
+      //
+      await staking.setPackage(0, 100)
+
+      expect((await staking.getPackage())[0]).to.be.equal(100)
+    })
+
     it('stake, unstake', async function () {
-      const { deployer, player, player2, liqETH, staking } = await loadFixture(deployFixture)
+      const { deployer, liqETH, staking, player } = await loadFixture(deployFixture)
       const stakeAmount = parseEther('2')
-      await (await staking.stake({ value: stakeAmount })).wait()
-      expect(await staking.stakedPackage(deployer.address)).to.be.equal(1)
-      expect(await liqETH.balanceOf(deployer.address)).to.be.equal(stakeAmount)
+      await liqETH.mint(player, stakeAmount)
+      await liqETH.mint(await staking.getAddress(), stakeAmount)
 
-      await expect(staking.unStake(1)).revertedWithCustomError(staking, 'InvalidStakedIndex')
+      for (let i = 0; i < 4; i++) {
+        await expect(staking.connect(player).stake(i, stakeAmount)).revertedWith(
+          'ERC20: insufficient allowance'
+        )
 
-      const stakeInforBefore = await staking.stakedInfoByIndex(deployer.address, 0)
+        await liqETH.connect(player).approve(await staking.getAddress(), stakeAmount)
 
-      expect(stakeInforBefore.amount).to.be.equal(stakeAmount)
-      expect(stakeInforBefore.isReleased).to.be.equal(false)
+        const tx = await (await staking.connect(player).stake(i, stakeAmount)).wait()
+        const log: any = tx?.logs[2]
+        expect(log.args[1]).to.be.equal(stakeAmount)
+        const stakedBalance = await staking.stakedBalance(player.address)
+        expect(stakedBalance).to.be.equal(stakeAmount * BigInt(i + 1))
 
-      await expect(staking.unStake(0)).revertedWithCustomError(staking, 'InvalidApprovalAmount')
+        expect((await staking.poolInfor())[i]).to.be.equal(stakeAmount)
 
-      await liqETH.approve(await staking.getAddress(), stakeAmount)
+        if (i > 0) {
+          await expect(staking.connect(player).unStake(0)).revertedWithCustomError(
+            staking,
+            'InvalidReleaseDate'
+          )
+          // Time travel to 2 months later
+          await ethers.provider.send('evm_increaseTime', [i * 30 * 24 * 60 * 60])
+          await ethers.provider.send('evm_mine', [])
+        }
 
-      await (await staking.unStake(0)).wait()
-
-      const stakeInforAfter = await staking.stakedInfoByIndex(deployer.address, 0)
-      expect(stakeInforAfter.isReleased).to.be.equal(true)
-
-      //unstake twice
-      await expect(staking.unStake(0)).revertedWithCustomError(staking, 'InvalidStake')
+        const unStakeTx = await (await staking.connect(player).unStake(0)).wait()
+        const unStakedlog: any = unStakeTx?.logs[1]
+        expect(unStakedlog.args[1]).to.be.equal(stakeAmount)
+      }
     })
   })
 })

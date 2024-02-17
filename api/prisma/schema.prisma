@@ -1,0 +1,26 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model wallet{
+  address String @id
+  supplyPoint Decimal @db.Decimal(10,2)
+  stakingPoint Decimal @db.Decimal(10,2)
+  point Decimal @db.Decimal(10,2)
+  updatedTime DateTime? @default(now()) @db.Timestamptz(6)
+  latestTx String
+}
+
+model transaction{
+  txHash String @id
+  sender String
+  contract String
+}
