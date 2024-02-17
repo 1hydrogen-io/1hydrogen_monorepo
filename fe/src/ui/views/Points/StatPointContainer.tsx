@@ -20,19 +20,20 @@ export default function StatPointContainer() {
         justifyContent="space-between"
       >
         <LabelValueColumn
-          label={"Supply points"}
+          label={"From Staking ETH / USDB"}
           labelFontSize="12px"
           value={point.supplyPoint}
         />
         <LabelValueColumn
-          label={"Borrow points"}
-          labelFontSize="12px"
-          value={"--"}
-        />
-        <LabelValueColumn
-          label={"Staking points"}
+          label={"From Staking hsETH / hsUSDB"}
           labelFontSize="12px"
           value={point.stakingPoint}
+        />
+        <LabelValueColumn
+          label={"From Locking hsETH / hsUSDB"}
+          labelFontSize="12px"
+          value={point.stakingLockPoint}
+
         />
       </Flex>
 

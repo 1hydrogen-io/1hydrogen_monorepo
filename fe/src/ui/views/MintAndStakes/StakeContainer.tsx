@@ -64,7 +64,7 @@ export default function StakeContainer() {
   return (
     <Flex w="full" justifyContent="space-between" flexDirection="column">
       <TextCus mb="10px">
-        Stake ETH and unlock the ability to mint liqETH
+        Stake ETH and unlock the ability to mint hsETH
       </TextCus>
       <InputCustom
         isFull

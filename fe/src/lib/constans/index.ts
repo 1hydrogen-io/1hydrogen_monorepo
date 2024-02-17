@@ -19,7 +19,7 @@ export const parseNumber = (val: string) => val.replace(/^\$/, '')
 
 
 export const footerData = [
-  {title: 'What is Hydrogen?', des: '=Hydrogen Protocol is the first liquid staking solution on Blast, powered by native yield functionality, and innovating the LSDfi space via integrating DAPP staking as collateral for LSD mint. For a detailed explanation of how Hydrogen works, please refer to (gitbook link).', link: ''},
+  {title: 'What is Hydrogen?', des: 'Hydrogen Protocol is the first liquid staking solution on Blast, powered by native yield functionality, and innovating the LSDfi space via integrating DAPP staking as collateral for LSD mint. For a detailed explanation of how Hydrogen works, please refer to (gitbook link).', link: ''},
   {title: 'What are hPoints?', des: `hPoints are used for the upcoming airdrop of Hydrogen Protocol native token $HH.
   You can earn hPoints by doing the following actions - Supplying ETH/USDB, Staking and Locking hsETH/hsUSDB. For a detailed explanation of how hPoints are calculated, please refer to `, link: 'https://1hydrogen.io/h-points'},
   {title: 'What is hsETH/hsUSDB?', des: `hsETH is a Liquid Staking Token that you can mint after staking any amount of ETH on Hydrogen Protocol with a 1:1 ratio. For example, if you stake 1 ETH, you can mint 1hsETH. Same process can be completed with USDB.`, link: ''},

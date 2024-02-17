@@ -27,7 +27,7 @@ export default function HowToEarnPoints() {
         <MainTitle fontSize="24px">?</MainTitle>
       </HStack>
       <TextCus fontSize="14px" fontWeight="450" mt="12px">
-        You can earn points by supplying, borrowing and LAB staking
+      You can earn points by Staking ETH / USDB, Staking hsETH / hsUSDB and Locking hsETH / hsUSDB
       </TextCus>
 
       <Spacer />

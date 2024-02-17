@@ -106,7 +106,7 @@ export default function RepayContainer() {
       />
       <LabelValueItem label={"Available USDB"} value={"--- USDB"} />
       <LabelValueItem
-        label={"Stake ETH Locked"}
+        label={"Staked ETH Locked"}
         value={`${numberFormat(
           vaulStaked.stakedBalance - vaulStaked.availableBalance
         )} ETH`}

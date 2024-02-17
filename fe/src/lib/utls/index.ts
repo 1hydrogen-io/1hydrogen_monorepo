@@ -31,10 +31,10 @@ export const numberFormat1 = (number: number | string) => {
 }
 
 
-export const numberFormat = (number: number | string) => {
+export const numberFormat = (number: number | string, decimal = 4) => {
   const valNum = Number(number);
   if (!valNum || valNum === 0) return '0';
-  return Number(number).toFixed(4);
+  return Number(number).toFixed(decimal);
 }
 
 
