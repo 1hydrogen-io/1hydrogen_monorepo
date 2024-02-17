@@ -15,7 +15,7 @@ import React from 'react'
 
 export default function HPoints() {
   return (
-    <AppWrapper gap="20px" wrapStyle={{ mb: 200, mt: '24px' }}>
+    <AppWrapper gap="20px" wrapStyle={{mt: '24px' }}>
       <Flex w="full" flexDirection="row" gap="24px">
         <MyPoint isLager />
 
@@ -59,7 +59,7 @@ export default function HPoints() {
 
       <HowToEarnPoints />
 
-      <Flex w="full" flexDirection="column" mt="140px">
+      <Flex w="full" flexDirection="column" mt="35px">
         <MainTitle fontSize="24px" alignSelf="center">
           Points leaderboard
         </MainTitle>

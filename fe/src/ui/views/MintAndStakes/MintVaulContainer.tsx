@@ -44,7 +44,7 @@ export default function MintVaulContainer() {
       const tx = await vaulContract.claimHsEthMutation(amountNumber);
       await onReFetchVaul();
       setAmount('');
-      onSuccessToast('Mint liqETH successfully', 'Success');
+      onSuccessToast('Mint hsETH successfully', 'Success');
     } catch(Ex) {
       console.log(Ex)
       onErrorToast();

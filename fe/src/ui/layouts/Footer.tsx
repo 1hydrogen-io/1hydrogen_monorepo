@@ -33,13 +33,13 @@ export default function Footer() {
         <MainTitle fontSize="24px" mb="12px">
           Frequently Asked Questions
         </MainTitle>
-        <SubText color="white" fontSize="14px" fontWeight="450">
+        {/* <SubText color="white" fontSize="14px" fontWeight="450">
           A lot of people don't appreciate the moment until it’s passed.
         </SubText>
         <SubText color="white" fontSize="14px" fontWeight="450">
           I'm not trying my hardest, and I'm not trying to do
-        </SubText>
-        <Accordion w='full' mt="48px" gap="24px" allowMultiple defaultIndex={0}>
+        </SubText> */}
+        <Accordion w='full' mt="24px" gap="24px" allowMultiple defaultIndex={0}>
           {dataRender.map((item) => (
             <AccordionItem border="none" key={item.title}>
               {({ isExpanded }) => (
