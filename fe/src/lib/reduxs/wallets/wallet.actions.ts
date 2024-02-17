@@ -12,7 +12,8 @@ const default_point: IWalletPoint = {
   stakingPoint: 0,
   point: 0,
   updatedTime: "",
-  latestTx: ""
+  latestTx: "",
+  stakingLockPoint: 0
 }
 
 export const default_balance: IWalletBalance = {
