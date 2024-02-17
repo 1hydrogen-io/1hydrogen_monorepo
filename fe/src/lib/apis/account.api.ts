@@ -4,6 +4,7 @@ export interface IWalletPoint {
   address: string;
   supplyPoint: number;
   stakingPoint: number;
+  stakingLockPoint: number;
   point: number;
   updatedTime: string;
   latestTx: string;

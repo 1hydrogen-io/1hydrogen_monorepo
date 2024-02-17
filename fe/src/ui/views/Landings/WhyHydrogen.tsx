@@ -4,7 +4,7 @@ import { Flex, Image } from '@chakra-ui/react'
 import React from 'react'
 
 const data = [
-  ['Reason #1', 'More Yeild', 'Leverage our system with locking $hsETH to receive incredibly high, risk-free yield.'],
+  ['Reason #1', 'More Yield', 'Leverage our system with locking $hsETH to receive incredibly high, risk-free yield.'],
   ['Reason #2','First-ever Liquid Staking for All DAPPs','A protocol that goes beyond the classic use-case, allowing any DAPP to activate Liquid Staking for their users.'],
   ['Reason #3','More DeFi','Use $hsETH across multiple different Blast projects boosting your  capital efficiency.'],
 ]
