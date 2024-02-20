@@ -3,6 +3,7 @@ import ButtonCustom from '@/ui/components/ButtonCustom';
 import { MainTitle } from '@/ui/components/Text';
 import { Flex, Spacer } from '@chakra-ui/react'
 import { useConnectModal } from '@rainbow-me/rainbowkit';
+import Link from 'next/link';
 import React from 'react'
 import { useAccount } from 'wagmi';
 
@@ -17,15 +18,19 @@ export default function HeaderSession() {
   }
 
   return (
-    <Flex w="full" h="374px" justifyContent="space-between" mt='25px'>
-      <Flex flex={1} flexDirection='column'>
+    <Flex w="full" h="374px" justifyContent="space-between" mt="25px">
+      <Flex flex={1} flexDirection="column">
         <MainTitle fontSize="56px" lineHeight="130%">
           A Blast Native Liquid Staking Protocol
         </MainTitle>
         <Spacer />
-        <ButtonCustom w='239px' h='45px' onClick={onOpenWalletModal}>CONNECT WALLET</ButtonCustom>
+        <Link href="/stake-mint">
+          <ButtonCustom w="239px" h="45px">
+            Go Liquid
+          </ButtonCustom>
+        </Link>
       </Flex>
-      
+
       <Flex
         w="410px"
         bgImage="/headers/icon.png"
