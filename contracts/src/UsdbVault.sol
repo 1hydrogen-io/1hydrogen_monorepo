@@ -9,10 +9,7 @@ import "./interfaces/IERC20Rebasing.sol";
 
 contract UsdbVault is Ownable {
     IHsUSDB public sHsUSDB;
-    // testnet: 0x4200000000000000000000000000000000000022
-    // mainnet: 0x4300000000000000000000000000000000000003
-    IERC20Rebasing public constant USDB =
-        IERC20Rebasing(0x4200000000000000000000000000000000000022);
+    IERC20Rebasing public USDB;
 
     uint256 public constant MIN_FEE = 0; //0%
     uint256 public constant MAX_FEE = 2; //2%
@@ -33,9 +30,10 @@ contract UsdbVault is Ownable {
     event UnStaked(address staker, uint256 amount);
     event HsUSDBRepaid(address staker, uint256 amount);
 
-    constructor(address hsUSDB, address owner) {
+    constructor(address hsUSDB, address usdb, address owner) {
         _transferOwnership(owner);
         sHsUSDB = IHsUSDB(hsUSDB);
+        USDB = IERC20Rebasing(usdb);
         USDB.configure(YieldMode.CLAIMABLE);
     }
 

@@ -14,8 +14,8 @@ contract UsdbVaultFactory is Ownable {
         sHsUsdb = IHsUSDB(_hsUSDBAddress);
     }
 
-    function createVault() public {
-        UsdbVault vault = new UsdbVault(address(sHsUsdb), msg.sender);
+    function createVault(address _usdb) public {
+        UsdbVault vault = new UsdbVault(address(sHsUsdb), _usdb, msg.sender);
         bytes32 minterRole = keccak256("MINTER_ROLE");
         sHsUsdb.grantRole(minterRole, address(vault));
         totalSupply++;
