@@ -7,14 +7,14 @@ async function main() {
   //usdb testnet: 0x4200000000000000000000000000000000000022
   //usdb mainnet: 0x4300000000000000000000000000000000000003
   const vault = await ethers.deployContract('UsdbVault', [
-    '0x7C84156e5f873dB9f544459cb4aA6eC5fc45f67a', //hsUsdb
+    '0xCA0AaF48356d44f254333C4F2C8Fc3295D00F602', //hsUsdb
     '0x4200000000000000000000000000000000000022',
     process.env.ADDRESS
   ])
 
   await vault.waitForDeployment()
   console.log(`vault with address: ${await vault.getAddress()}`)
-  setConfig(`${network}.vault`, await vault.getAddress())
+  setConfig(`${network}.usdbVault`, await vault.getAddress())
   await updateConfig()
 }
 
