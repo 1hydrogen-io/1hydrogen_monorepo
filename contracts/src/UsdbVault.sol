@@ -6,6 +6,7 @@ import "@openzeppelin/contracts/interfaces/IERC20.sol";
 
 import "./interfaces/IHsUSDB.sol";
 import "./interfaces/IERC20Rebasing.sol";
+import "./interfaces/IBlastPoints.sol";
 
 contract UsdbVault is Ownable {
     IHsUSDB public sHsUSDB;
@@ -30,11 +31,18 @@ contract UsdbVault is Ownable {
     event UnStaked(address staker, uint256 amount);
     event HsUSDBRepaid(address staker, uint256 amount);
 
-    constructor(address hsUSDB, address usdb, address owner) {
+    constructor(
+        address hsUSDB,
+        address usdb,
+        address owner,
+        address blastPoint,
+        address pointOperator
+    ) {
         _transferOwnership(owner);
         sHsUSDB = IHsUSDB(hsUSDB);
         USDB = IERC20Rebasing(usdb);
         USDB.configure(YieldMode.CLAIMABLE);
+        IBlastPoints(blastPoint).configurePointsOperator(pointOperator);
     }
 
     receive() external payable {}
@@ -56,7 +64,6 @@ contract UsdbVault is Ownable {
 
     function unStake(uint256 amount) public {
         uint256 availableAmount = sBalance[msg.sender];
-
         if (amount > availableAmount) {
             revert InvalidAmount();
         }

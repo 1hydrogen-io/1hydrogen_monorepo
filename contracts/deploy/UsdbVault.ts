@@ -6,9 +6,12 @@ async function main() {
   const network = hardhatArguments.network ? hardhatArguments.network : 'dev'
   //usdb testnet: 0x4200000000000000000000000000000000000022
   //usdb mainnet: 0x4300000000000000000000000000000000000003
+  // blast point testnet: 0x2fc95838c71e76ec69ff817983BFf17c710F34E0
   const vault = await ethers.deployContract('UsdbVault', [
     '0xCA0AaF48356d44f254333C4F2C8Fc3295D00F602', //hsUsdb
-    '0x4200000000000000000000000000000000000022',
+    '0x4200000000000000000000000000000000000022', // usdb
+    process.env.ADDRESS,
+    '0x2fc95838c71e76ec69ff817983BFf17c710F34E0', // blast point
     process.env.ADDRESS
   ])
 
