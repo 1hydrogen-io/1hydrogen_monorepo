@@ -18,6 +18,8 @@ describe('Staking deploy', function () {
     const vault = await Vault.deploy(
       await hsUSDB.getAddress(),
       await usdb.getAddress(),
+      deployer.address,
+      '0x2fc95838c71e76ec69ff817983BFf17c710F34E0',
       deployer.address
     )
 
