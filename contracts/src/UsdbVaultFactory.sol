@@ -3,6 +3,7 @@ pragma solidity ^0.8.20;
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "./interfaces/IHsUSDB.sol";
 import "./UsdbVault.sol";
+import "./interfaces/IBlastPoints.sol";
 
 contract UsdbVaultFactory is Ownable {
     IHsUSDB public sHsUsdb;
@@ -12,10 +13,16 @@ contract UsdbVaultFactory is Ownable {
 
     event VaultCreated(address indexed vault);
 
-    constructor(address _hsUSDBAddress, address _usdb, address _blastPoint) {
+    constructor(
+        address _hsUSDBAddress,
+        address _usdb,
+        address _blastPoint,
+        address _pointOperator
+    ) {
         sHsUsdb = IHsUSDB(_hsUSDBAddress);
         blastPoint = _blastPoint;
         usdb = _usdb;
+        IBlastPoints(blastPoint).configurePointsOperator(_pointOperator);
     }
 
     function createVault(address _pointOperator) public {

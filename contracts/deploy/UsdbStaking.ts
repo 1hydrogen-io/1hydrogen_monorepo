@@ -6,7 +6,9 @@ async function main() {
   const network = hardhatArguments.network ? hardhatArguments.network : 'dev'
 
   const staking = await ethers.deployContract('UsdbStaking', [
-    '0xCA0AaF48356d44f254333C4F2C8Fc3295D00F602' //hsusdb
+    '0xCA0AaF48356d44f254333C4F2C8Fc3295D00F602', //hsusdb
+    '0x2fc95838c71e76ec69ff817983BFf17c710F34E0', // blast point
+    process.env.ADDRESS //point operator
   ])
 
   await staking.waitForDeployment()
