@@ -4,10 +4,11 @@ import "@openzeppelin/contracts/access/Ownable.sol";
 
 import "./interfaces/IHsETH.sol";
 import "./interfaces/IBlast.sol";
+import "./interfaces/IBlastPoints.sol";
 
 contract Vault is Ownable {
     IHsETH public sHsETH;
-    address public blastYield = 0x4300000000000000000000000000000000000002;
+    IBlast public blastYield;
     uint256 public constant MIN_FEE = 0; //0%
     uint256 public constant MAX_FEE = 2; //2%
     uint256 public sFee;
@@ -27,10 +28,18 @@ contract Vault is Ownable {
     event UnStaked(address staker, uint256 amount);
     event HsETHRepaid(address staker, uint256 amount);
 
-    constructor(address hsETH, address owner) {
+    constructor(
+        address hsETH,
+        address owner,
+        address yieldAddress,
+        address blastPoint,
+        address pointOperator
+    ) {
         _transferOwnership(owner);
         sHsETH = IHsETH(hsETH);
-        IBlast(blastYield).configureClaimableYield();
+        blastYield = IBlast(yieldAddress);
+        blastYield.configureClaimableYield();
+        IBlastPoints(blastPoint).configurePointsOperator(pointOperator);
     }
 
     receive() external payable {}
@@ -104,6 +113,6 @@ contract Vault is Ownable {
     }
 
     function claimYield() external onlyOwner {
-        IBlast(blastYield).claimAllYield(address(this), msg.sender);
+        blastYield.claimAllYield(address(this), msg.sender);
     }
 }
