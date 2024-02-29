@@ -4,6 +4,7 @@ import "@openzeppelin/contracts/access/Ownable.sol";
 import "./interfaces/IHsETH.sol";
 import "./interfaces/IBlast.sol";
 import "./Vault.sol";
+import "./interfaces/IBlastPoints.sol";
 
 contract VaultFactory is Ownable {
     IHsETH public sLiqETH;
@@ -13,10 +14,16 @@ contract VaultFactory is Ownable {
 
     event VaultCreated(address indexed vault);
 
-    constructor(address _liqETHAddress, address _yield, address _blastPoint) {
+    constructor(
+        address _liqETHAddress,
+        address _yield,
+        address _blastPoint,
+        address _pointOperator
+    ) {
         sLiqETH = IHsETH(_liqETHAddress);
         blastYield = _yield;
         blastPoint = _blastPoint;
+        IBlastPoints(blastPoint).configurePointsOperator(_pointOperator);
     }
 
     function createVault(address _pointOperator) public {

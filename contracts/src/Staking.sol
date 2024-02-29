@@ -4,6 +4,7 @@ import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
 
 import "./interfaces/IHsETH.sol";
+import "./interfaces/IBlastPoints.sol";
 
 contract Staking is Ownable {
     uint256 private constant MAX_INDEX = 999;
@@ -34,9 +35,10 @@ contract Staking is Ownable {
     event Staked(address staker, uint256 amount, uint256 package);
     event UnStaked(address staker, uint256 amount, uint256 package);
 
-    constructor(address hsETH) {
+    constructor(address hsETH, address blastPoint, address pointOperator) {
         sHsETH = IHsETH(hsETH);
         initPackage();
+        IBlastPoints(blastPoint).configurePointsOperator(pointOperator);
     }
 
     receive() external payable {}
