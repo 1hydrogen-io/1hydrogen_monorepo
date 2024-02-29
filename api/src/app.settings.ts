@@ -4,6 +4,7 @@ dotenv.config()
 export const RPC_URL = process.env.RPC_URL || ''
 export const VAULT_ADDRESS = process.env.VAULT_ADDRESS || ''
 export const STAKING_ADDRESS = process.env.STAKING_ADDRESS || ''
+export const DATA_FEED = process.env.DATA_FEED || ''
 
 export function setAppSetting(app: INestApplication) {
   app.setGlobalPrefix('api', {
