@@ -4,10 +4,15 @@ async function main() {
   await calculatePoint()
 }
 
-schedule('*/5 * * * *', () => {
+schedule('0 0 * * *', () => {
   console.log('fetch data')
   main().catch((err) => {
     console.log('exit with error', err)
-    //process.exit(1)
+    process.exit(1)
   })
+})
+
+main().catch((err) => {
+  console.log('exit with error', err)
+  process.exit(1)
 })

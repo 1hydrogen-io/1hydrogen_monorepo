@@ -6,6 +6,9 @@ export const VAULT_ADDRESS = process.env.VAULT_ADDRESS || ''
 export const STAKING_ADDRESS = process.env.STAKING_ADDRESS || ''
 export const DATA_FEED = process.env.DATA_FEED || ''
 
+export const USDB_VAULT_ADDRESS = process.env.USDB_VAULT_ADDRESS || ''
+export const USDB_STAKING_ADDRESS = process.env.USDB_STAKING_ADDRESS || ''
+
 export function setAppSetting(app: INestApplication) {
   app.setGlobalPrefix('api', {
     exclude: [{ path: 'health', method: RequestMethod.GET }]
