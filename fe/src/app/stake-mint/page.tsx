@@ -12,57 +12,23 @@ import UsdbStakedLockedAPR from "@/ui/views/Commons/usdb/UsdbStakedLockedAPR";
 import UsdbStakeContainer from "@/ui/views/MintAndStakes/usdb/UsdbStakeContainer";
 import UsdbMintVaultContainer from "@/ui/views/MintAndStakes/usdb/UsdbMintVaultContainer";
 import UsdbStatMintStakeVaulContainer from "@/ui/views/MintAndStakes/usdb/UsdbStatMintStakeVaulContainer";
+import {useGlobalState} from "@/lib/reduxs/globals/global.hook";
 
 const LIST_TAB = [
     {
         title: "ETH MARKET",
         img: "/coins/eth.svg",
+        value: "eth"
     },
     {
         title: "USDB MARKET",
         img: "/coins/usdb.svg",
+        value: "usdb"
     }
 ]
 
 export default function RePayUnStake() {
-    const [tabActive, setTabActive] = useState(0);
-    const container = () => {
-        switch (tabActive) {
-            case 0:
-                return (
-                    <>
-                        <CardCus gap="40px">
-                            <StakedLockedAPR isShowPoint/>
-                            <StakeContainer/>
-                            <MintVaulContainer/>
-                        </CardCus>
-                        <StatMintStakeVaulContainer/>
-                    </>
-                )
-            case 1:
-                return (
-                    <>
-                        <CardCus gap="40px">
-                            <UsdbStakedLockedAPR isShowPoint/>
-                            <UsdbStakeContainer />
-                            <UsdbMintVaultContainer/>
-                        </CardCus>
-                        <UsdbStatMintStakeVaulContainer />
-                    </>
-                )
-            default:
-                return (
-                    <>
-                        <CardCus gap="40px">
-                            <StakedLockedAPR isShowPoint/>
-                            <StakeContainer/>
-                            <MintVaulContainer/>
-                        </CardCus>
-                        <StatMintStakeVaulContainer/>
-                    </>
-                )
-        }
-    }
+    const {globalState: {currentCoin}, onSetCurrentCoin} = useGlobalState();
     return (
         <AppWrapper gap="20px">
             <Flex w="full" gap="25px" mt="35px">
@@ -73,14 +39,19 @@ export default function RePayUnStake() {
                                 key={index}
                                 img={item.img}
                                 title={item.title}
-                                active={tabActive === index}
-                                onClick={() => setTabActive(index)}
+                                active={currentCoin === item.value}
+                                onClick={() => onSetCurrentCoin(item.value as "eth" | "usdb")}
                             />
                         ))
                     }
                 </Flex>
 
-                {container()}
+                <CardCus gap="40px">
+                    <StakedLockedAPR isShowPoint/>
+                    <StakeContainer/>
+                    <MintVaulContainer/>
+                </CardCus>
+                <StatMintStakeVaulContainer/>
             </Flex>
         </AppWrapper>
     );

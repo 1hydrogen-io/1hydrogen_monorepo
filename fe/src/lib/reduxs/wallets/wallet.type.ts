@@ -1,7 +1,9 @@
-import { IWalletPoint } from "@/lib/apis/account.api";
+import {IWalletPoint} from "@/lib/apis/account.api";
 
 export interface IWalletBalance {
-  eth: number;
-  hsEth: number;
-  point: IWalletPoint;
+    eth: number;
+    hsEth: number;
+    point: IWalletPoint;
+    usdb: number;
+    hsUsdb: number;
 }
