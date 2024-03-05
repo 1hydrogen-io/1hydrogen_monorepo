@@ -1,5 +1,5 @@
 import React from 'react'
-import CardCus from '../Commons/CardCus'
+import CardCus from '../../Commons/CardCus'
 import { Flex } from '@chakra-ui/react'
 import SubText from '@/ui/components/Text/SubText'
 import LabelValueColumn from '@/ui/components/LabelValueColumn'

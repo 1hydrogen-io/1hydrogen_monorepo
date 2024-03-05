@@ -1,7 +1,7 @@
 import { MyPoint } from '@/ui/components';
 import { Flex } from '@chakra-ui/react';
 import React from 'react'
-import TotalHsEthStakedAndLocked from '../Commons/TotalHsEthStakedAndLocked';
+import TotalHsEthStakedAndLocked from '../../Commons/eth/TotalHsEthStakedAndLocked';
 
 export default function StakeInfoContainer() {
   
