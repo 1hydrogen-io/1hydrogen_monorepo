@@ -24,7 +24,7 @@ export default function StatMintStakeVaulContainer() {
         data: usdbPriceData = BigInt(0),
     } = useContractRead({
         abi: usdbAbi,
-        address: isProduction() ? '0x4200000000000000000000000000000000000022' : '0x4200000000000000000000000000000000000022',
+        address: '0x4200000000000000000000000000000000000022',
         functionName: 'price',
     })
 

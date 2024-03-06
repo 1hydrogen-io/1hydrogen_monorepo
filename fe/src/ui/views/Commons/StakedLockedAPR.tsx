@@ -26,21 +26,21 @@ export default function StakedLockedAPR({isShow, isShowPoint}: IProps) {
     data: usdbPriceData = BigInt(0),
   } = useContractRead({
     abi: usdbAbi,
-    address: isProduction() ? '0x4200000000000000000000000000000000000022' : '0x4200000000000000000000000000000000000022',
+    address: '0x4200000000000000000000000000000000000022',
     functionName: 'price',
   })
   const usdbPrice = ethers.utils.formatUnits(usdbPriceData as BigNumber);
 
   const stakedAPR = useMemo(() => {
     if (packages.length < 1) return 0;
-    if(isEthSelected) return packages[0].percent;
-    return usdbPackages[0].percent;
+    if(isEthSelected) return packages[0]?.percent;
+    return usdbPackages[0]?.percent;
   }, [packages, isEthSelected]);
 
   const lockedAPR = useMemo(() => {
     if (packages.length < 1) return '0 - 0';
-    if(isEthSelected) return `${packages[1].percent} - ${packages[3].percent}`;
-    return `${usdbPackages[1].percent} - ${usdbPackages[3].percent}`;
+    if(isEthSelected) return `${packages[1]?.percent} - ${packages[3]?.percent}`;
+    return `${usdbPackages[1]?.percent} - ${usdbPackages[3]?.percent}`;
   }, [packages, isEthSelected]);
 
   return (

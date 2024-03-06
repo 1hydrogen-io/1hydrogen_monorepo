@@ -19,7 +19,7 @@ import {useGlobalState} from "@/lib/reduxs/globals/global.hook";
 import {usdbAbi} from "@/lib/contracts/abis/usdb";
 import UsdbVaultContract from "@/lib/contracts/UsdbVaultContract";
 import {BigNumber, ethers} from "ethers";
-import {readContract} from "@wagmi/core";
+import {readContract, writeContract} from "@wagmi/core";
 
 export default function StakeContainer() {
     const {isConnected, address} = useAccount();
@@ -37,7 +37,7 @@ export default function StakeContainer() {
         refetch: refetchUsdbBalance
     } = useContractRead({
         abi: usdbAbi,
-        address: isProduction() ? '0x4200000000000000000000000000000000000022' : '0x4200000000000000000000000000000000000022',
+        address: '0x4200000000000000000000000000000000000022',
         functionName: 'balanceOf',
         args: [address],
         enabled: isConnected,
@@ -60,13 +60,12 @@ export default function StakeContainer() {
         const usdbAmountUnit = ethers.utils.parseUnits(amount);
         try {
             console.log(address, "address")
-            const result = await readContract({
+            const result = await writeContract({
                 abi: usdbAbi,
-                address: isProduction() ? '0x4200000000000000000000000000000000000022' : '0x4200000000000000000000000000000000000022',
+                address: '0x4200000000000000000000000000000000000022',
                 functionName: 'approve',
-                args: [address, usdbAmountUnit],
+                args: ["0x02b436EAE5E1BAe083B9BB8eB03aAAcdd375985a", usdbAmountUnit],
             })
-            console.log(result, "result")
             const usdbVaultContract = new UsdbVaultContract(signer);
             return await usdbVaultContract.stakeMutation(amount);
         } catch (err) {
