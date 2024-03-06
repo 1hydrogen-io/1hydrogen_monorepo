@@ -15,7 +15,7 @@ export function walletClientToSigner(walletClient: WalletClient) {
  
 
 export async function getEthersSigner({ chainId = 168587773 }: { chainId?: number } = {}) {
-  const walletClient = await getWalletClient({ chainId });  
+  const walletClient = await getWalletClient({ chainId });
   if (!walletClient) return undefined
   return walletClientToSigner(walletClient)
 }

@@ -1,10 +1,11 @@
 'use client'
 import { useAppDispatch, useAppSelector } from '@/lib/reduxs/hooks';
-import { setPackageAction } from '@/lib/reduxs/hs-stakings/hs-staking.slices';
+import {setPackageAction, setUsdbPackageAction} from '@/lib/reduxs/hs-stakings/hs-staking.slices';
 import { PackageType } from '@/lib/reduxs/hs-stakings/hs-staking.type';
 import StakePackage from '@/ui/components/StakePackage'
 import { Flex } from '@chakra-ui/react'
-import React from 'react';
+import React, {useMemo} from 'react';
+import {useGlobalState} from "@/lib/reduxs/globals/global.hook";
 
 const packages = [
   {
@@ -31,11 +32,13 @@ const packages = [
 
 export default function StakePackageContainer() {
   const dispatch = useAppDispatch();
-  const {packageSelected} = useAppSelector(p => p.hsStake);
+  const {packageSelected, usdbPackageSelected} = useAppSelector(p => p.hsStake);
+  const {globalState: {currentCoin}} = useGlobalState();
+  const isEthSelected = useMemo(() => currentCoin === "eth", [currentCoin]);
 
   return (
     <Flex w="full" gap="8px">
-      {packages.map((p) => (
+      {packages.map((p) => isEthSelected ? (
         <StakePackage
           key={p.value}
           active={p.value === packageSelected}
@@ -43,6 +46,15 @@ export default function StakePackageContainer() {
           xLabel={p.xLabel}
           cursor='pointer'
           onClick={() => dispatch(setPackageAction(p.value as PackageType ))}
+        />
+      ) : (
+        <StakePackage
+          key={p.value}
+          active={p.value === usdbPackageSelected}
+          lable={p.lable}
+          xLabel={p.xLabel}
+          cursor='pointer'
+          onClick={() => dispatch(setUsdbPackageAction(p.value as PackageType ))}
         />
       ))}
     </Flex>

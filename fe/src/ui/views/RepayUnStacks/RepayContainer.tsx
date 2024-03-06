@@ -15,32 +15,43 @@ import { TextCus } from '@/ui/components/Text'
 import { Flex } from '@chakra-ui/react'
 import React, { useMemo, useState } from 'react'
 import { useAccount } from 'wagmi'
+import {useGlobalState} from "@/lib/reduxs/globals/global.hook";
+import UsdbVaultContract from "@/lib/contracts/UsdbVaultContract";
+import HsUsdbContract from "@/lib/contracts/HsUsdbContract";
 
 export default function RepayContainer() {
   const {isConnected} = useAccount();
-  const {vaulStaked} = useAppSelector(p => p.vaul);
+  const {vaulStaked, usdbVaulStaked} = useAppSelector(p => p.vaul);
   const {isProcessing, onCloseProcessing, onOpenProcessing} = useProcessing();
   const {onErrorToast, onSuccessToast} = useToastCustom();
   const {onRefetch, onReFetchVaul} = useRefetchBalance();
   const [amount, setAmount] = useState<string>('');
+  const {globalState: {currentCoin}} = useGlobalState();
+  const isEthSelected = useMemo(() => currentCoin === "eth", [currentCoin]);
 
   const availableRepay = useMemo(() => {
     return subtract(vaulStaked.stakedBalance, vaulStaked.availableBalance);
   }, [vaulStaked]);
 
+  const availableUsdbRepay = useMemo(() => {
+    return subtract(usdbVaulStaked.stakedBalance, usdbVaulStaked.availableBalance);
+  }, [usdbVaulStaked]);
+
   const isLocked = useMemo(() => {
     if (!isConnected) return true;
-    if (availableRepay <= 0) return true;
+    if (availableRepay <= 0 && isEthSelected) return true;
+    if (availableUsdbRepay <= 0 && !isEthSelected) return true;
     return false;
   }, [availableRepay, isConnected]);
-  
+
   const onAmountChange = (val: string) => {
-    if (subtract(availableRepay, Number(val)) < 0) return;
+    if (subtract(availableRepay, Number(val)) < 0 && isEthSelected) return;
+    if(subtract(availableUsdbRepay, Number(val)) < 0 && !isEthSelected) return;
     setAmount(val)
   }
 
   const onSetMax = () => {
-    setAmount(availableRepay.toString());
+    setAmount(isEthSelected ? availableRepay.toString() : availableUsdbRepay.toString());
   }
 
   const onHandleRepay = async()=> {
@@ -52,10 +63,17 @@ export default function RepayContainer() {
     }
     try {
       onOpenProcessing('REPAY');
-      const vaultContract = new VaultContract(signer);
-      const hsEthContract = new HsEthContract(signer);
-      await hsEthContract.approve(vaultContract._contractAddress, amountNum);
-      const tx = await vaultContract.repayHsEthMutation(amountNum);
+      if(isEthSelected) {
+        const vaultContract = new VaultContract(signer);
+        const hsEthContract = new HsEthContract(signer);
+        await hsEthContract.approve(vaultContract._contractAddress, amountNum);
+        const tx = await vaultContract.repayHsEthMutation(amountNum);
+      } else {
+        const usdbVaultContract = new UsdbVaultContract(signer);
+        const hsUsdbContract = new HsUsdbContract(signer);
+        await hsUsdbContract.approve(usdbVaultContract._contractAddress, amountNum);
+        const tx = await usdbVaultContract.repayHsUsdbMutation(amountNum);
+      }
       setAmount('');
       await onRefetch();
       await onReFetchVaul();
@@ -73,7 +91,7 @@ export default function RepayContainer() {
       flexDirection="column"
       gap="16px"
     >
-      <TextCus mb="10px">Repay hsETH</TextCus>
+      <TextCus mb="10px">{isEthSelected ? "Repay hsETH" : "Repay hsUSDB"}</TextCus>
       <Flex justifyContent="space-between" alignItems="center">
         <InputCustom
           w="342px"
@@ -84,34 +102,43 @@ export default function RepayContainer() {
           value={amount}
         />
         <ButtonCustom h="48px" onClick={onSetMax}>
-          hsETH
+          {isEthSelected ? "hsETH" : "hsUSDB"}
         </ButtonCustom>
       </Flex>
       <LabelValueItem
         label={"Total Value to be Repaid for full unlock"}
-        value={`${numberFormat(
+        value={isEthSelected ? `${numberFormat(
           vaulStaked.stakedBalance - vaulStaked.availableBalance
-        )} ETH`}
+        )} ETH` : `${numberFormat(
+            usdbVaulStaked.stakedBalance - usdbVaulStaked.availableBalance
+        )} USDB`}
       />
 
       <LabelValueItem
-        label={"Available hsETH"}
-        value={`${numberFormat(
-          vaulStaked.stakedBalance - vaulStaked.availableBalance
-        )} ETH`}
+        label={isEthSelected ? "Available hsETH" : "Available hsUSDB"}
+        value={isEthSelected ? `${numberFormat(
+          vaulStaked.availableBalance
+        )} ETH` : `${numberFormat(
+            usdbVaulStaked.availableBalance
+        )} USDB`}
       />
       <LabelValueItem
-        label={"Available ETH"}
-        value={numberFormat(vaulStaked.availableBalance)}
+        label={isEthSelected ? "Available ETH" : "Available USDB"}
+        value={isEthSelected ? numberFormat(vaulStaked.availableBalance) : numberFormat(usdbVaulStaked.availableBalance)}
       />
-      <LabelValueItem label={"Available USDB"} value={"--- USDB"} />
+      <LabelValueItem label={"Available USDB"} value={`${numberFormat(usdbVaulStaked.availableBalance)} USDB`} />
       <LabelValueItem
-        label={"Staked ETH Locked"}
-        value={`${numberFormat(
+        label={isEthSelected ? "Staked ETH Locked" : "Staked USDB Locked"}
+        value={isEthSelected ? `${numberFormat(
           vaulStaked.stakedBalance - vaulStaked.availableBalance
-        )} ETH`}
+        )} ETH` : `${numberFormat(
+            usdbVaulStaked.stakedBalance - usdbVaulStaked.availableBalance
+        )} USDB`}
       />
-      <LabelValueItem label={"Staked ETH UnLocked"} value={"0 ETH"} />
+      <LabelValueItem
+          label={isEthSelected ? "Staked ETH UnLocked" : "Staked USDB UnLocked"}
+          value={isEthSelected ? "0 ETH" : "0 USDB"}
+      />
       <ButtonCustom
         w="full"
         onClick={onHandleRepay}

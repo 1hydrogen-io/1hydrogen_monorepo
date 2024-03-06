@@ -8,7 +8,9 @@ type ProcessName =
   | "UNSTAKE"
   | "REPAY"
   | "STAKING_HS_ETH"
-  | "GLOBAL";
+  | "GLOBAL"
+  | "STAKING_HS_USDB"
+;
 
 export default function useProcessing() {
   const dispatch = useAppDispatch();

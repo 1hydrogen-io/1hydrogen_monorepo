@@ -1,40 +1,49 @@
 'use client'
 import VaultContract from '@/lib/contracts/VaultContract'
-import { getEthersSigner } from '@/lib/hooks/useEtherSigner'
+import {getEthersSigner} from '@/lib/hooks/useEtherSigner'
 import useProcessing from '@/lib/hooks/useProcessing'
 import useRefetchBalance from '@/lib/hooks/useRefetchBalance'
 import useToastCustom from '@/lib/hooks/useToastCustom'
-import { useAppSelector } from '@/lib/reduxs/hooks'
-import { numberFormat } from '@/lib/utls'
-import { subtract } from '@/lib/utls/numberHelper'
-import { LabelValueItem } from '@/ui/components'
+import {useAppSelector} from '@/lib/reduxs/hooks'
+import {numberFormat} from '@/lib/utls'
+import {subtract} from '@/lib/utls/numberHelper'
+import {LabelValueItem} from '@/ui/components'
 import ButtonCustom from '@/ui/components/ButtonCustom'
 import InputCustom from '@/ui/components/InputCustom'
-import { TextCus } from '@/ui/components/Text'
-import { Flex } from '@chakra-ui/react'
-import React, { useMemo, useState } from 'react'
-import { useAccount } from 'wagmi'
+import {TextCus} from '@/ui/components/Text'
+import {Flex} from '@chakra-ui/react'
+import React, {useEffect, useMemo, useState} from 'react'
+import {useAccount} from 'wagmi'
+import {useGlobalState} from "@/lib/reduxs/globals/global.hook";
+import UsdbVaultContract from "@/lib/contracts/UsdbVaultContract";
 
-export default function UsdbUnstakeContainer() {
+export default function UnstackContainer() {
     const {isConnected} = useAccount();
-    const {vaulStaked} = useAppSelector(p => p.vaul);
+    const {vaulStaked, usdbVaulStaked} = useAppSelector(p => p.vaul);
     const {isProcessing, onCloseProcessing, onOpenProcessing} = useProcessing();
     const {onErrorToast, onSuccessToast} = useToastCustom();
     const {onRefetch, onReFetchVaul} = useRefetchBalance();
     const [amount, setAmount] = useState<string>('');
+    const {globalState: {currentCoin}} = useGlobalState();
+    const isEthSelected = useMemo(() => currentCoin === "eth", [currentCoin]);
 
     const isLocked = useMemo(() => {
         if (!isConnected) return true;
-        if (!vaulStaked.availableBalance) return true;
+        if (!vaulStaked.availableBalance && isEthSelected) return true;
+        if (!usdbVaulStaked.availableBalance && !isEthSelected) return true;
         return false;
     }, [isConnected, vaulStaked]);
 
+    useEffect(() => {
+        setAmount('')
+    }, [currentCoin]);
     const onAmountChange = (val: string) => {
-        if (subtract(vaulStaked.availableBalance, Number(val) ) < 0) return;
+        if (subtract(vaulStaked.availableBalance, Number(val)) < 0 && isEthSelected) return;
+        if (subtract(usdbVaulStaked.availableBalance, Number(val)) < 0 && !isEthSelected) return;
         setAmount(val)
     }
 
-    const onHandleUnStake = async()=> {
+    const onHandleUnStake = async () => {
         const amountNum = Number(amount);
         const signer = await getEthersSigner();
         if (!signer) return;
@@ -43,13 +52,13 @@ export default function UsdbUnstakeContainer() {
         }
         try {
             onOpenProcessing('UNSTAKE');
-            const vaultContract = new VaultContract(signer);
+            const vaultContract = isEthSelected ? new VaultContract(signer) : new UsdbVaultContract(signer);
             const tx = await vaultContract.unStakeMutation(amountNum);
             setAmount('');
             await onRefetch();
             await onReFetchVaul();
             onSuccessToast('UnStake successfully');
-        } catch(ex) {
+        } catch (ex) {
             onErrorToast();
         }
         onCloseProcessing();
@@ -58,7 +67,10 @@ export default function UsdbUnstakeContainer() {
     return (
         <Flex w="full" justifyContent="space-between" flexDirection="column">
             <TextCus mb="10px">
-                Repay hsETH and unlock the ability to unstake ETH
+                {isEthSelected ?
+                    "Repay hsETH and unlock the ability to unstake ETH" :
+                    "Repay hsUSDB and unlock the ability to unstake USDB"
+                }
             </TextCus>
             <InputCustom
                 isFull
@@ -71,7 +83,11 @@ export default function UsdbUnstakeContainer() {
             />
             <LabelValueItem
                 label={"Available amount to unstake"}
-                value={`${numberFormat(vaulStaked.availableBalance)} USDB`}
+                value={
+                    isEthSelected ?
+                        `${numberFormat(vaulStaked.availableBalance)} ETH` :
+                        `${numberFormat(usdbVaulStaked.availableBalance)} USDB`
+                }
                 my="16px"
             />
             <ButtonCustom w="full"

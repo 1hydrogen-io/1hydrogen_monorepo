@@ -3,14 +3,14 @@ import useProcessing from '@/lib/hooks/useProcessing';
 import useRefetchBalance from '@/lib/hooks/useRefetchBalance';
 import { fetchWalletInfoGlobalAction } from '@/lib/reduxs/globals/global.action';
 import { useAppDispatch } from '@/lib/reduxs/hooks';
-import { getPackageAction } from '@/lib/reduxs/hs-stakings/hs-staking.actions';
+import {getPackageAction, getUsdbPackageAction} from '@/lib/reduxs/hs-stakings/hs-staking.actions';
 import { useCallback, useEffect } from 'react'
 import { useAccount } from 'wagmi';
 
 export default function WalletListener() {
   const {isConnected, address} = useAccount();
   const {onOpenProcessing, onCloseProcessing} = useProcessing();
-  const {onFetchVaulStakedInfo, onFetchSTotalStaked} = useRefetchBalance();
+  const {onFetchVaulStakedInfo, onFetchSTotalStaked, onFetchUsdbVaulStakedInfo, onFetchUsdbSTotalStaked} = useRefetchBalance();
 
   const dispatch = useAppDispatch();
 
@@ -19,12 +19,14 @@ export default function WalletListener() {
     try {
       await dispatch(fetchWalletInfoGlobalAction()).unwrap();
       onFetchVaulStakedInfo();
+      onFetchUsdbVaulStakedInfo();
     } catch(ex) {}
     onCloseProcessing();
   }, [isConnected, address])
 
   const getPackage = useCallback(async() => {
     dispatch(getPackageAction())
+    dispatch(getUsdbPackageAction())
   }, []);
 
   useEffect(() => {
@@ -37,6 +39,7 @@ export default function WalletListener() {
 
   useEffect(() => {
     onFetchSTotalStaked();
+    onFetchUsdbSTotalStaked();
   },[]);
 
 
