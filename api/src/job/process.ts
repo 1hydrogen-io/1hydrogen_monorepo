@@ -1,6 +1,6 @@
-import { updatePoint, wallets } from './service'
-import { Balance, Point } from './type'
-import { balance, ethPrice } from './utils'
+import { updatePoint, walletByRefCode, wallets } from './service'
+import { Balance } from './type'
+import { balance, ethPrice } from '../app.utils'
 
 export async function calculatePoint() {
   console.log('start...')
@@ -8,7 +8,6 @@ export async function calculatePoint() {
   const price = await ethPrice()
   let walletCount = walletList.length
 
-  const points: Point[] = []
   for (let i = 0; i < walletList.length; i++) {
     const wallet = walletList[i]
     const walletBalance: Balance = await balance(wallet.address)
@@ -35,14 +34,24 @@ export async function calculatePoint() {
     //hsusdb180 lock: 12 point/day
     stakingPoint += walletBalance.hsUsdb180 * 12
 
-    const point = supplyPoint + stakingPoint
-    points.push({ wallet: wallet.address, point, supplyPoint, stakingPoint })
-    console.log(walletCount--)
-  }
+    //referral point
+    if (wallet.joinedCode) {
+      const referrer = await walletByRefCode(wallet.joinedCode)
+      await updatePoint({
+        wallet: referrer.address,
+        supplyPoint: 0,
+        stakingPoint: 0,
+        referralPoint: ((stakingPoint + supplyPoint) * 25) / 100
+      })
+    }
 
-  //update db
-  for (let i = 0; i < points.length; i++) {
-    await updatePoint(points[i])
+    await updatePoint({
+      wallet: wallet.address,
+      supplyPoint,
+      stakingPoint,
+      referralPoint: 0
+    })
+    console.log(walletCount--)
   }
 
   console.log('finish')

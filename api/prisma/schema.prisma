@@ -12,11 +12,14 @@ datasource db {
 
 model wallet{
   address String @id
-  supplyPoint Decimal @db.Decimal(10,2)
-  stakingPoint Decimal @db.Decimal(10,2)
-  point Decimal @db.Decimal(10,2)
+  supplyPoint Decimal @db.Decimal(10,2) @default(0)
+  stakingPoint Decimal @db.Decimal(10,2) @default(0)
+  referralPoint Decimal @db.Decimal(10,2) @default(0)
+  point Decimal @db.Decimal(10,2) @default(0)
   updatedTime DateTime? @default(now()) @db.Timestamptz(6)
   latestTx String
+  referralCode String @unique 
+  joinedCode String?
 }
 
 model transaction{

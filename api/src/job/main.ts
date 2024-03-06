@@ -12,7 +12,7 @@ schedule('0 0 * * *', () => {
   })
 })
 
-main().catch((err) => {
-  console.log('exit with error', err)
-  process.exit(1)
-})
+// main().catch((err) => {
+//   console.log('exit with error', err)
+//   process.exit(1)
+// })

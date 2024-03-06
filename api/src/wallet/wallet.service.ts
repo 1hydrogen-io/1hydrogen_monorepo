@@ -1,11 +1,17 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common'
 import { PrismaService } from '../prisma.service'
-import { transactionReceipt } from '../app.utils'
-import { Interface, parseEther } from 'ethers'
+import { balance, transactionReceipt } from '../app.utils'
+import { Interface } from 'ethers'
 import { abis as vaultAbis } from '../abis/vault'
 import { IStakingStaked, IVaultStaked } from '../app.types'
-import { STAKING_ADDRESS, VAULT_ADDRESS } from '../app.settings'
+import {
+  STAKING_ADDRESS,
+  USDB_STAKING_ADDRESS,
+  USDB_VAULT_ADDRESS,
+  VAULT_ADDRESS
+} from '../app.settings'
 import { abis as stakingAbis } from '../abis/staking'
+import { randomUUID } from 'crypto'
 
 @Injectable()
 export class WalletService {
@@ -19,49 +25,65 @@ export class WalletService {
     return await this.prismaService.wallet.findMany({ orderBy: { point: 'desc' }, take })
   }
 
-  async createOrUpdate(tx: string) {
+  async createOrUpdate(tx: string, joinedCode: string) {
     const txReceipt = await transactionReceipt(tx)
     const contract = txReceipt.to
     console.log('tx', txReceipt.logs)
-    if (contract != VAULT_ADDRESS && contract != STAKING_ADDRESS)
+    if (
+      contract != VAULT_ADDRESS &&
+      contract != STAKING_ADDRESS &&
+      contract != USDB_VAULT_ADDRESS &&
+      contract != USDB_STAKING_ADDRESS
+    )
       throw new HttpException('invalid tx', HttpStatus.BAD_REQUEST)
+
     await this.prismaService.transaction.create({
       data: { txHash: txReceipt.hash, sender: txReceipt.from, contract }
     })
-    let supplyPoint = 0
-    let stakingPoint = 0
 
     let staker: string
-    if (contract == VAULT_ADDRESS) {
+    if (contract == VAULT_ADDRESS || contract == USDB_VAULT_ADDRESS) {
       const iface = new Interface(vaultAbis)
-      const eventData = iface.parseLog(txReceipt.logs[0])?.args as unknown as IVaultStaked
+      let logIndex = 0
+      if (contract == USDB_VAULT_ADDRESS) logIndex = 2
+      const eventData = iface.parseLog(txReceipt.logs[logIndex])?.args as unknown as IVaultStaked
       staker = eventData.staker
-      supplyPoint = Math.floor(Number(eventData.amount / parseEther('0.01'))) * 0.01
-    } else if (contract == STAKING_ADDRESS) {
+    } else if (contract == STAKING_ADDRESS || contract == USDB_STAKING_ADDRESS) {
       const iface = new Interface(stakingAbis)
       const eventData = iface.parseLog(txReceipt.logs[2])?.args as unknown as IStakingStaked
       staker = eventData.staker
-      stakingPoint = Math.floor(Number(eventData.amount / parseEther('0.01'))) * 1
-      if (eventData.package == 1)
-        //+20% lock 1M
-        stakingPoint += (stakingPoint * 20) / 100
-      if (eventData.package == 2)
-        //+80% lock 3M
-        stakingPoint += (stakingPoint * 80) / 100
-      if (eventData.package == 3)
-        //+200% lock 6M
-        stakingPoint += (stakingPoint * 200) / 100
     }
-    const point = stakingPoint + supplyPoint
 
-    return await this.prismaService.wallet.upsert({
-      where: { address: staker },
-      update: {
-        supplyPoint: { increment: supplyPoint },
-        stakingPoint: { increment: stakingPoint },
-        point: { increment: point }
-      },
-      create: { address: staker, supplyPoint, stakingPoint, point, latestTx: txReceipt.hash }
-    })
+    const onChainBalance = await balance(staker)
+    const hasBalance = Object.keys(onChainBalance).find((f) => onChainBalance[f] > 0)
+
+    let wallet = await this.prismaService.wallet.findUnique({ where: { address: staker } })
+    if (!wallet && !hasBalance) {
+      let refCode = randomUUID()
+      while (await this.prismaService.wallet.findUnique({ where: { referralCode: refCode } }))
+        refCode = randomUUID()
+
+      const referrer = await this.prismaService.wallet.findUnique({
+        where: { referralCode: joinedCode }
+      })
+
+      wallet = await this.prismaService.wallet.create({
+        data: {
+          address: staker,
+          latestTx: txReceipt.hash,
+          referralCode: refCode,
+          joinedCode: referrer ? joinedCode : ''
+        }
+      })
+    }
+
+    return wallet
+  }
+
+  async player(wallet: string) {
+    for (let i = 0; i < 7; i++) {
+      console.log(i, randomUUID())
+    }
+    return await this.prismaService.wallet.findUnique({ where: { address: wallet } })
   }
 }
