@@ -118,7 +118,7 @@ export default function RepayContainer() {
           value={amount}
         />
         <ButtonCustom h="48px" onClick={onSetMax}>
-          {isEthSelected ? "hsETH" : "hsUSDB"}
+          MAX
         </ButtonCustom>
       </Flex>
       <LabelValueItem

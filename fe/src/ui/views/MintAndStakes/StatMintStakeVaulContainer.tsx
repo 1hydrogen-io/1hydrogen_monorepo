@@ -8,29 +8,13 @@ import {Flex} from '@chakra-ui/react'
 import React from 'react'
 import TotalHsTokenStakedAndLocked from '../Commons/TotalHsTokenStakedAndLocked'
 import {useGlobalState} from "@/lib/reduxs/globals/global.hook";
-import {useContractRead} from "wagmi";
-import {usdbAbi} from "@/lib/contracts/abis/usdb";
-import {BigNumber, ethers} from "ethers";
-import {CONTRACTS} from "@/lib/constans";
 
 export default function StatMintStakeVaulContainer() {
     const {sTotalStaked, usdbSTotalStaked} = useAppSelector(p => p.vaul);
-    const {ethUsdt} = useBaseEthContract();
+    const {ethUsdt, usdbUsdt} = useBaseEthContract();
     useAppSelector(p => p.hsStake);
     const {globalState: {currentCoin}} = useGlobalState();
     const isEthSelected = currentCoin === "eth";
-
-
-    const {
-        data: usdbPriceData = BigInt(0),
-    } = useContractRead({
-        abi: CONTRACTS.usdb.abi,
-        address: CONTRACTS.usdb.address,
-        functionName: 'price',
-    })
-
-
-    const usdbPrice = ethers.utils.formatUnits(usdbPriceData as BigNumber);
 
     return (
         <Flex flexDirection="column" w="full" gap="25px">
@@ -41,7 +25,7 @@ export default function StatMintStakeVaulContainer() {
                 percent=""
                 totalVal={isEthSelected ?
                     `$${balanceFormatWithPrefix(sTotalStaked * ethUsdt)}` :
-                    `$${balanceFormatWithPrefix(usdbSTotalStaked * Number(usdbPrice))}`
+                    `$${balanceFormatWithPrefix(usdbSTotalStaked * usdbUsdt)}`
                 }
             />
             <TotalHsTokenStakedAndLocked/>

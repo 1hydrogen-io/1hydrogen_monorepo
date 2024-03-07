@@ -1,6 +1,9 @@
 import React, { useCallback, useEffect, useState } from 'react'
 import BaseEthContract from '../contracts/BaseEtherContract';
 import UsdbContract from "@/lib/contracts/UsdbContract";
+import {readContract} from "@wagmi/core";
+import {CONTRACTS} from "@/lib/constans";
+import {ethers} from "ethers";
 
 export default function useTokenContract() {
   const [ethUsdt, setEthUsdt] = useState<number>(0)
@@ -13,18 +16,22 @@ export default function useTokenContract() {
     } catch (ex) {}
   }, []);
 
-  // const getUsdbPrice = useCallback(async() => {
-  //   try {
-  //     const usdbContract = new UsdbContract();
-  //     const price = await usdbContract.getPrice();
-  //     setUsdbUsdt(price);
-  //   } catch (ex) {}
-  // }, []);
+  const getUsdbPrice = useCallback(async() => {
+    const price = await readContract({
+      abi: CONTRACTS.usdb.abi,
+        address: CONTRACTS.usdb.address,
+        functionName: 'price',
+    })
+    const usdbUnit = ethers.utils.formatUnits(Number(price), 8);
+    const usdbPrice = Number.parseFloat(usdbUnit);
+    setUsdbUsdt(usdbPrice);
+  }, []);
 
   useEffect(() => {
     getEthPrice();
-  }, [getEthPrice]);
+    getUsdbPrice();
+  }, [getEthPrice, getUsdbPrice]);
 
 
-  return {ethUsdt}
+  return {ethUsdt, usdbUsdt}
 }

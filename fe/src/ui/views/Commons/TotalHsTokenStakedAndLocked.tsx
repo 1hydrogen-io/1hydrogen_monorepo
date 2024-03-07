@@ -5,26 +5,12 @@ import {balanceFormatWithPrefix, isProduction, numberFormat} from '@/lib/utls';
 import StakeCard from '@/ui/components/StakeCard';
 import React from 'react'
 import {useGlobalState} from "@/lib/reduxs/globals/global.hook";
-import {useContractRead} from "wagmi";
-import {usdbAbi} from "@/lib/contracts/abis/usdb";
-import {BigNumber, ethers} from "ethers";
-import {CONTRACTS} from "@/lib/constans";
 
 export default function TotalHsTokenStakedAndLocked() {
-  const  {ethUsdt} = useBaseEthContract();
+  const  {ethUsdt, usdbUsdt} = useBaseEthContract();
   const {totalHsEthLocked, totalHsEthStaked, totalHsUsdbStaked, totalHsUsdbLocked} = useAppSelector(p => p.hsStake);
   const {globalState: {currentCoin}} = useGlobalState();
   const isEthSelected = currentCoin === "eth";
-
-  const {
-    data: usdbPriceData = BigInt(0),
-  } = useContractRead({
-    abi: CONTRACTS.usdb.abi,
-    address: CONTRACTS.usdb.address,
-    functionName: 'price',
-  })
-
-  const usdbPrice = ethers.utils.formatUnits(usdbPriceData as BigNumber);
   return (
     <>
     <StakeCard
@@ -34,7 +20,7 @@ export default function TotalHsTokenStakedAndLocked() {
         totalVal={
           isEthSelected ?
               `$${balanceFormatWithPrefix(totalHsEthStaked * ethUsdt)}` :
-              `$${balanceFormatWithPrefix(totalHsUsdbStaked * Number(usdbPrice))}`
+              `$${balanceFormatWithPrefix(totalHsUsdbStaked * usdbUsdt)}`
         }
       />
       <StakeCard
@@ -44,7 +30,7 @@ export default function TotalHsTokenStakedAndLocked() {
         totalVal={
           isEthSelected ?
               `$${balanceFormatWithPrefix(totalHsEthLocked * ethUsdt)}` :
-              `$${balanceFormatWithPrefix(totalHsUsdbLocked * Number(usdbPrice))}`
+              `$${balanceFormatWithPrefix(totalHsUsdbLocked * usdbUsdt)}`
       }
       />
     </>

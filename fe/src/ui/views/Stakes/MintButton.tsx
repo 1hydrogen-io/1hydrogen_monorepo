@@ -6,7 +6,7 @@ import {getEthersSigner} from '@/lib/hooks/useEtherSigner';
 import useProcessing from '@/lib/hooks/useProcessing';
 import {fetchWalletInfoGlobalAction} from '@/lib/reduxs/globals/global.action';
 import {useAppDispatch, useAppSelector} from '@/lib/reduxs/hooks';
-import {resetUserValue} from '@/lib/reduxs/hs-stakings/hs-staking.slices';
+import {resetUsdbUserValue, resetUserValue} from '@/lib/reduxs/hs-stakings/hs-staking.slices';
 import {getToast} from '@/lib/utls';
 import ButtonCustom from '@/ui/components/ButtonCustom'
 import {useToast} from '@chakra-ui/react';
@@ -24,7 +24,7 @@ export default function MintButton() {
     const dispatch = useAppDispatch();
     const {isConnected} = useAccount();
     const {openConnectModal} = useConnectModal();
-    const {packageSelected, hsEthAmount} = useAppSelector(p => p.hsStake);
+    const {packageSelected, hsEthAmount, hsUsdbAmount} = useAppSelector(p => p.hsStake);
 
     const title = useMemo(() => {
         if (isConnected) return 'STAKE';
@@ -34,7 +34,6 @@ export default function MintButton() {
     const isEthSelected = useMemo(() => currentCoin === "eth", [currentCoin]);
 
     const stakeEth = async (signer: any, amount: number) => {
-        onOpenProcessing('STAKING_HS_ETH');
         try {
             const hsEthContract = new HsEthContract(signer);
             const hsEthStakingContract = new HsEthStakingContract(signer);
@@ -53,7 +52,6 @@ export default function MintButton() {
     }
 
     const stakeUsdb = async (signer: any, amount: number) => {
-        onOpenProcessing('STAKING_HS_USDB');
         try {
             const hsUsdbContract = new HsUsdbContract(signer);
             const hsUsdbStakingContract = new HsUsdbStakingContract(signer);
@@ -65,7 +63,7 @@ export default function MintButton() {
             }
             await dispatch(fetchWalletInfoGlobalAction()).unwrap();
             toast(getToast(`Stake successfully `, 'success', 'Stake HsUsdb'))
-            dispatch(resetUserValue());
+            dispatch(resetUsdbUserValue());
         } catch (ex) {
             toast(getToast('Something went wrong'))
         }
@@ -77,23 +75,38 @@ export default function MintButton() {
             return;
         }
         const signer = await getEthersSigner();
-        if (!signer) return;
-        const amount = Number(hsEthAmount);
-        if (!amount) {
-            toast(getToast(`Invalid amount`));
-            return;
-        }
-        if(isEthSelected) {
-            stakeEth(signer, amount).then();
-        } else {
-            stakeUsdb(signer, amount).then()
+        if (!signer) return
+        try {
+
+            if (isEthSelected) {
+                onOpenProcessing('STAKING_HS_ETH');
+                const amount = Number(hsEthAmount);
+                if (!amount) {
+                    toast(getToast(`Invalid amount`));
+                    return;
+                }
+                stakeEth(signer, amount).then();
+            } else {
+                onOpenProcessing('STAKING_HS_USDB');
+                const amount = Number(hsUsdbAmount);
+                if (!amount) {
+                    toast(getToast(`Invalid amount`));
+                    return;
+                }
+                stakeUsdb(signer, amount).then()
+            }
+        } catch (ex) {
+            toast(getToast('Something went wrong'))
         }
         onCloseProcessing();
     }
 
     return (
-        <ButtonCustom w="full" isLoading={isProcessing}
-                      onClick={handleClick}>
+        <ButtonCustom
+            w="full"
+            isLoading={isProcessing}
+            onClick={handleClick}
+        >
             {title}
         </ButtonCustom>
     );

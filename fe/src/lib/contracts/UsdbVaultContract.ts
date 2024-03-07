@@ -43,6 +43,7 @@ export default class UsdbVaultContract extends Erc20 {
 
     claimHsUsdbMutation = async(amount: number) => {
         const response:TransactionResponse = await this._contract.claimHsUSDB(this._toWei(amount), this._option);
+        console.log(response, "response")
         return this._handleTransactionResponse(response);
     }
 

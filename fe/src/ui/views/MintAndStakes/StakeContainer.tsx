@@ -60,13 +60,13 @@ export default function StakeContainer() {
     const usdbStakeTx = async (signer: any, amount: any) => {
         const usdbAmountUnit = ethers.utils.parseUnits(amount);
         try {
+            const usdbVaultContract = new UsdbVaultContract(signer);
             const result = await writeContract({
                 abi: CONTRACTS.usdb.abi,
                 address: CONTRACTS.usdb.address,
                 functionName: 'approve',
-                args: ["0x02b436EAE5E1BAe083B9BB8eB03aAAcdd375985a", usdbAmountUnit],
+                args: [usdbVaultContract._contractAddress, usdbAmountUnit],
             })
-            const usdbVaultContract = new UsdbVaultContract(signer);
             return await usdbVaultContract.stakeMutation(amount);
         } catch (err) {
             console.log(err, "error in usdbStakeTx")
@@ -84,6 +84,7 @@ export default function StakeContainer() {
         try {
             onOpenProcessing('STAKE');
             const tx = isEthSelected ? await ethStakeTx(signer, amount) : await usdbStakeTx(signer, amount);
+            console.log(tx)
             try {
                 await addPointApi(tx as string);
             } catch {
@@ -100,7 +101,6 @@ export default function StakeContainer() {
         }
         onCloseProcessing();
     }
-
 
     useEffect(() => {
         setAmount('')

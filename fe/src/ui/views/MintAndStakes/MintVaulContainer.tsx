@@ -17,10 +17,7 @@ import React, {useEffect, useMemo, useState} from 'react'
 import {useAccount} from 'wagmi'
 import {useGlobalState} from "@/lib/reduxs/globals/global.hook";
 import UsdbVaultContract from "@/lib/contracts/UsdbVaultContract";
-import {writeContract} from "@wagmi/core";
-import {usdbAbi} from "@/lib/contracts/abis/usdb";
 import {ethers} from "ethers";
-import {CONTRACTS} from "@/lib/constans";
 
 export default function MintVaulContainer() {
     const {isConnected} = useAccount()
@@ -58,13 +55,8 @@ export default function MintVaulContainer() {
 
     const mintUsdb = async (signer: any, amount: number) => {
         try {
-            const usdbAmountUnit = ethers.utils.formatUnits(amount);
-            await writeContract({
-                abi: CONTRACTS.usdb.abi,
-                address: CONTRACTS.usdb.address,
-                functionName: 'approve',
-                args: ["0x02b436EAE5E1BAe083B9BB8eB03aAAcdd375985a", usdbAmountUnit],
-            })
+            const usdbAmountUnit = ethers.utils.parseUnits(amount.toString());
+            console.log(usdbAmountUnit)
             const usdbVaultContract = new UsdbVaultContract(signer);
             const tx = await usdbVaultContract.claimHsUsdbMutation(amount);
             onSuccessToast('Mint hsUSDB successfully', 'Success');

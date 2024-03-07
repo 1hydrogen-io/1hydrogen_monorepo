@@ -74,13 +74,13 @@ export default function UnstackContainer() {
             onOpenProcessing('UNSTAKE');
             if (isEthSelected) {
                 await unStakeEth(signer, amountNum);
+                await onReFetchVaul();
             } else {
                 await unStakeUsdb(signer, amountNum);
+                await onReFetchUsdbVaul();
             }
             setAmount('');
             await onRefetch();
-            await onReFetchVaul();
-            await onReFetchUsdbVaul();
             onSuccessToast('UnStake successfully');
         } catch (ex) {
             onErrorToast();
