@@ -24,7 +24,7 @@ export default function MintVaulContainer() {
     const {vaulStaked, usdbVaulStaked} = useAppSelector(p => p.vaul);
     const {isProcessing, onCloseProcessing, onOpenProcessing} = useProcessing();
     const {onErrorToast, onSuccessToast} = useToastCustom();
-    const {onReFetchVaul, onReFetchUsdbVaul} = useRefetchBalance();
+    const {onReFetchVaul, onReFetchUsdbVaul, onRefetch} = useRefetchBalance();
     const {globalState: {currentCoin}} = useGlobalState();
     const isEthSelected = useMemo(() => currentCoin === "eth", [currentCoin]);
 
@@ -80,6 +80,7 @@ export default function MintVaulContainer() {
                 await mintUsdb(signer, amountNumber);
                 await onReFetchUsdbVaul();
             }
+            await onRefetch();
             setAmount('');
         } catch (Ex) {
             console.log(Ex)

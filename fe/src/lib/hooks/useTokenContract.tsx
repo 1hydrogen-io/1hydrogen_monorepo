@@ -1,13 +1,18 @@
 import React, { useCallback, useEffect, useState } from 'react'
 import BaseEthContract from '../contracts/BaseEtherContract';
 import UsdbContract from "@/lib/contracts/UsdbContract";
-import {readContract} from "@wagmi/core";
+import {getEthersSigner} from "@/lib/hooks/useEtherSigner";
+import {readContract, writeContract} from "@wagmi/core";
 import {CONTRACTS} from "@/lib/constans";
-import {ethers} from "ethers";
+import {toNumberBalance} from "@/lib/contracts/utils/common";
+import {BigNumber, ethers} from "ethers";
+import {usdbAbi} from "@/lib/contracts/abis/usdb";
 
 export default function useTokenContract() {
   const [ethUsdt, setEthUsdt] = useState<number>(0)
   const [usdbUsdt, setUsdbUsdt] = useState<number>(0)
+  const usdbContractAbi = CONTRACTS.usdb.abi;
+  const usdbContractAddress = CONTRACTS.usdb.address;
   const getEthPrice = useCallback(async() => {
     try {
       const baseContract = new BaseEthContract();
@@ -16,15 +21,29 @@ export default function useTokenContract() {
     } catch (ex) {}
   }, []);
 
+
   const getUsdbPrice = useCallback(async() => {
-    const price = await readContract({
-      abi: CONTRACTS.usdb.abi,
-        address: CONTRACTS.usdb.address,
-        functionName: 'price',
+    try {
+      const priceData = await readContract({
+        abi: usdbContractAbi,
+        address: usdbContractAddress,
+        functionName: 'price'
+      })
+      const price = toNumberBalance(priceData as BigNumber, 8);
+      setUsdbUsdt(price)
+    } catch (ex) {
+      console.log('usdb price', ex)
+    }
+  }, []);
+
+  const approveUsdbContract = useCallback(async (sender: string, amount: string) => {
+    const amountUnit = ethers.utils.parseUnits(amount);
+    await writeContract({
+      abi: usdbContractAbi,
+      address: usdbContractAddress,
+      functionName: 'approve',
+      args: [sender, amountUnit],
     })
-    const usdbUnit = ethers.utils.formatUnits(Number(price), 8);
-    const usdbPrice = Number.parseFloat(usdbUnit);
-    setUsdbUsdt(usdbPrice);
   }, []);
 
   useEffect(() => {
@@ -33,5 +52,5 @@ export default function useTokenContract() {
   }, [getEthPrice, getUsdbPrice]);
 
 
-  return {ethUsdt, usdbUsdt}
+  return {ethUsdt, usdbUsdt, approveUsdbContract}
 }

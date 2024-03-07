@@ -69,6 +69,13 @@ export default function MintButton() {
         }
     }
 
+    const checkAmount = (amount: number) => {
+        if(!amount || amount < 0) {
+            toast(getToast(`Invalid amount`));
+            return false;
+        }
+        return true;
+    }
     const handleClick = async () => {
         if (!isConnected) {
             openConnectModal && openConnectModal();
@@ -81,18 +88,12 @@ export default function MintButton() {
             if (isEthSelected) {
                 onOpenProcessing('STAKING_HS_ETH');
                 const amount = Number(hsEthAmount);
-                if (!amount) {
-                    toast(getToast(`Invalid amount`));
-                    return;
-                }
+                if(!checkAmount(amount)) return;
                 stakeEth(signer, amount).then();
             } else {
                 onOpenProcessing('STAKING_HS_USDB');
                 const amount = Number(hsUsdbAmount);
-                if (!amount) {
-                    toast(getToast(`Invalid amount`));
-                    return;
-                }
+                if(!checkAmount(amount)) return;
                 stakeUsdb(signer, amount).then()
             }
         } catch (ex) {

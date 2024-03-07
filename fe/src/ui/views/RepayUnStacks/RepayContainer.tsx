@@ -86,13 +86,13 @@ export default function RepayContainer() {
       onOpenProcessing('REPAY');
       if(isEthSelected) {
         await repayEth(signer, amountNum);
+        await onReFetchVaul();
       } else {
         await repayUsdb(signer, amountNum);
+        await onReFetchUsdbVaul();
       }
       setAmount('');
       await onRefetch();
-      await onReFetchVaul();
-      await onReFetchUsdbVaul();
       onSuccessToast('Repay successfully');
     } catch(ex) {
       onErrorToast();

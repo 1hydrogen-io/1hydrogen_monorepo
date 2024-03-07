@@ -5,4 +5,5 @@ export interface IWalletBalance {
     hsEth: number;
     point: IWalletPoint;
     hsUsdb: number;
+    usdb: number;
 }

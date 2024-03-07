@@ -15,7 +15,7 @@ export default class UsdbContract extends Erc20 {
     }
 
     getPrice = async()=> {
-        const price = await this._contract.latestAnswer();
+        const price = await this._contract.price();
         return this._toNumberBalance(price, 8);
     }
 }

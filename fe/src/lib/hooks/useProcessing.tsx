@@ -9,7 +9,7 @@ type ProcessName =
   | "REPAY"
   | "STAKING_HS_ETH"
   | "GLOBAL"
-  | "STAKING_HS_USDB"
+    | "STAKING_HS_USDB"
 ;
 
 export default function useProcessing() {

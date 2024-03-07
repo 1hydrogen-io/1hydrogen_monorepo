@@ -49,7 +49,6 @@ export const fetchSTotalStakedAction = createAsyncThunk<number, void>(
   'vaul/fetchSTotalStakedAction',
   async() => {
     const vaulContract = new VaultContract();
-    const sTotalStaked = await vaulContract.sTotalStaked();
-    return sTotalStaked;
+      return await vaulContract.sTotalStaked();
   }
 )

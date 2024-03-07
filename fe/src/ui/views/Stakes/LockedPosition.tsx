@@ -49,7 +49,6 @@ export default function LockedPosition() {
         (stakedInfos.length < 1 && isEthSelected) ||
         (usdbStakedInfos.length < 1 && !isEthSelected)
     ) return null;
-
     return (
         <Flex w="full" flexDirection="column">
             <MainTitle mb="24px">Locked Positions</MainTitle>

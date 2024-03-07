@@ -18,9 +18,7 @@ import {useAccount, useContractRead} from 'wagmi'
 import {useGlobalState} from "@/lib/reduxs/globals/global.hook";
 import {usdbAbi} from "@/lib/contracts/abis/usdb";
 import UsdbVaultContract from "@/lib/contracts/UsdbVaultContract";
-import {BigNumber, ethers} from "ethers";
-import {writeContract} from "@wagmi/core";
-import {CONTRACTS} from "@/lib/constans";
+import useTokenContract from "@/lib/hooks/useTokenContract";
 
 export default function StakeContainer() {
     const {isConnected, address} = useAccount();
@@ -29,26 +27,14 @@ export default function StakeContainer() {
     const {onErrorToast, onSuccessToast} = useToastCustom();
     const {onRefetch, onReFetchVaul, onReFetchUsdbVaul} = useRefetchBalance();
     const {globalState: {currentCoin}} = useGlobalState();
+    const {approveUsdbContract} = useTokenContract()
     const isEthSelected = useMemo(() => currentCoin === "eth", [currentCoin]);
 
     const [amount, setAmount] = useState<string>('');
 
-    const {
-        data: usdbBalanceData = BigInt(0),
-        refetch: refetchUsdbBalance
-    } = useContractRead({
-        abi: CONTRACTS.usdb.abi,
-        address: CONTRACTS.usdb.address,
-        functionName: 'balanceOf',
-        args: [address],
-        enabled: isConnected,
-    })
-
-    const usdbBalance = ethers.utils.formatUnits(usdbBalanceData as BigNumber);
-
     const onAmountChange = (val: string) => {
         if (subtract(balance.eth, Number(val)) < 0 && isEthSelected) return;
-        if (subtract(Number(usdbBalance), Number(val)) < 0 && !isEthSelected) return;
+        if (subtract(balance.usdb, Number(val)) < 0 && !isEthSelected) return;
         setAmount(val)
     }
 
@@ -58,21 +44,14 @@ export default function StakeContainer() {
     }
 
     const usdbStakeTx = async (signer: any, amount: any) => {
-        const usdbAmountUnit = ethers.utils.parseUnits(amount);
         try {
             const usdbVaultContract = new UsdbVaultContract(signer);
-            const result = await writeContract({
-                abi: CONTRACTS.usdb.abi,
-                address: CONTRACTS.usdb.address,
-                functionName: 'approve',
-                args: [usdbVaultContract._contractAddress, usdbAmountUnit],
-            })
+            await approveUsdbContract(usdbVaultContract._contractAddress, amount);
             return await usdbVaultContract.stakeMutation(amount);
         } catch (err) {
             console.log(err, "error in usdbStakeTx")
             throw err;
         }
-
     }
     const onHandleStake = async () => {
         const amountNum = Number(amount);
@@ -83,15 +62,15 @@ export default function StakeContainer() {
         }
         try {
             onOpenProcessing('STAKE');
-            const tx = isEthSelected ? await ethStakeTx(signer, amount) : await usdbStakeTx(signer, amount);
-            console.log(tx)
+            const tx = isEthSelected ?
+                await ethStakeTx(signer, amount) :
+                await usdbStakeTx(signer, amount);
             try {
                 await addPointApi(tx as string);
             } catch {
             }
             setAmount('');
             await onRefetch();
-            await refetchUsdbBalance();
             await onReFetchVaul();
             await onReFetchUsdbVaul();
             onSuccessToast('Stake successfully');
@@ -109,7 +88,7 @@ export default function StakeContainer() {
     const isLocked = useMemo(() => {
         if (!isConnected) return true;
         if (!balance.eth && isEthSelected) return true;
-        if (!Number(usdbBalance) && !isEthSelected) return true;
+        if (!balance.usdb && !isEthSelected) return true;
         return false;
     }, [isConnected, balance, isEthSelected]);
 
@@ -134,7 +113,7 @@ export default function StakeContainer() {
             />
             <LabelValueItem
                 label={"Available amount to stake"}
-                value={isEthSelected ? `${numberFormat(balance.eth)} ETH` : `${numberFormat(Number(usdbBalance))} USDB`}
+                value={isEthSelected ? `${numberFormat(balance.eth)} ETH` : `${numberFormat(balance.usdb)} USDB`}
                 my="16px"
             />
             <ButtonCustom w="full"

@@ -5,6 +5,7 @@ import LabelValueColumn from '@/ui/components/LabelValueColumn'
 import { Flex, Image } from '@chakra-ui/react'
 import React, { useMemo } from 'react'
 import {useGlobalState} from "@/lib/reduxs/globals/global.hook";
+import useTokenContract from "@/lib/hooks/useTokenContract";
 
 interface IProps {
   isShow?: boolean;
@@ -14,7 +15,7 @@ export default function StakedLockedAPR({isShow, isShowPoint}: IProps) {
   const {packages, stakedAmount, lockedHsETHBalance, lockedHsUSDBBalance,
   usdbPackages, usdbStakedAmount} = useAppSelector(p => p.hsStake);
   const {balance} = useAppSelector(p => p.wallet);
-  const {ethUsdt, usdbUsdt} = useBaseEthContract();
+  const {ethUsdt, usdbUsdt} = useTokenContract();
   const {globalState: {currentCoin}} = useGlobalState();
   const isEthSelected = useMemo(() => currentCoin === "eth", [currentCoin]);
 
