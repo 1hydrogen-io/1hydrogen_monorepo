@@ -9,6 +9,7 @@ import {useAccount, useContractRead} from "wagmi";
 import {usdbAbi} from "@/lib/contracts/abis/usdb";
 import {isProduction} from "@/lib/utls";
 import {BigNumber, ethers} from "ethers";
+import {CONTRACTS} from "@/lib/constans";
 
 interface IProps {
   isShow?: boolean;
@@ -25,8 +26,8 @@ export default function StakedLockedAPR({isShow, isShowPoint}: IProps) {
   const {
     data: usdbPriceData = BigInt(0),
   } = useContractRead({
-    abi: usdbAbi,
-    address: '0x4200000000000000000000000000000000000022',
+    abi: CONTRACTS.usdb.abi,
+    address: CONTRACTS.usdb.address,
     functionName: 'price',
   })
   const usdbPrice = ethers.utils.formatUnits(usdbPriceData as BigNumber);

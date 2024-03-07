@@ -19,14 +19,15 @@ import {useGlobalState} from "@/lib/reduxs/globals/global.hook";
 import {usdbAbi} from "@/lib/contracts/abis/usdb";
 import UsdbVaultContract from "@/lib/contracts/UsdbVaultContract";
 import {BigNumber, ethers} from "ethers";
-import {readContract, writeContract} from "@wagmi/core";
+import {writeContract} from "@wagmi/core";
+import {CONTRACTS} from "@/lib/constans";
 
 export default function StakeContainer() {
     const {isConnected, address} = useAccount();
     const {balance} = useAppSelector(p => p.wallet);
     const {isProcessing, onCloseProcessing, onOpenProcessing} = useProcessing();
     const {onErrorToast, onSuccessToast} = useToastCustom();
-    const {onRefetch, onReFetchVaul} = useRefetchBalance();
+    const {onRefetch, onReFetchVaul, onReFetchUsdbVaul} = useRefetchBalance();
     const {globalState: {currentCoin}} = useGlobalState();
     const isEthSelected = useMemo(() => currentCoin === "eth", [currentCoin]);
 
@@ -36,8 +37,8 @@ export default function StakeContainer() {
         data: usdbBalanceData = BigInt(0),
         refetch: refetchUsdbBalance
     } = useContractRead({
-        abi: usdbAbi,
-        address: '0x4200000000000000000000000000000000000022',
+        abi: CONTRACTS.usdb.abi,
+        address: CONTRACTS.usdb.address,
         functionName: 'balanceOf',
         args: [address],
         enabled: isConnected,
@@ -59,10 +60,9 @@ export default function StakeContainer() {
     const usdbStakeTx = async (signer: any, amount: any) => {
         const usdbAmountUnit = ethers.utils.parseUnits(amount);
         try {
-            console.log(address, "address")
             const result = await writeContract({
-                abi: usdbAbi,
-                address: '0x4200000000000000000000000000000000000022',
+                abi: CONTRACTS.usdb.abi,
+                address: CONTRACTS.usdb.address,
                 functionName: 'approve',
                 args: ["0x02b436EAE5E1BAe083B9BB8eB03aAAcdd375985a", usdbAmountUnit],
             })
@@ -90,8 +90,9 @@ export default function StakeContainer() {
             }
             setAmount('');
             await onRefetch();
-            await onReFetchVaul();
             await refetchUsdbBalance();
+            await onReFetchVaul();
+            await onReFetchUsdbVaul();
             onSuccessToast('Stake successfully');
         } catch (ex) {
             console.log(ex, "error")

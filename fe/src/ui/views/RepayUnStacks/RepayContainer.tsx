@@ -24,7 +24,7 @@ export default function RepayContainer() {
   const {vaulStaked, usdbVaulStaked} = useAppSelector(p => p.vaul);
   const {isProcessing, onCloseProcessing, onOpenProcessing} = useProcessing();
   const {onErrorToast, onSuccessToast} = useToastCustom();
-  const {onRefetch, onReFetchVaul} = useRefetchBalance();
+  const {onRefetch, onReFetchVaul, onReFetchUsdbVaul} = useRefetchBalance();
   const [amount, setAmount] = useState<string>('');
   const {globalState: {currentCoin}} = useGlobalState();
   const isEthSelected = useMemo(() => currentCoin === "eth", [currentCoin]);
@@ -54,6 +54,27 @@ export default function RepayContainer() {
     setAmount(isEthSelected ? availableRepay.toString() : availableUsdbRepay.toString());
   }
 
+  const repayEth = async (signer: any, amount: number) => {
+    try {
+      const vaultContract = new VaultContract(signer);
+      const hsEthContract = new HsEthContract(signer);
+      await hsEthContract.approve(vaultContract._contractAddress, amount);
+      await vaultContract.repayHsEthMutation(amount);
+    } catch (e) {
+      throw e;
+    }
+  }
+
+  const repayUsdb = async (signer: any, amount: number) => {
+    try {
+        const usdbVaultContract = new UsdbVaultContract(signer);
+        const hsUsdbContract = new HsUsdbContract(signer);
+        await hsUsdbContract.approve(usdbVaultContract._contractAddress, amount);
+        await usdbVaultContract.repayHsUsdbMutation(amount);
+    } catch (e) {
+        throw e;
+    }
+  }
   const onHandleRepay = async()=> {
     const amountNum = Number(amount);
     const signer = await getEthersSigner();
@@ -64,19 +85,14 @@ export default function RepayContainer() {
     try {
       onOpenProcessing('REPAY');
       if(isEthSelected) {
-        const vaultContract = new VaultContract(signer);
-        const hsEthContract = new HsEthContract(signer);
-        await hsEthContract.approve(vaultContract._contractAddress, amountNum);
-        const tx = await vaultContract.repayHsEthMutation(amountNum);
+        await repayEth(signer, amountNum);
       } else {
-        const usdbVaultContract = new UsdbVaultContract(signer);
-        const hsUsdbContract = new HsUsdbContract(signer);
-        await hsUsdbContract.approve(usdbVaultContract._contractAddress, amountNum);
-        const tx = await usdbVaultContract.repayHsUsdbMutation(amountNum);
+        await repayUsdb(signer, amountNum);
       }
       setAmount('');
       await onRefetch();
       await onReFetchVaul();
+      await onReFetchUsdbVaul();
       onSuccessToast('Repay successfully');
     } catch(ex) {
       onErrorToast();

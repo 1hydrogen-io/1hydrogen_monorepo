@@ -22,7 +22,7 @@ export default function UnstackContainer() {
     const {vaulStaked, usdbVaulStaked} = useAppSelector(p => p.vaul);
     const {isProcessing, onCloseProcessing, onOpenProcessing} = useProcessing();
     const {onErrorToast, onSuccessToast} = useToastCustom();
-    const {onRefetch, onReFetchVaul} = useRefetchBalance();
+    const {onRefetch, onReFetchVaul, onReFetchUsdbVaul} = useRefetchBalance();
     const [amount, setAmount] = useState<string>('');
     const {globalState: {currentCoin}} = useGlobalState();
     const isEthSelected = useMemo(() => currentCoin === "eth", [currentCoin]);
@@ -43,6 +43,26 @@ export default function UnstackContainer() {
         setAmount(val)
     }
 
+    const unStakeEth = async (signer: any, amount: number) => {
+        try {
+            const vaulContract = new VaultContract(signer);
+            const tx = await vaulContract.unStakeMutation(amount);
+            onSuccessToast('UnStake ETH successfully', 'Success');
+        } catch (Ex) {
+            throw Ex;
+        }
+    }
+
+    const unStakeUsdb = async (signer: any, amount: number) => {
+        try {
+            const vaulContract = new UsdbVaultContract(signer);
+            const tx = await vaulContract.unStakeMutation(amount);
+            onSuccessToast('UnStake USDB successfully', 'Success');
+        } catch (Ex) {
+            throw Ex;
+        }
+    }
+
     const onHandleUnStake = async () => {
         const amountNum = Number(amount);
         const signer = await getEthersSigner();
@@ -52,11 +72,15 @@ export default function UnstackContainer() {
         }
         try {
             onOpenProcessing('UNSTAKE');
-            const vaultContract = isEthSelected ? new VaultContract(signer) : new UsdbVaultContract(signer);
-            const tx = await vaultContract.unStakeMutation(amountNum);
+            if (isEthSelected) {
+                await unStakeEth(signer, amountNum);
+            } else {
+                await unStakeUsdb(signer, amountNum);
+            }
             setAmount('');
             await onRefetch();
             await onReFetchVaul();
+            await onReFetchUsdbVaul();
             onSuccessToast('UnStake successfully');
         } catch (ex) {
             onErrorToast();

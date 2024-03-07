@@ -20,6 +20,7 @@ import UsdbVaultContract from "@/lib/contracts/UsdbVaultContract";
 import {writeContract} from "@wagmi/core";
 import {usdbAbi} from "@/lib/contracts/abis/usdb";
 import {ethers} from "ethers";
+import {CONTRACTS} from "@/lib/constans";
 
 export default function MintVaulContainer() {
     const {isConnected} = useAccount()
@@ -45,23 +46,22 @@ export default function MintVaulContainer() {
         setAmount('')
     }, [currentCoin]);
 
-    const mintEth = async (signer: any, amount: any) => {
+    const mintEth = async (signer: any, amount: number) => {
         try {
             const vaulContract = new VaultContract(signer);
             const tx = await vaulContract.claimHsEthMutation(amount);
             onSuccessToast('Mint hsETH successfully', 'Success');
         } catch (Ex) {
-            console.log(Ex)
-            onErrorToast();
+            throw Ex;
         }
     }
 
-    const mintUsdb = async (signer: any, amount: any) => {
+    const mintUsdb = async (signer: any, amount: number) => {
         try {
-            const usdbAmountUnit = ethers.utils.parseUnits(amount);
-            const result = await writeContract({
-                abi: usdbAbi,
-                address: '0x4200000000000000000000000000000000000022',
+            const usdbAmountUnit = ethers.utils.formatUnits(amount);
+            await writeContract({
+                abi: CONTRACTS.usdb.abi,
+                address: CONTRACTS.usdb.address,
                 functionName: 'approve',
                 args: ["0x02b436EAE5E1BAe083B9BB8eB03aAAcdd375985a", usdbAmountUnit],
             })
@@ -69,8 +69,7 @@ export default function MintVaulContainer() {
             const tx = await usdbVaultContract.claimHsUsdbMutation(amount);
             onSuccessToast('Mint hsUSDB successfully', 'Success');
         } catch (Ex) {
-            console.log(Ex)
-            onErrorToast();
+            throw Ex;
         }
     }
 

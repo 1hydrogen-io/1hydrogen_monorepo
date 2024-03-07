@@ -8,6 +8,7 @@ import {useGlobalState} from "@/lib/reduxs/globals/global.hook";
 import {useContractRead} from "wagmi";
 import {usdbAbi} from "@/lib/contracts/abis/usdb";
 import {BigNumber, ethers} from "ethers";
+import {CONTRACTS} from "@/lib/constans";
 
 export default function TotalHsTokenStakedAndLocked() {
   const  {ethUsdt} = useBaseEthContract();
@@ -18,8 +19,8 @@ export default function TotalHsTokenStakedAndLocked() {
   const {
     data: usdbPriceData = BigInt(0),
   } = useContractRead({
-    abi: usdbAbi,
-    address: isProduction() ? '0x4200000000000000000000000000000000000022' : '0x4200000000000000000000000000000000000022',
+    abi: CONTRACTS.usdb.abi,
+    address: CONTRACTS.usdb.address,
     functionName: 'price',
   })
 

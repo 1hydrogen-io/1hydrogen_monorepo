@@ -11,6 +11,7 @@ import {useGlobalState} from "@/lib/reduxs/globals/global.hook";
 import {useContractRead} from "wagmi";
 import {usdbAbi} from "@/lib/contracts/abis/usdb";
 import {BigNumber, ethers} from "ethers";
+import {CONTRACTS} from "@/lib/constans";
 
 export default function StatMintStakeVaulContainer() {
     const {sTotalStaked, usdbSTotalStaked} = useAppSelector(p => p.vaul);
@@ -23,8 +24,8 @@ export default function StatMintStakeVaulContainer() {
     const {
         data: usdbPriceData = BigInt(0),
     } = useContractRead({
-        abi: usdbAbi,
-        address: '0x4200000000000000000000000000000000000022',
+        abi: CONTRACTS.usdb.abi,
+        address: CONTRACTS.usdb.address,
         functionName: 'price',
     })
 
