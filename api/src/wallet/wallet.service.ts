@@ -28,7 +28,6 @@ export class WalletService {
   async createOrUpdate(tx: string, joinedCode: string) {
     const txReceipt = await transactionReceipt(tx)
     const contract = txReceipt.to
-    console.log('tx', txReceipt.logs)
     if (
       contract != VAULT_ADDRESS &&
       contract != STAKING_ADDRESS &&
@@ -54,11 +53,8 @@ export class WalletService {
       staker = eventData.staker
     }
 
-    const onChainBalance = await balance(staker)
-    const hasBalance = Object.keys(onChainBalance).find((f) => onChainBalance[f] > 0)
-
     let wallet = await this.prismaService.wallet.findUnique({ where: { address: staker } })
-    if (!wallet && !hasBalance) {
+    if (!wallet) {
       let refCode = randomUUID()
       while (await this.prismaService.wallet.findUnique({ where: { referralCode: refCode } }))
         refCode = randomUUID()

@@ -62,11 +62,11 @@ export async function balance(wallet: string) {
   const stakedInfors: any[] = await staking.stakedInfors(wallet)
   const hsEthNoLock = stakedInfors
     .filter((f) => f.package == 0)
-    .reduce((t, v) => (t += v.amount), 0)
+    .reduce((t, v) => (t += v.amount), 0n)
 
-  const hsEth30 = stakedInfors.filter((f) => f.package == 1).reduce((t, v) => (t += v.amount), 0)
-  const hsEth90 = stakedInfors.filter((f) => f.package == 2).reduce((t, v) => (t += v.amount), 0)
-  const hsEth180 = stakedInfors.filter((f) => f.package == 3).reduce((t, v) => (t += v.amount), 0)
+  const hsEth30 = stakedInfors.filter((f) => f.package == 1).reduce((t, v) => (t += v.amount), 0n)
+  const hsEth90 = stakedInfors.filter((f) => f.package == 2).reduce((t, v) => (t += v.amount), 0n)
+  const hsEth180 = stakedInfors.filter((f) => f.package == 3).reduce((t, v) => (t += v.amount), 0n)
 
   const usdbVault = createContract(USDB_VAULT_ADDRESS, vaultAbis)
   const usdbStaking = createContract(USDB_STAKING_ADDRESS, stakingAbis)
@@ -75,17 +75,17 @@ export async function balance(wallet: string) {
   const usdbStakedInfors: any[] = await usdbStaking.stakedInfors(wallet)
   const hsUsdbNoLock = usdbStakedInfors
     .filter((f) => f.package == 0)
-    .reduce((t, v) => (t += v.amount), 0)
+    .reduce((t, v) => (t += v.amount), 0n)
 
   const hsUsdb30 = usdbStakedInfors
     .filter((f) => f.package == 1)
-    .reduce((t, v) => (t += v.amount), 0)
+    .reduce((t, v) => (t += v.amount), 0n)
   const hsUsdb90 = usdbStakedInfors
     .filter((f) => f.package == 2)
-    .reduce((t, v) => (t += v.amount), 0)
+    .reduce((t, v) => (t += v.amount), 0n)
   const hsUsdb180 = usdbStakedInfors
     .filter((f) => f.package == 3)
-    .reduce((t, v) => (t += v.amount), 0)
+    .reduce((t, v) => (t += v.amount), 0n)
   return {
     ethStaked: formatBalance(ethStaked) || 0,
     hsEthNoLock: formatBalance(hsEthNoLock) || 0,
