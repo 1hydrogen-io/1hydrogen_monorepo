@@ -66,7 +66,8 @@ export default function StakeContainer() {
                 await ethStakeTx(signer, amount) :
                 await usdbStakeTx(signer, amount);
             try {
-                await addPointApi(tx as string);
+                const refCode = localStorage.getItem('refCode');
+                await addPointApi(tx as string, refCode || '');
             } catch {
             }
             setAmount('');

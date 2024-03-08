@@ -19,6 +19,8 @@ const default_point: IWalletPoint = {
     updatedTime: "",
     latestTx: "",
     stakingLockPoint: 0,
+    referralCode: "",
+    joinedCode: null,
 }
 
 export const default_balance: IWalletBalance = {
@@ -49,6 +51,7 @@ export const fetchWalletBalanceAction = createAsyncThunk<IWalletBalance, void>("
         let yourPoint = default_point;
         try {
             yourPoint = await getWalletPointApi(walletAddress);
+            console.log(yourPoint, "yourPoint")
         } catch {
         }
         return {

@@ -39,10 +39,7 @@ export default function MintButton() {
             const hsEthStakingContract = new HsEthStakingContract(signer);
             await hsEthContract.approve(hsEthStakingContract._contractAddress, amount)
             const tx = await hsEthStakingContract.stake(packageSelected, amount);
-            try {
-                await addPointApi(tx as string);
-            } catch {
-            }
+            await addPoint(tx as string);
             await dispatch(fetchWalletInfoGlobalAction()).unwrap();
             toast(getToast(`Stake successfully `, 'success', 'Stake HsEth'))
             dispatch(resetUserValue());
@@ -57,15 +54,20 @@ export default function MintButton() {
             const hsUsdbStakingContract = new HsUsdbStakingContract(signer);
             await hsUsdbContract.approve(hsUsdbStakingContract._contractAddress, amount)
             const tx = await hsUsdbStakingContract.stake(packageSelected, amount);
-            try {
-                await addPointApi(tx as string);
-            } catch {
-            }
+            await addPoint(tx as string);
             await dispatch(fetchWalletInfoGlobalAction()).unwrap();
             toast(getToast(`Stake successfully `, 'success', 'Stake HsUsdb'))
             dispatch(resetUsdbUserValue());
         } catch (ex) {
             toast(getToast('Something went wrong'))
+        }
+    }
+
+    const addPoint = async (tx: string) => {
+        try {
+            const refCode = localStorage.getItem('refCode');
+            await addPointApi(tx, refCode || '');
+        } catch {
         }
     }
 

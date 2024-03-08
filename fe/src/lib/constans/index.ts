@@ -8,6 +8,8 @@ export const menus = [
 
 ]
 
+export const BASE_URL = 'https://1hydrogen.io/';
+
 export const socials = [
   {name: 'facebook', url: '#'},
   {name: 'medium', url: '#'},
