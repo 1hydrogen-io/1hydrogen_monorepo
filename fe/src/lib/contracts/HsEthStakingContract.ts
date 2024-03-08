@@ -55,6 +55,7 @@ export default class HsEthStakingContract extends Erc20 {
 
   getPackage = async(): Promise<IPackage[]> => {
     const rp: any[] = await this._contract.getPackage();
+
     const result = rp.map((item, index) => ({
       index,
       value: this._toNumber(item),

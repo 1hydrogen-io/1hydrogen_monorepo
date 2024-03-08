@@ -1,7 +1,12 @@
 import React from 'react'
 import { useAppDispatch } from '../reduxs/hooks'
 import { fetchWalletInfoGlobalAction } from '../reduxs/globals/global.action';
-import { fetchSTotalStakedAction, fetchVaulStakedInfo } from '../reduxs/vauls/vaul.actions';
+import {
+  fetchSTotalStakedAction,
+  fetchUsdbSTotalStakedAction,
+  fetchUsdbVaulStakedInfo,
+  fetchVaulStakedInfo
+} from '../reduxs/vauls/vaul.actions';
 
 export default function useRefetchBalance() {
   const dispatch = useAppDispatch();
@@ -15,6 +20,15 @@ export default function useRefetchBalance() {
     await dispatch(fetchSTotalStakedAction()).unwrap();
   }
 
+  const onReFetchUsdbVaul = async()=> {
+    await dispatch(fetchUsdbVaulStakedInfo()).unwrap();
+    await dispatch(fetchUsdbSTotalStakedAction()).unwrap();
+  }
+
+  const onFetchUsdbVaulStakedInfo = async()=> {
+    await dispatch(fetchUsdbVaulStakedInfo()).unwrap();
+  }
+
   const onFetchVaulStakedInfo = async()=> {
     await dispatch(fetchVaulStakedInfo()).unwrap();
   }
@@ -23,10 +37,17 @@ export default function useRefetchBalance() {
     await dispatch(fetchSTotalStakedAction()).unwrap();
   }
 
+  const onFetchUsdbSTotalStaked = async()=> {
+    await dispatch(fetchUsdbSTotalStakedAction()).unwrap();
+  }
+
   return {
     onRefetch,
     onReFetchVaul,
     onFetchVaulStakedInfo,
     onFetchSTotalStaked,
+    onReFetchUsdbVaul,
+    onFetchUsdbVaulStakedInfo,
+    onFetchUsdbSTotalStaked,
   }
 }
