@@ -2,6 +2,7 @@ import { Body, Controller, Get, Param, Post } from '@nestjs/common'
 import { ApiTags } from '@nestjs/swagger'
 import { WalletService } from './wallet.service'
 import { PointDto } from './dto/point.dto'
+import { ReferralJoinDto } from './dto/referralJoin.dto'
 
 @Controller({ path: 'wallet', version: '1' })
 @ApiTags('Wallet')
@@ -26,5 +27,11 @@ export class WalletController {
   @Post('point')
   async updatePoint(@Body() point: PointDto) {
     return await this.walletService.createOrUpdate(point.txHash, point.refCode)
+  }
+
+  @Post('join')
+  async create(@Body() data: ReferralJoinDto) {
+    const sender = await this.walletService.senderFromSignature(data)
+    return await this.walletService.create(sender, data.joinCode)
   }
 }

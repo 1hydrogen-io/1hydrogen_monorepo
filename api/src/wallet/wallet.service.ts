@@ -1,7 +1,7 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common'
 import { PrismaService } from '../prisma.service'
-import { balance, transactionReceipt } from '../app.utils'
-import { Interface } from 'ethers'
+import { transactionReceipt } from '../app.utils'
+import { Interface, verifyMessage } from 'ethers'
 import { abis as vaultAbis } from '../abis/vault'
 import { IStakingStaked, IVaultStaked } from '../app.types'
 import {
@@ -12,6 +12,7 @@ import {
 } from '../app.settings'
 import { abis as stakingAbis } from '../abis/staking'
 import { randomUUID } from 'crypto'
+import { ReferralJoinDto } from './dto/referralJoin.dto'
 
 @Injectable()
 export class WalletService {
@@ -68,7 +69,7 @@ export class WalletService {
           address: staker,
           latestTx: txReceipt.hash,
           referralCode: refCode,
-          joinedCode: referrer ? joinedCode : ''
+          joinedCode: referrer ? joinedCode : undefined
         }
       })
     }
@@ -81,5 +82,37 @@ export class WalletService {
       console.log(i, randomUUID())
     }
     return await this.prismaService.wallet.findUnique({ where: { address: wallet } })
+  }
+
+  async senderFromSignature(data: ReferralJoinDto) {
+    //check owner account
+    //verify sign message
+    const strMessage = { wallet: data.wallet, joinCode: data.joinCode }
+    const sender = verifyMessage(JSON.stringify(strMessage), data.signature)
+    return sender
+  }
+
+  async create(staker: string, joinedCode: string) {
+    let wallet = await this.prismaService.wallet.findUnique({ where: { address: staker } })
+    if (!wallet) {
+      let refCode = randomUUID()
+      while (await this.prismaService.wallet.findUnique({ where: { referralCode: refCode } }))
+        refCode = randomUUID()
+
+      const referrer = await this.prismaService.wallet.findUnique({
+        where: { referralCode: joinedCode }
+      })
+
+      wallet = await this.prismaService.wallet.create({
+        data: {
+          address: staker,
+          latestTx: refCode,
+          referralCode: refCode,
+          joinedCode: referrer && joinedCode ? joinedCode : undefined
+        }
+      })
+    }
+
+    return wallet
   }
 }
