@@ -66,7 +66,8 @@ export default function StakeContainer() {
                 await ethStakeTx(signer, amount) :
                 await usdbStakeTx(signer, amount);
             try {
-                await addPointApi(tx as string);
+                const joinedCode = balance.point.joinedCode
+                const res = await addPointApi(tx as string, joinedCode || '');
             } catch {
             }
             setAmount('');

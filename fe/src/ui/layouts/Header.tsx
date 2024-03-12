@@ -1,5 +1,5 @@
 'use client'
-import React, { useMemo } from "react";
+import React, { useEffect, useMemo } from "react";
 import { Flex, Spacer } from "@chakra-ui/react";
 import { menus } from "@/lib/constans";
 import ConnectWalletButton from "../components/ConnectWalletButton";
@@ -15,6 +15,7 @@ export default function Header() {
     if (pathname === '/landing') return true;
     return false;
   }, [pathname]);  
+
 
   return (
     <AppWrapper alignItems="center" justifyContent="center" flexDirection="row">

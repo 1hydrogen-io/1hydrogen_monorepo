@@ -1,5 +1,4 @@
 'use client'
-import {addPointApi} from '@/lib/apis/account.api'
 import VaultContract from '@/lib/contracts/VaultContract'
 import {getEthersSigner} from '@/lib/hooks/useEtherSigner'
 import useProcessing from '@/lib/hooks/useProcessing'
@@ -55,8 +54,6 @@ export default function MintVaulContainer() {
 
     const mintUsdb = async (signer: any, amount: number) => {
         try {
-            const usdbAmountUnit = ethers.utils.parseUnits(amount.toString());
-            console.log(usdbAmountUnit)
             const usdbVaultContract = new UsdbVaultContract(signer);
             const tx = await usdbVaultContract.claimHsUsdbMutation(amount);
             onSuccessToast('Mint hsUSDB successfully', 'Success');
