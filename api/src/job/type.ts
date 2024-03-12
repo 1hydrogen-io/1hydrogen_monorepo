@@ -3,6 +3,7 @@ export interface Point {
   supplyPoint: number
   stakingPoint: number
   referralPoint: number
+  updatedTime: Date
 }
 
 export interface Balance {

@@ -1,12 +1,15 @@
 import { updatePoint, walletByRefCode, wallets } from './service'
 import { Balance } from './type'
 import { balance, ethPrice } from '../app.utils'
+import { PrismaService } from 'src/prisma.service'
 
 export async function calculatePoint() {
   console.log('start...')
   const walletList = await wallets()
   const price = await ethPrice()
   let walletCount = walletList.length
+  const tday = new Date()
+  const prismaService = new PrismaService()
 
   for (let i = 0; i < walletList.length; i++) {
     const wallet = walletList[i]
@@ -37,20 +40,28 @@ export async function calculatePoint() {
     //referral point
     if (wallet.joinedCode) {
       const referrer = await walletByRefCode(wallet.joinedCode)
-      await updatePoint({
-        wallet: referrer.address,
-        supplyPoint: 0,
-        stakingPoint: 0,
-        referralPoint: ((stakingPoint + supplyPoint) * 25) / 100
-      })
+      await updatePoint(
+        {
+          wallet: referrer.address,
+          supplyPoint: 0,
+          stakingPoint: 0,
+          referralPoint: ((stakingPoint + supplyPoint) * 25) / 100,
+          updatedTime: tday
+        },
+        prismaService
+      )
     }
 
-    await updatePoint({
-      wallet: wallet.address,
-      supplyPoint,
-      stakingPoint,
-      referralPoint: 0
-    })
+    await updatePoint(
+      {
+        wallet: wallet.address,
+        supplyPoint,
+        stakingPoint,
+        referralPoint: 0,
+        updatedTime: tday
+      },
+      prismaService
+    )
     console.log(walletCount--)
   }
 
