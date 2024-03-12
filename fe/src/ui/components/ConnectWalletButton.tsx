@@ -9,6 +9,7 @@ import { useGlobalState } from '@/lib/reduxs/globals/global.hook';
 import { signMessageWallet } from '@/lib/apis/account.api';
 import useToastCustom from '@/lib/hooks/useToastCustom';
 import { useAppSelector } from '@/lib/reduxs/hooks';
+import useRefetchBalance from "@/lib/hooks/useRefetchBalance";
 
 export default function ConnectWalletButton() {
   const { openConnectModal } = useConnectModal();
@@ -17,7 +18,7 @@ export default function ConnectWalletButton() {
   const { globalState: { joinCode }, onSetJoinCode } = useGlobalState();
   const { onSuccessToast, onErrorToast } = useToastCustom();
   const { balance: { point } } = useAppSelector(p => p.wallet);
-
+  const { onRefetchWalletPointAndCode } = useRefetchBalance();
 
   const signMessageWithJoinCode = async () => {
     try {
@@ -31,6 +32,8 @@ export default function ConnectWalletButton() {
       if (result) {
         await signMessageWallet(address as string, joinCode, result)
         onSuccessToast('Sign message successfully!')
+        await onRefetchWalletPointAndCode()
+        onSetJoinCode('')
       }
     } catch (error: any) {
       onErrorToast(error?.message || 'Failed to sign message!')
@@ -38,10 +41,10 @@ export default function ConnectWalletButton() {
   }
 
   useEffect(() => {
-    if (isConnected && address) {
+    if (isConnected && address && joinCode) {
       signMessageWithJoinCode().then()
     }
-  }, [isConnected, address]);
+  }, [isConnected, address, joinCode]);
 
   const handleOpenConnectWallet = () => {
     openConnectModal && openConnectModal();

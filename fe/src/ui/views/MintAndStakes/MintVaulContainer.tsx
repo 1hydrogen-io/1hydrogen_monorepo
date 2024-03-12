@@ -54,8 +54,6 @@ export default function MintVaulContainer() {
 
     const mintUsdb = async (signer: any, amount: number) => {
         try {
-            const usdbAmountUnit = ethers.utils.parseUnits(amount.toString());
-            console.log(usdbAmountUnit)
             const usdbVaultContract = new UsdbVaultContract(signer);
             const tx = await usdbVaultContract.claimHsUsdbMutation(amount);
             onSuccessToast('Mint hsUSDB successfully', 'Success');

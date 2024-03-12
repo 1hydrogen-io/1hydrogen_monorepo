@@ -7,12 +7,17 @@ import {
   fetchUsdbVaulStakedInfo,
   fetchVaulStakedInfo
 } from '../reduxs/vauls/vaul.actions';
+import {fetchWalletBalanceAction} from "@/lib/reduxs/wallets/wallet.actions";
 
 export default function useRefetchBalance() {
   const dispatch = useAppDispatch();
 
   const onRefetch = async()=> {
     await dispatch(fetchWalletInfoGlobalAction()).unwrap();
+  }
+
+  const onRefetchWalletPointAndCode = async () => {
+    await dispatch(fetchWalletBalanceAction()).unwrap();
   }
 
   const onReFetchVaul = async()=> {
@@ -49,5 +54,6 @@ export default function useRefetchBalance() {
     onReFetchUsdbVaul,
     onFetchUsdbVaulStakedInfo,
     onFetchUsdbSTotalStaked,
+    onRefetchWalletPointAndCode
   }
 }

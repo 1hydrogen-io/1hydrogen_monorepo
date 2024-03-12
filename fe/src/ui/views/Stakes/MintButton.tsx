@@ -20,6 +20,7 @@ import {useGlobalState} from "@/lib/reduxs/globals/global.hook";
 
 export default function MintButton() {
     const toast = useToast();
+    const {balance} = useAppSelector(p => p.wallet);
     const {onOpenProcessing, onCloseProcessing, isProcessing} = useProcessing();
     const dispatch = useAppDispatch();
     const {isConnected} = useAccount();
@@ -65,8 +66,8 @@ export default function MintButton() {
 
     const addPoint = async (tx: string) => {
         try {
-            const refCode = localStorage.getItem('refCode');
-            await addPointApi(tx, refCode || '');
+            const joinedCode = balance.point.joinedCode
+            await addPointApi(tx as string, joinedCode || '');
         } catch {
         }
     }
