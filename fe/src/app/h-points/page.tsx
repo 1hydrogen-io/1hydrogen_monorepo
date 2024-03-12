@@ -17,7 +17,7 @@ import useToastCustom from "@/lib/hooks/useToastCustom";
 import {useAppSelector} from "@/lib/reduxs/hooks";
 
 export default function HPoints() {
-  const {onSuccessToast} = useToastCustom();
+  const {onSuccessToast, onErrorToast} = useToastCustom();
   const { balance: {point} } = useAppSelector(p => p.wallet);
   const handleCopyLink = async () => {
     try {
@@ -27,8 +27,8 @@ export default function HPoints() {
         const refUrl = `${window.location.origin}/?ref=${point?.referralCode}`;
         await navigator.clipboard.writeText(refUrl)
         onSuccessToast('Copied!')
-    } catch (err) {
-        console.error('Failed to copy!', err);
+    } catch (err: any) {
+      onErrorToast(err?.message || 'Failed to copy link!')
     }
   }
   return (

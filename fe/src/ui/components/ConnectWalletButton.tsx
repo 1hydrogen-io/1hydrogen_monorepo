@@ -1,14 +1,47 @@
 'use client'
 import { Flex, Text } from '@chakra-ui/react'
-import React from 'react'
+import React, { useEffect } from 'react'
 import { useConnectModal } from '@rainbow-me/rainbowkit';
-import { useAccount } from 'wagmi';
+import { useAccount, useSignMessage } from 'wagmi';
 import { showSortAddress } from '@/lib/utls';
 import { plus_jakarta_san } from '@/themes';
+import { useGlobalState } from '@/lib/reduxs/globals/global.hook';
+import { signMessageWallet } from '@/lib/apis/account.api';
+import useToastCustom from '@/lib/hooks/useToastCustom';
+import { useAppSelector } from '@/lib/reduxs/hooks';
 
 export default function ConnectWalletButton() {
   const { openConnectModal } = useConnectModal();
-  const { isConnected, address } = useAccount(); 
+  const { isConnected, address } = useAccount();
+  const { signMessageAsync } = useSignMessage();
+  const { globalState: { joinCode }, onSetJoinCode } = useGlobalState();
+  const { onSuccessToast, onErrorToast } = useToastCustom();
+  const { balance: { point } } = useAppSelector(p => p.wallet);
+
+
+  const signMessageWithJoinCode = async () => {
+    try {
+      const message = JSON.stringify({
+        wallet: address,
+        joinCode
+      })
+      const result = await signMessageAsync({
+        message
+      });
+      if (result) {
+        await signMessageWallet(address as string, joinCode, result)
+        onSuccessToast('Sign message successfully!')
+      }
+    } catch (error: any) {
+      onErrorToast(error?.message || 'Failed to sign message!')
+    }
+  }
+
+  useEffect(() => {
+    if (isConnected && address) {
+      signMessageWithJoinCode().then()
+    }
+  }, [isConnected, address]);
 
   const handleOpenConnectWallet = () => {
     openConnectModal && openConnectModal();
@@ -39,8 +72,8 @@ export default function ConnectWalletButton() {
   }
 
   return (
-    <Flex 
-      p='6px 21px' 
+    <Flex
+      p='6px 21px'
       borderRadius='full'
       gap='8px' cursor='pointer'
       bgColor='white'
@@ -51,7 +84,7 @@ export default function ConnectWalletButton() {
         fontWeight='800'
         fontSize='10px'
         lineHeight='150%'
-      textTransform='uppercase'
+        textTransform='uppercase'
       >Connect Wallet</Text>
     </Flex>
   )

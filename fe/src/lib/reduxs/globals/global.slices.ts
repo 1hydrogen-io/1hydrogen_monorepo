@@ -4,13 +4,15 @@ interface GlobalState {
   isProcessing?: boolean;
   ethPrice: number;
   processName?: string;
-  currentCoin: "eth" | "usdb"
+  currentCoin: "eth" | "usdb",
+  joinCode: string;
 }
 
 const initialState: GlobalState = {
   isProcessing: false,
   ethPrice: 0,
-  currentCoin: "eth"
+  currentCoin: "eth",
+  joinCode: ""
 };
 
 export const globalSlice = createSlice({
@@ -25,6 +27,9 @@ export const globalSlice = createSlice({
     },
     setCurrentCoinAction: (state, {payload}: PayloadAction<"eth" | "usdb">) => {
       state.currentCoin = payload;
+    },
+    setJoinCode: (state, {payload}: PayloadAction<string>) => {
+      state.joinCode = payload;
     }
   }
 });
@@ -34,5 +39,6 @@ export default globalSlice.reducer;
 export const { 
   setProcessingAction,
   setProcessNameAction,
-    setCurrentCoinAction
+  setCurrentCoinAction,
+  setJoinCode
 } = globalSlice.actions;
