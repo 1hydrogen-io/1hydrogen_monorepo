@@ -24,7 +24,7 @@ export default function ButtonTab({img, title, active, ...props}: IProps) {
       bgColor={bg}
       backdropFilter='blur(60px)'
       _hover={{
-        bgColor: '#0075FF'
+        bgColor: '#0075FF33'
       }}
       {...props}
     >

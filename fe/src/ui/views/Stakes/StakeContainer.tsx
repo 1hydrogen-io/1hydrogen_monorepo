@@ -5,7 +5,7 @@ import SubText from '@/ui/components/Text/SubText'
 import LabelValueColumn from '@/ui/components/LabelValueColumn'
 import StakePackageContainer from './StakePackageContainer'
 import MintButton from './MintButton'
-import InputHsEthStake from './InputHsEthStake'
+import InputHsEthStake from './InputHsTokenStake'
 import BalanceInfo from './BalanceInfo'
 import LockedPosition from './LockedPosition'
 

@@ -1,3 +1,4 @@
+'use client'
 import { liner_bg } from '@/themes'
 import { MyPoint } from '@/ui/components'
 import AppWrapper from '@/ui/components/AppWrapper'
@@ -12,8 +13,24 @@ import Leaderboard from '@/ui/views/Points/Leaderboard'
 import StatPointContainer from '@/ui/views/Points/StatPointContainer'
 import { Flex, Image, VStack } from '@chakra-ui/react'
 import React from 'react'
+import useToastCustom from "@/lib/hooks/useToastCustom";
+import {useAppSelector} from "@/lib/reduxs/hooks";
 
 export default function HPoints() {
+  const {onSuccessToast, onErrorToast} = useToastCustom();
+  const { balance: {point} } = useAppSelector(p => p.wallet);
+  const handleCopyLink = async () => {
+    try {
+        if (!navigator.clipboard) {
+            throw new Error('Clipboard API not available');
+        }
+        const refUrl = `${window.location.origin}/?ref=${point?.referralCode}`;
+        await navigator.clipboard.writeText(refUrl)
+        onSuccessToast('Copied!')
+    } catch (err: any) {
+      onErrorToast(err?.message || 'Failed to copy link!')
+    }
+  }
   return (
     <AppWrapper gap="20px" wrapStyle={{mt: '24px' }}>
       <Flex w="full" flexDirection="row" gap="24px">
@@ -33,7 +50,7 @@ export default function HPoints() {
           <Flex w="full" flexDirection="column" gap="24px">
             <LabelValueColumn
               label={"Referral points"}
-              value={"323323"}
+              value={point?.referralPoint?.toString() ?? '0'}
               labelProps={{ color: "#FFF", fontSize: "12px" }}
               valProps={{ fontSize: "32px" }}
             />
@@ -53,7 +70,7 @@ export default function HPoints() {
             </SubText>
           </Flex>
 
-          <ButtonCustom w="full">COPY LINK</ButtonCustom>
+          <ButtonCustom w="full" onClick={handleCopyLink}>COPY LINK</ButtonCustom>
         </Flex>
       </Flex>
 

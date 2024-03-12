@@ -1,3 +1,5 @@
+import {usdbAbi} from "@/lib/contracts/abis/usdb";
+
 export const menus = [
   {lable: 'STAKE & MINT', url: '/stake-mint'},
   {lable: 'REPAY & UNSTAKE', url: '/repay-unstake'},
@@ -6,6 +8,8 @@ export const menus = [
 
 ]
 
+export const BASE_URL = 'https://1hydrogen.io/';
+
 export const socials = [
   {name: 'facebook', url: '#'},
   {name: 'medium', url: '#'},
@@ -13,6 +17,13 @@ export const socials = [
   {name: 'x', url: '#'},
   {name: 'discord', url: '#'},
 ]
+
+export const CONTRACTS = {
+  usdb: {
+    address: '0x4200000000000000000000000000000000000022' as `0x${string}`,
+    abi: usdbAbi
+  },
+}
 
 export const NUMBER_PATTERN = '/^[0-9]*\.?[0-9]*$/';
 export const parseNumber = (val: string) => val.replace(/^\$/, '')

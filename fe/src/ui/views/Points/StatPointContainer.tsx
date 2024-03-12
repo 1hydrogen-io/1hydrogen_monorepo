@@ -22,17 +22,17 @@ export default function StatPointContainer() {
         <LabelValueColumn
           label={"From Staking ETH / USDB"}
           labelFontSize="12px"
-          value={point.supplyPoint}
+          value={point.supplyPoint ?? 0}
         />
         <LabelValueColumn
           label={"From Staking hsETH / hsUSDB"}
           labelFontSize="12px"
-          value={point.stakingPoint}
+          value={point.stakingPoint ?? 0}
         />
         <LabelValueColumn
           label={"From Locking hsETH / hsUSDB"}
           labelFontSize="12px"
-          value={point.stakingLockPoint}
+          value={point.stakingLockPoint ?? 0}
 
         />
       </Flex>
