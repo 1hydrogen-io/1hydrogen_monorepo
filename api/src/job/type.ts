@@ -1,8 +1,9 @@
 export interface Point {
   wallet: string
-  point: number
   supplyPoint: number
   stakingPoint: number
+  referralPoint: number
+  updatedTime: Date
 }
 
 export interface Balance {
