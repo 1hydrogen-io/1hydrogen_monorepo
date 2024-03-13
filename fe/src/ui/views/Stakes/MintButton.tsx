@@ -25,14 +25,14 @@ export default function MintButton() {
     const dispatch = useAppDispatch();
     const {isConnected} = useAccount();
     const {openConnectModal} = useConnectModal();
-    const {packageSelected, hsEthAmount, hsUsdbAmount} = useAppSelector(p => p.hsStake);
+    const {packageSelected, hsEthAmount, hsUsdbAmount, usdbPackageSelected} = useAppSelector(p => p.hsStake);
+    const {globalState: {currentCoin}} = useGlobalState();
 
+    const isEthSelected = useMemo(() => currentCoin === "eth", [currentCoin]);
     const title = useMemo(() => {
         if (isConnected) return 'STAKE';
         return 'CONNECT YOUR WALLET'
     }, [isConnected]);
-    const {globalState: {currentCoin}} = useGlobalState();
-    const isEthSelected = useMemo(() => currentCoin === "eth", [currentCoin]);
 
     const stakeEth = async (signer: any, amount: number) => {
         try {
@@ -54,14 +54,14 @@ export default function MintButton() {
             const hsUsdbContract = new HsUsdbContract(signer);
             const hsUsdbStakingContract = new HsUsdbStakingContract(signer);
             await hsUsdbContract.approve(hsUsdbStakingContract._contractAddress, amount)
-            const tx = await hsUsdbStakingContract.stake(packageSelected, amount);
+            const tx = await hsUsdbStakingContract.stake(usdbPackageSelected, amount);
             await addPoint(tx as string);
             await dispatch(fetchWalletInfoGlobalAction()).unwrap();
             toast(getToast(`Stake successfully `, 'success', 'Stake HsUsdb'))
             dispatch(resetUsdbUserValue());
         } catch (ex) {
             toast(getToast('Something went wrong'))
-        }
+        } 
     }
 
     const addPoint = async (tx: string) => {
@@ -87,22 +87,21 @@ export default function MintButton() {
         const signer = await getEthersSigner();
         if (!signer) return
         try {
-
+            onOpenProcessing('STAKING_HS_TOKEN')
             if (isEthSelected) {
-                onOpenProcessing('STAKING_HS_ETH');
                 const amount = Number(hsEthAmount);
                 if(!checkAmount(amount)) return;
-                stakeEth(signer, amount).then();
+                await stakeEth(signer, amount)
             } else {
-                onOpenProcessing('STAKING_HS_USDB');
                 const amount = Number(hsUsdbAmount);
                 if(!checkAmount(amount)) return;
-                stakeUsdb(signer, amount).then()
+                await stakeUsdb(signer, amount)
             }
         } catch (ex) {
             toast(getToast('Something went wrong'))
+        } finally {
+            onCloseProcessing();
         }
-        onCloseProcessing();
     }
 
     return (

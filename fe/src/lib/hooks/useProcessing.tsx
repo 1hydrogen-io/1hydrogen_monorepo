@@ -7,9 +7,8 @@ type ProcessName =
   | "STAKE"
   | "UNSTAKE"
   | "REPAY"
-  | "STAKING_HS_ETH"
   | "GLOBAL"
-    | "STAKING_HS_USDB"
+  | "STAKING_HS_TOKEN"
 ;
 
 export default function useProcessing() {

@@ -8,7 +8,7 @@ import { TransactionResponse } from '@ethersproject/abstract-provider';
 export const ADDRESS = () =>
   isProduction()
     ? ""
-    : "0xc04ce7709b8d2503a50F0B62465d6eEDA6217591";
+    : "0xbc6Af48e302dbFfBA2F3d19F19C2015A8832f06C";
 
 export default class VaultContract extends Erc20 {
   constructor(signer?: ethers.providers.JsonRpcSigner) {

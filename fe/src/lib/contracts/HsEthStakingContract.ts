@@ -8,7 +8,7 @@ import { IPackage, IStakedInfo } from './types';
 export const ADDRESS = () =>
   isProduction()
     ? ""
-    : "0x7569b1D80B7D41AB8D1A4102263c9503A3fDFb5D";
+    : "0xc192BE3A65e4Ef7c383ab14498ca28e8Bd891BbB";
 
 export default class HsEthStakingContract extends Erc20 {
   constructor(signer?: ethers.providers.JsonRpcSigner) {

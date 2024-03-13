@@ -64,7 +64,7 @@ export default function Footer() {
                   />
                   <AccordionPanel>
                     <SubText>{item.des}</SubText>
-                    {Boolean(item.link) && <Link href={item.link}>
+                    {Boolean(item.link) && <Link href={item.link} target={"_blank"}>
                       <SubText color='white'>
                         {item.link}
                         </SubText>

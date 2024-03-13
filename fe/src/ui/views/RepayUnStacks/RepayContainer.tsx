@@ -107,7 +107,7 @@ export default function RepayContainer() {
       flexDirection="column"
       gap="16px"
     >
-      <TextCus mb="10px">{isEthSelected ? "Repay hsETH" : "Repay hsUSDB"}</TextCus>
+      <TextCus>{isEthSelected ? "Repay hsETH" : "Repay hsUSDB"}</TextCus>
       <Flex justifyContent="space-between" alignItems="center">
         <InputCustom
           w="342px"

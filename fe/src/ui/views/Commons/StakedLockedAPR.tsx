@@ -6,6 +6,7 @@ import { Flex, Image } from '@chakra-ui/react'
 import React, { useMemo } from 'react'
 import {useGlobalState} from "@/lib/reduxs/globals/global.hook";
 import useTokenContract from "@/lib/hooks/useTokenContract";
+import {numberFormat} from "@/lib/utls";
 
 interface IProps {
   isShow?: boolean;
@@ -93,22 +94,22 @@ export default function StakedLockedAPR({isShow, isShowPoint}: IProps) {
       <Flex w="full" justifyContent="space-between">
         <LabelValueColumn
           subLabel={isEthSelected ? "hsETH Balance" : "hsUSDB Balance"}
-          value={isEthSelected ? `${balance.hsEth} hsETH` : `${balance.hsUsdb} hsUSDB`}
-          label={isEthSelected ? `$${balance.hsEth * ethUsdt}` : `$${balance.hsUsdb * usdbUsdt}`}
+          value={isEthSelected ? `${numberFormat(balance.hsEth, 2)} hsETH` : `${numberFormat(balance.hsUsdb, 2)} hsUSDB`}
+          label={isEthSelected ? `$${numberFormat(balance.hsEth * ethUsdt, 2)}` : `$${numberFormat(balance.hsUsdb * usdbUsdt, 2)}`}
           labelFontSize="12px"
           subLabelFontSize="10px"
         />
         <LabelValueColumn
           subLabel={isEthSelected ? "Staked hsETH Balance" : "Staked hsUSDB Balance"}
-          value={isEthSelected ? `${stakedAmount} hsETH` : `${usdbStakedAmount} hsUSDB`}
-          label={isEthSelected ? `$${stakedAmount * ethUsdt}` : `$${usdbStakedAmount * usdbUsdt}`}
+          value={isEthSelected ? `${numberFormat(stakedAmount, 2)} hsETH` : `${numberFormat(usdbStakedAmount, 2)} hsUSDB`}
+          label={isEthSelected ? `$${numberFormat(stakedAmount * ethUsdt, 2)}` : `$${numberFormat(usdbStakedAmount * usdbUsdt, 2)}`}
           labelFontSize="12px"
           subLabelFontSize="10px"
         />
         <LabelValueColumn
           subLabel={isEthSelected ? "Locked hsETH Balance" : "Locked hsUSDB Balance"}
-          value={isEthSelected ? `${lockedHsETHBalance} hsETH` : `${lockedHsUSDBBalance} hsUSDB`}
-          label={isEthSelected ? `$${lockedHsETHBalance * ethUsdt}` : `$${lockedHsUSDBBalance * usdbUsdt}`}
+          value={isEthSelected ? `${numberFormat(lockedHsETHBalance, 2)} hsETH` : `${numberFormat(lockedHsUSDBBalance, 2)} hsUSDB`}
+          label={isEthSelected ? `$${numberFormat(lockedHsETHBalance * ethUsdt, 2)}` : `$${numberFormat(lockedHsUSDBBalance * usdbUsdt, 2)}`}
           labelFontSize="12px"
           subLabelFontSize="10px"
         />
