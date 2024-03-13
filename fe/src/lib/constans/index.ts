@@ -8,14 +8,11 @@ export const menus = [
 
 ]
 
-export const BASE_URL = 'https://1hydrogen.io/';
-
-export const socials = [
-  {name: 'facebook', url: '#'},
-  {name: 'medium', url: '#'},
-  {name: 'telegram', url: '#'},
-  {name: 'x', url: '#'},
-  {name: 'discord', url: '#'},
+export const socialsData = [
+  {name: 'twitter', url: 'https://twitter.com/h1blast'},
+  {name: 'telegram', url: 'https://t.me/h1blast'},
+  {name: 'discord', url: 'https://discord.gg/h1drogen'},
+  {name: 'gitbook', url: 'https://docs.1hydrogen.io/'},
 ]
 
 export const CONTRACTS = {
