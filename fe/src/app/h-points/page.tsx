@@ -60,7 +60,7 @@ export default function HPoints() {
 
               <VStack alignItems="flex-start">
                 <TextCus color="white" fontSize="18px" fontWeight="550">
-                  4
+                  {point?.members ?? 0}
                 </TextCus>
                 <SubText fontSize="12px">People invited</SubText>
               </VStack>

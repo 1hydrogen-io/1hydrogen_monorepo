@@ -16,7 +16,7 @@ export default function InputCustom({inputFieldProps, btnLabel, btnProps, isFull
       bgImage={`/inputs/bg-${isFull ? 'full' : '1'}.svg`}>
       <NumberInput
         w="full"
-        placeholder="0"
+        placeholder={'0'}
         focusBorderColor="transparent"
         position="relative"
         {...props}

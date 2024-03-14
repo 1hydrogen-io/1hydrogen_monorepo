@@ -6,7 +6,7 @@ import useRefetchBalance from '@/lib/hooks/useRefetchBalance'
 import useToastCustom from '@/lib/hooks/useToastCustom'
 import {useAppSelector} from '@/lib/reduxs/hooks'
 import {numberFormat} from '@/lib/utls'
-import {subtract} from '@/lib/utls/numberHelper'
+import {compareNumber, subtract} from '@/lib/utls/numberHelper'
 import {LabelValueItem} from '@/ui/components'
 import ButtonCustom from '@/ui/components/ButtonCustom'
 import InputCustom from '@/ui/components/InputCustom'
@@ -16,6 +16,7 @@ import React, {useEffect, useMemo, useState} from 'react'
 import {useAccount} from 'wagmi'
 import {useGlobalState} from "@/lib/reduxs/globals/global.hook";
 import UsdbVaultContract from "@/lib/contracts/UsdbVaultContract";
+import {Float} from "@solana/buffer-layout";
 
 export default function UnstackContainer() {
     const {isConnected} = useAccount();
@@ -38,8 +39,8 @@ export default function UnstackContainer() {
         setAmount('')
     }, [currentCoin]);
     const onAmountChange = (val: string) => {
-        if (subtract(vaulStaked.availableBalance, Number(val)) < 0 && isEthSelected) return;
-        if (subtract(usdbVaulStaked.availableBalance, Number(val)) < 0 && !isEthSelected) return;
+        if (compareNumber(vaulStaked.availableBalance, Number(val), ) && isEthSelected) return;
+        if (compareNumber(usdbVaulStaked.availableBalance, Number(val)) && !isEthSelected) return;
         setAmount(val)
     }
 
@@ -88,6 +89,7 @@ export default function UnstackContainer() {
         onCloseProcessing();
     }
 
+    // console.log(vaulStaked.availableBalance, usdbVaulStaked.availableBalance, amount)
     return (
         <Flex w="full" justifyContent="space-between" flexDirection="column">
             <TextCus mb="10px">
@@ -109,15 +111,15 @@ export default function UnstackContainer() {
                 label={"Available amount to unstake"}
                 value={
                     isEthSelected ?
-                        `${numberFormat(vaulStaked.availableBalance)} ETH` :
-                        `${numberFormat(usdbVaulStaked.availableBalance)} USDB`
+                        `${numberFormat(vaulStaked.availableBalance, 9)} ETH` :
+                        `${numberFormat(usdbVaulStaked.availableBalance, 9)} USDB`
                 }
                 my="16px"
             />
             <ButtonCustom w="full"
                           onClick={onHandleUnStake}
                           isLoading={isProcessing}
-                          disable={!isConnected || isProcessing}
+                          disable={isProcessing}
                           isLock={isLocked}
             >UNSTAKE</ButtonCustom>
         </Flex>
