@@ -102,7 +102,7 @@ export default function MintVaulContainer() {
             flexDirection="column"
             gap="16px"
         >
-            <TextCus mb="10px">{isEthSelected ? "Mint hsETH" : "Mint hsUSDB"}</TextCus>
+            <TextCus>{isEthSelected ? "Mint hsETH" : "Mint hsUSDB"}</TextCus>
             <InputCustom
                 isFull
                 w="424px"

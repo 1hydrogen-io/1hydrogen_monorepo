@@ -2,7 +2,7 @@
 import React, { useMemo } from 'react'
 import AppWrapper from '../components/AppWrapper'
 import { Accordion, AccordionButton, AccordionItem, AccordionPanel, Flex, Image, VStack } from '@chakra-ui/react'
-import { footerData, menus } from '@/lib/constans'
+import {footerData, menus, socialsData} from '@/lib/constans'
 import { MainTitle, TextCus } from '../components/Text';
 import SubText from '../components/Text/SubText'
 import { motion } from 'framer-motion'
@@ -64,7 +64,7 @@ export default function Footer() {
                   />
                   <AccordionPanel>
                     <SubText>{item.des}</SubText>
-                    {Boolean(item.link) && <Link href={item.link}>
+                    {Boolean(item.link) && <Link href={item.link} target={"_blank"}>
                       <SubText color='white'>
                         {item.link}
                         </SubText>
@@ -84,9 +84,9 @@ export default function Footer() {
           ))}
         </Flex>
         <Flex gap="18px" justifyContent="center" mt="21px" mb="27px">
-          {["facebook", "github", "instagram", "twitter"].map((so, index) => (
-            <Link href="#" target="_blank" key={so}>
-              <Image src={`/socials/${so}.svg`} alt={so} />
+          {socialsData.map((so, index) => (
+            <Link href={so.url} target="_blank" key={so.name}>
+              <Image src={`/socials/${so.name}.svg`} alt={so.name} />
             </Link>
           ))}
         </Flex>

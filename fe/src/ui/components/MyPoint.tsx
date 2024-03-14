@@ -77,7 +77,7 @@ export default function MyPoint({isLager,  ...props}: IProps) {
         My Points
       </MainTitle>
       <MainTitle fontSize="44px" fontWeight="800" lineHeight="100%">
-        {point.point}
+        {point.point ?? 0}
       </MainTitle>
       <HStack
         bg="#0F1535"
