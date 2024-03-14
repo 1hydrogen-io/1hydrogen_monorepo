@@ -19,7 +19,14 @@ export class WalletService {
   constructor(private readonly prismaService: PrismaService) {}
 
   async point(address: string) {
-    return await this.prismaService.wallet.findUnique({ where: { address } })
+    const player = await this.prismaService.wallet.findUnique({ where: { address } })
+    if (player) {
+      const members = await this.prismaService.wallet.findMany({
+        where: { joinedCode: player.referralCode }
+      })
+      return { ...player, members: members.length }
+    }
+    return {}
   }
 
   async leaderBoard(take: number) {
@@ -78,10 +85,14 @@ export class WalletService {
   }
 
   async player(wallet: string) {
-    for (let i = 0; i < 7; i++) {
-      console.log(i, randomUUID())
+    const player = await this.prismaService.wallet.findUnique({ where: { address: wallet } })
+    if (player) {
+      const members = await this.prismaService.wallet.findMany({
+        where: { joinedCode: player.referralCode }
+      })
+      return { ...player, members: members.length }
     }
-    return await this.prismaService.wallet.findUnique({ where: { address: wallet } })
+    return {}
   }
 
   async senderFromSignature(data: ReferralJoinDto) {
