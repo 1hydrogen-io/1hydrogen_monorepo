@@ -32,10 +32,11 @@ export default function UnstackContainer() {
 
   const isLocked = useMemo(() => {
     if (!isConnected) return true;
-    if (!vaulStaked.availableBalance && isEthSelected) return true;
-    if (!usdbVaulStaked.availableBalance && !isEthSelected) return true;
-    return false;
-  }, [isConnected, vaulStaked, usdbVaulStaked]);
+    if (isEthSelected) {
+      return vaulStaked.availableBalance > 0 ? false : true;
+    }
+    return usdbVaulStaked.availableBalance > 0 ? false : true;
+  }, [isConnected, currentCoin, vaulStaked, usdbVaulStaked]);
 
   useEffect(() => {
     setAmount("");

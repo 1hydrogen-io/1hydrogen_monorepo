@@ -44,7 +44,7 @@ export default function RepayContainer() {
     if (availableRepay <= 0 && isEthSelected) return true;
     if (availableUsdbRepay <= 0 && !isEthSelected) return true;
     return false;
-  }, [availableRepay, availableUsdbRepay, isConnected]);
+  }, [availableRepay, currentCoin, availableUsdbRepay, isConnected]);
 
   const onAmountChange = (val: string) => {
     if (compareNumber(availableRepay, Number(val)) && isEthSelected) return;
