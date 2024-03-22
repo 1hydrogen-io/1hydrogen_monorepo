@@ -11,31 +11,60 @@ import {
   trustWallet,
   ledgerWallet,
 } from "@rainbow-me/rainbowkit/wallets";
-
+import { isProduction } from "@/lib/utls";
 
 const blastTestnet: Chain = {
   id: 168587773,
-  name: 'Blast Sepolia',
-  network: 'Blast Sepolia',  
+  name: "Blast Sepolia",
+  network: "Blast Sepolia",
   nativeCurrency: {
     decimals: 18,
-    name: 'ETH',
-    symbol: 'ETH',
+    name: "ETH",
+    symbol: "ETH",
   },
   rpcUrls: {
-    public: { http: ['https://rpc.ankr.com/blast_testnet_sepolia'] },
-    default: { http: ['https://rpc.ankr.com/blast_testnet_sepolia'] },
+    public: { http: ["https://rpc.ankr.com/blast_testnet_sepolia"] },
+    default: { http: ["https://rpc.ankr.com/blast_testnet_sepolia"] },
   },
   blockExplorers: {
-    default: { name: 'BlastScope', url: 'https://testnet.blastscan.io/' },
-    etherscan: { name: 'BlastScope', url: 'https://testnet.blastscan.io/' },
-  },  
+    default: { name: "BlastScope", url: "https://testnet.blastscan.io/" },
+    etherscan: { name: "BlastScope", url: "https://testnet.blastscan.io/" },
+  },
   testnet: true,
+};
+
+const blastMainnet: Chain = {
+  id: 81457,
+  name: "Blast Sepolia",
+  network: "Blast Sepolia",
+  nativeCurrency: {
+    decimals: 18,
+    name: "ETH",
+    symbol: "ETH",
+  },
+  rpcUrls: {
+    public: {
+      http: [
+        "https://patient-green-ensemble.blast-mainnet.quiknode.pro/809fbaf16dafbe18f747d508686089eaffb96f59",
+      ],
+    },
+    default: {
+      http: [
+        "https://patient-green-ensemble.blast-mainnet.quiknode.pro/809fbaf16dafbe18f747d508686089eaffb96f59",
+      ],
+    },
+  },
+  blockExplorers: {
+    default: { name: "BlastScope", url: "https://blastscan.io/" },
+    etherscan: { name: "BlastScope", url: "https://blastscan.io/" },
+  },
+  testnet: false,
 };
 
 const { chains, publicClient, webSocketPublicClient } = configureChains(
   [
     blastTestnet,
+    blastMainnet,
     ...(process.env.NEXT_PUBLIC_ENABLE_TESTNETS === "true" ? [goerli] : []),
   ],
   [publicProvider()]
@@ -72,5 +101,8 @@ const wagmiConfig = createConfig({
 });
 
 const devId = blastTestnet.id;
+const mainId = blastMainnet.id;
 
-export { wagmiConfig, demoAppInfo, chains, devId };
+const defaultChainId = isProduction() ? mainId : devId;
+
+export { wagmiConfig, demoAppInfo, chains, devId, mainId, defaultChainId };

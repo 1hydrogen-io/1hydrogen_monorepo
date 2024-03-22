@@ -1,8 +1,10 @@
 /** @type {import('next').NextConfig} */
-const nextConfig = {
-    env: {
-        BASE_URL: process.env.BASE_URL
-    },
-}
+// const nextConfig = {
+//     env: {
+//         BASE_URL: process.env.BASE_URL
+//     },
+// }
 
-module.exports = nextConfig
+const nextConfig = {};
+
+module.exports = nextConfig;

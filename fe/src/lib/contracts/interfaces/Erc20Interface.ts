@@ -18,8 +18,8 @@ class Erc20 extends BaseInterface {
   }
 
   async balanceOf(walletAddress: string): Promise<number> {
-    const balance = await this._contract.balanceOf(walletAddress);   
-    const decimal = await this.decimals();  
+    const balance = await this._contract.balanceOf(walletAddress);
+    const decimal = await this.decimals();
     return this._toNumberBalance(balance, decimal);
   }
 
@@ -29,7 +29,7 @@ class Erc20 extends BaseInterface {
 
   async totalSupply(): Promise<number> {
     const total = await this._contract.totalSupply();
-    const decimal = await this.decimals()
+    const decimal = await this.decimals();
     return this._toNumber(total) / Math.pow(10, decimal);
   }
 
@@ -42,14 +42,21 @@ class Erc20 extends BaseInterface {
   }
 
   async approve(address: string, amount: number) {
-    const decimal =  await this.decimals();
+    const decimal = await this.decimals();
     const wei = ethers.utils.parseUnits(amount.toString(), decimal);
     await this._contract.approve(address, wei, this._option);
   }
 
-  async transfer(toAddress: string, balance: number): Promise<string|ethers.utils.Result> {
-    const decimal = await this.decimals()
-    const tx: TransactionResponse  = await this._contract.transfer(toAddress, balance * Math.pow(10, decimal), this._option);
+  async transfer(
+    toAddress: string,
+    balance: number
+  ): Promise<string | ethers.utils.Result> {
+    const decimal = await this.decimals();
+    const tx: TransactionResponse = await this._contract.transfer(
+      toAddress,
+      balance * Math.pow(10, decimal),
+      this._option
+    );
     return this._handleTransactionResponse(tx);
   }
 }
