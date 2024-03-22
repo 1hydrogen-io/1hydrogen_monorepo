@@ -151,18 +151,22 @@ export default function RepayContainer() {
             : `${numberFormat(usdbVaulStaked.availableBalance, 7)} USDB`
         }
       />
-      <LabelValueItem
-        label={isEthSelected ? "Available ETH" : "Available USDB"}
-        value={
-          isEthSelected
-            ? numberFormat(vaulStaked.availableBalance, 7)
-            : numberFormat(usdbVaulStaked.availableBalance, 7)
-        }
-      />
-      <LabelValueItem
-        label={"Available USDB"}
-        value={`${numberFormat(usdbVaulStaked.availableBalance, 7)} USDB`}
-      />
+      {isEthSelected && (
+        <LabelValueItem
+          label={isEthSelected ? "Available ETH" : "Available USDB"}
+          value={
+            isEthSelected
+              ? numberFormat(vaulStaked.availableBalance, 7)
+              : numberFormat(usdbVaulStaked.availableBalance, 7)
+          }
+        />
+      )}
+      {!isEthSelected && (
+        <LabelValueItem
+          label={"Available USDB"}
+          value={`${numberFormat(usdbVaulStaked.availableBalance, 7)} USDB`}
+        />
+      )}
       <LabelValueItem
         label={isEthSelected ? "Staked ETH Locked" : "Staked USDB Locked"}
         value={
