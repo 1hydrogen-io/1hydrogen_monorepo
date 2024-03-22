@@ -27,6 +27,7 @@ export default function UnstackContainer() {
   const {
     globalState: { currentCoin },
   } = useGlobalState();
+
   const isEthSelected = useMemo(() => currentCoin === "eth", [currentCoin]);
 
   const isLocked = useMemo(() => {
@@ -34,11 +35,12 @@ export default function UnstackContainer() {
     if (!vaulStaked.availableBalance && isEthSelected) return true;
     if (!usdbVaulStaked.availableBalance && !isEthSelected) return true;
     return false;
-  }, [isConnected, vaulStaked]);
+  }, [isConnected, vaulStaked, usdbVaulStaked]);
 
   useEffect(() => {
     setAmount("");
   }, [currentCoin]);
+
   const onAmountChange = (val: string) => {
     if (
       compareNumber(vaulStaked.availableBalance, Number(val)) &&
