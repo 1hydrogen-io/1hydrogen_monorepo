@@ -6,7 +6,7 @@ import useRefetchBalance from '@/lib/hooks/useRefetchBalance'
 import useToastCustom from '@/lib/hooks/useToastCustom'
 import {useAppSelector} from '@/lib/reduxs/hooks'
 import {numberFormat, numberFormat1} from '@/lib/utls'
-import {subtract} from '@/lib/utls/numberHelper'
+import {compareNumber, subtract} from '@/lib/utls/numberHelper'
 import {LabelValueItem} from '@/ui/components'
 import ButtonCustom from '@/ui/components/ButtonCustom'
 import InputCustom from '@/ui/components/InputCustom'
@@ -31,10 +31,10 @@ export default function MintVaulContainer() {
 
     const onHandleAmountChange = (val: string) => {
         const amountNumber = Number(val);
-        if (subtract(vaulStaked.availableBalance, amountNumber) < 0 && isEthSelected) return;
-        if (subtract(vaulStaked.stakedBalance, amountNumber) < 0 && isEthSelected) return;
-        if (subtract(usdbVaulStaked.availableBalance, amountNumber) < 0 && !isEthSelected) return;
-        if (subtract(usdbVaulStaked.stakedBalance, amountNumber) < 0 && !isEthSelected) return;
+        if (compareNumber(vaulStaked.availableBalance, amountNumber) && isEthSelected) return;
+        if (compareNumber(vaulStaked.stakedBalance, amountNumber) && isEthSelected) return;
+        if (compareNumber(usdbVaulStaked.availableBalance, amountNumber) && !isEthSelected) return;
+        if (compareNumber(usdbVaulStaked.stakedBalance, amountNumber) && !isEthSelected) return;
         setAmount(val);
     }
 
@@ -116,32 +116,32 @@ export default function MintVaulContainer() {
                 label={isEthSelected ? "Staked ETH" : "Staked USDB"}
                 value={
                     isEthSelected ?
-                        `${numberFormat(vaulStaked.stakedBalance)} ETH` :
-                        `${numberFormat(usdbVaulStaked.stakedBalance)} USDB`
+                        `${numberFormat(vaulStaked.stakedBalance, 7)} ETH` :
+                        `${numberFormat(usdbVaulStaked.stakedBalance, 7)} USDB`
                 }
             />
             <LabelValueItem
                 label={"Available amount to mint"}
                 value={
                     isEthSelected ?
-                        `${numberFormat(vaulStaked.availableBalance)} ETH` :
-                        `${numberFormat(usdbVaulStaked.availableBalance)} USDB`
+                        `${numberFormat(vaulStaked.availableBalance, 7)} ETH` :
+                        `${numberFormat(usdbVaulStaked.availableBalance, 7)} USDB`
                 }
             />
             <LabelValueItem
                 label={isEthSelected ? "Staked ETH Locked" : "Staked USDB Locked"}
                 value={
                     isEthSelected ?
-                        `${numberFormat(vaulStaked.stakedBalance - vaulStaked.availableBalance)} ETH` :
-                        `${numberFormat(usdbVaulStaked.stakedBalance - usdbVaulStaked.availableBalance)} USDB`
+                        `${numberFormat(vaulStaked.stakedBalance - vaulStaked.availableBalance, 7)} ETH` :
+                        `${numberFormat(usdbVaulStaked.stakedBalance - usdbVaulStaked.availableBalance, 7)} USDB`
                 }
             />
             <LabelValueItem
                 label={isEthSelected ? "Minted hsETH" : "Minted hsUSDB"}
                 value={
                     isEthSelected ?
-                        `${numberFormat(vaulStaked.stakedBalance - vaulStaked.availableBalance)} ETH` :
-                        `${numberFormat(usdbVaulStaked.stakedBalance - usdbVaulStaked.availableBalance)} USDB`
+                        `${numberFormat(vaulStaked.stakedBalance - vaulStaked.availableBalance, 7)} ETH` :
+                        `${numberFormat(usdbVaulStaked.stakedBalance - usdbVaulStaked.availableBalance, 7)} USDB`
                 }
             />
             <ButtonCustom

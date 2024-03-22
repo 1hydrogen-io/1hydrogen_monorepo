@@ -11,6 +11,7 @@ export interface IWalletPoint {
     latestTx: string;
     referralCode: string;
     joinedCode: null | string;
+    members: number;
 }
 
 export const addPointApi = async (

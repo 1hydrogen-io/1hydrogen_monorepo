@@ -21,6 +21,7 @@ const default_point: IWalletPoint = {
     referralPoint: 0,
     referralCode: "",
     joinedCode: "",
+    members: 0,
 };
 
 export const default_balance: IWalletBalance = {

@@ -7,7 +7,7 @@ import useRefetchBalance from '@/lib/hooks/useRefetchBalance'
 import useToastCustom from '@/lib/hooks/useToastCustom'
 import {useAppSelector} from '@/lib/reduxs/hooks'
 import {isProduction, numberFormat} from '@/lib/utls'
-import {subtract} from '@/lib/utls/numberHelper'
+import {compareNumber, subtract} from '@/lib/utls/numberHelper'
 import {LabelValueItem} from '@/ui/components'
 import ButtonCustom from '@/ui/components/ButtonCustom'
 import InputCustom from '@/ui/components/InputCustom'
@@ -33,8 +33,8 @@ export default function StakeContainer() {
     const [amount, setAmount] = useState<string>('');
 
     const onAmountChange = (val: string) => {
-        if (subtract(balance.eth, Number(val)) < 0 && isEthSelected) return;
-        if (subtract(balance.usdb, Number(val)) < 0 && !isEthSelected) return;
+        if (compareNumber(balance.eth, Number(val)) && isEthSelected) return;
+        if (compareNumber(balance.usdb, Number(val)) && !isEthSelected) return;
         setAmount(val)
     }
 
@@ -114,7 +114,10 @@ export default function StakeContainer() {
             />
             <LabelValueItem
                 label={"Available amount to stake"}
-                value={isEthSelected ? `${numberFormat(balance.eth)} ETH` : `${numberFormat(balance.usdb)} USDB`}
+                value={isEthSelected ?
+                    `${numberFormat(balance.eth, 9)} ETH` :
+                    `${numberFormat(balance.usdb, 9)} USDB`
+            }
                 my="16px"
             />
             <ButtonCustom w="full"
