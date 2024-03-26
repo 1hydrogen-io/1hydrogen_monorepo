@@ -5,13 +5,19 @@ import useRefetchBalance from "@/lib/hooks/useRefetchBalance";
 import useToastCustom from "@/lib/hooks/useToastCustom";
 import { fetchWalletInfoGlobalAction } from "@/lib/reduxs/globals/global.action";
 import { useGlobalState } from "@/lib/reduxs/globals/global.hook";
-import { useAppDispatch, useAppSelector } from "@/lib/reduxs/hooks";
+import { useAppDispatch } from "@/lib/reduxs/hooks";
 import {
   getPackageAction,
   getUsdbPackageAction,
 } from "@/lib/reduxs/hs-stakings/hs-staking.actions";
+import { defaultChainId } from "@/providers/wagmiConfig";
 import { useCallback, useEffect } from "react";
-import { useAccount, useSignMessage } from "wagmi";
+import {
+  useAccount,
+  useSignMessage,
+  useNetwork,
+  useSwitchNetwork,
+} from "wagmi";
 
 export default function WalletListener() {
   const {
@@ -20,6 +26,8 @@ export default function WalletListener() {
   } = useGlobalState();
 
   const { signMessageAsync } = useSignMessage();
+  const { chain } = useNetwork();
+  const { switchNetworkAsync } = useSwitchNetwork();
 
   const { isConnected, address } = useAccount();
   const { onOpenProcessing, onCloseProcessing } = useProcessing();
@@ -67,15 +75,18 @@ export default function WalletListener() {
   const onListeningChang = useCallback(async () => {
     onOpenProcessing();
     try {
+      if (chain?.id !== defaultChainId) {
+        await switchNetworkAsync?.(defaultChainId);
+        onCloseProcessing();
+        return;
+      }
       await signMessageWithJoinCode();
-
       await dispatch(fetchWalletInfoGlobalAction()).unwrap();
-
       onFetchVaulStakedInfo();
       onFetchUsdbVaulStakedInfo();
     } catch (ex) {}
     onCloseProcessing();
-  }, [isConnected, address]);
+  }, [isConnected, address, chain?.id, joinCode]);
 
   const getPackage = useCallback(async () => {
     dispatch(getPackageAction());
