@@ -1,16 +1,18 @@
-'use client'
-import { Flex, FlexProps, HStack, Image } from '@chakra-ui/react'
-import React from 'react'
-import { MainTitle, TextCus } from './Text'
-import { useAppSelector } from '@/lib/reduxs/hooks';
+"use client";
+import { Flex, FlexProps, HStack, Image } from "@chakra-ui/react";
+import React from "react";
+import { MainTitle, TextCus } from "./Text";
+import { useAppSelector } from "@/lib/reduxs/hooks";
 
-interface IProps   extends FlexProps {
+interface IProps extends FlexProps {
   isLager?: boolean;
 }
 
-export default function MyPoint({isLager,  ...props}: IProps) {
-    const {balance: {point}} = useAppSelector(p => p.wallet);
-  
+export default function MyPoint({ isLager, ...props }: IProps) {
+  const {
+    balance: { point },
+  } = useAppSelector((p) => p.wallet);
+
   if (!isLager) {
     return (
       <Flex
@@ -46,14 +48,13 @@ export default function MyPoint({isLager,  ...props}: IProps) {
         >
           <Image src="/lb.svg" />
           <Flex>
-            <TextCus>2323/</TextCus>
-            <TextCus color="#A0AEC0">32332</TextCus>
+            <TextCus>--/</TextCus>
+            <TextCus color="#A0AEC0">--</TextCus>
           </Flex>
         </HStack>
       </Flex>
     );
   }
-
 
   return (
     <Flex
@@ -90,8 +91,8 @@ export default function MyPoint({isLager,  ...props}: IProps) {
       >
         <Image src="/lb.svg" />
         <Flex>
-          <TextCus>2323/</TextCus>
-          <TextCus color="#A0AEC0">32332</TextCus>
+          <TextCus>---/</TextCus>
+          <TextCus color="#A0AEC0">---</TextCus>
         </Flex>
       </HStack>
     </Flex>
