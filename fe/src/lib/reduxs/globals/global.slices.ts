@@ -4,41 +4,56 @@ interface GlobalState {
   isProcessing?: boolean;
   ethPrice: number;
   processName?: string;
-  currentCoin: "eth" | "usdb",
+  currentCoin: "eth" | "usdb";
   joinCode: string;
+  totalUserActive: number;
 }
 
 const initialState: GlobalState = {
   isProcessing: false,
   ethPrice: 0,
   currentCoin: "eth",
-  joinCode: ""
+  joinCode: "",
+  totalUserActive: 0,
 };
 
 export const globalSlice = createSlice({
   name: "global-reducer",
   initialState,
   reducers: {
-    setProcessingAction: (state, { payload }: PayloadAction<boolean | undefined>) => {
+    setProcessingAction: (
+      state,
+      { payload }: PayloadAction<boolean | undefined>
+    ) => {
       state.isProcessing = payload;
     },
-    setProcessNameAction: (state, {payload}: PayloadAction<string | undefined>) => {
+    setProcessNameAction: (
+      state,
+      { payload }: PayloadAction<string | undefined>
+    ) => {
       state.processName = payload;
     },
-    setCurrentCoinAction: (state, {payload}: PayloadAction<"eth" | "usdb">) => {
+    setCurrentCoinAction: (
+      state,
+      { payload }: PayloadAction<"eth" | "usdb">
+    ) => {
       state.currentCoin = payload;
     },
-    setJoinCode: (state, {payload}: PayloadAction<string>) => {
+    setJoinCode: (state, { payload }: PayloadAction<string>) => {
       state.joinCode = payload;
-    }
-  }
+    },
+    setTotalUserActiveAction: (state, { payload }: PayloadAction<number>) => {
+      state.totalUserActive = payload;
+    },
+  },
 });
 
 export default globalSlice.reducer;
 
-export const { 
+export const {
   setProcessingAction,
   setProcessNameAction,
   setCurrentCoinAction,
-  setJoinCode
+  setJoinCode,
+  setTotalUserActiveAction,
 } = globalSlice.actions;

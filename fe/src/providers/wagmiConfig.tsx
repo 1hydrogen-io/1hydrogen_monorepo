@@ -33,10 +33,33 @@ const blastTestnet: Chain = {
   testnet: true,
 };
 
+const mantleSepoliaTestnet: Chain = {
+  id: 5003,
+  name: "Mantle Sepolia",
+  network: "Mantle Sepolia",
+  nativeCurrency: {
+    decimals: 18,
+    name: "MNT",
+    symbol: "MNT",
+  },
+  rpcUrls: {
+    public: { http: ["https://rpc.sepolia.mantle.xyz"] },
+    default: { http: ["https://rpc.sepolia.mantle.xyz"] },
+  },
+  blockExplorers: {
+    default: { name: "Mantle Sepolia", url: "https://rpc.sepolia.mantle.xyz" },
+    etherscan: {
+      name: "Mantle Sepolia",
+      url: "https://rpc.sepolia.mantle.xyz",
+    },
+  },
+  testnet: true,
+};
+
 const blastMainnet: Chain = {
   id: 81457,
-  name: "Blast Sepolia",
-  network: "Blast Sepolia",
+  name: "Blast mainnet",
+  network: "Blast mainnet",
   nativeCurrency: {
     decimals: 18,
     name: "ETH",
@@ -65,6 +88,7 @@ const { chains, publicClient, webSocketPublicClient } = configureChains(
   [
     blastTestnet,
     blastMainnet,
+    mantleSepoliaTestnet,
     ...(process.env.NEXT_PUBLIC_ENABLE_TESTNETS === "true" ? [goerli] : []),
   ],
   [publicProvider()]
@@ -103,6 +127,6 @@ const wagmiConfig = createConfig({
 const devId = blastTestnet.id;
 const mainId = blastMainnet.id;
 
-const defaultChainId = isProduction() ? mainId : devId;
+const defaultChainId = mantleSepoliaTestnet.id; //  isProduction() ? mainId : devId;
 
 export { wagmiConfig, demoAppInfo, chains, devId, mainId, defaultChainId };

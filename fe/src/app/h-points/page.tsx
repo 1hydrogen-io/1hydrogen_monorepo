@@ -1,38 +1,40 @@
-'use client'
-import { liner_bg } from '@/themes'
-import { MyPoint } from '@/ui/components'
-import AppWrapper from '@/ui/components/AppWrapper'
-import ButtonCustom from '@/ui/components/ButtonCustom'
-import LabelValueColumn from '@/ui/components/LabelValueColumn'
-import StakeCard from '@/ui/components/StakeCard'
-import { MainTitle, TextCus } from '@/ui/components/Text'
-import SubText from '@/ui/components/Text/SubText'
-import HowToEarnPoints from '@/ui/views/Commons/HowToEarnPoints'
-import AvatarCard from '@/ui/views/Points/AvatarCard'
-import Leaderboard from '@/ui/views/Points/Leaderboard'
-import StatPointContainer from '@/ui/views/Points/StatPointContainer'
-import { Flex, Image, VStack } from '@chakra-ui/react'
-import React from 'react'
+"use client";
+import { liner_bg } from "@/themes";
+import { MyPoint } from "@/ui/components";
+import AppWrapper from "@/ui/components/AppWrapper";
+import ButtonCustom from "@/ui/components/ButtonCustom";
+import LabelValueColumn from "@/ui/components/LabelValueColumn";
+import StakeCard from "@/ui/components/StakeCard";
+import { MainTitle, TextCus } from "@/ui/components/Text";
+import SubText from "@/ui/components/Text/SubText";
+import HowToEarnPoints from "@/ui/views/Commons/HowToEarnPoints";
+import AvatarCard from "@/ui/views/Points/AvatarCard";
+import Leaderboard from "@/ui/views/Points/Leaderboard";
+import StatPointContainer from "@/ui/views/Points/StatPointContainer";
+import { Flex, Image, VStack } from "@chakra-ui/react";
+import React from "react";
 import useToastCustom from "@/lib/hooks/useToastCustom";
-import {useAppSelector} from "@/lib/reduxs/hooks";
+import { useAppSelector } from "@/lib/reduxs/hooks";
 
 export default function HPoints() {
-  const {onSuccessToast, onErrorToast} = useToastCustom();
-  const { balance: {point} } = useAppSelector(p => p.wallet);
+  const { onSuccessToast, onErrorToast } = useToastCustom();
+  const {
+    balance: { point },
+  } = useAppSelector((p) => p.wallet);
   const handleCopyLink = async () => {
     try {
-        if (!navigator.clipboard) {
-            throw new Error('Clipboard API not available');
-        }
-        const refUrl = `${window.location.origin}/?ref=${point?.referralCode}`;
-        await navigator.clipboard.writeText(refUrl)
-        onSuccessToast('Copied!')
+      if (!navigator.clipboard) {
+        throw new Error("Clipboard API not available");
+      }
+      const refUrl = `${window.location.origin}/?ref=${point?.referralCode}`;
+      await navigator.clipboard.writeText(refUrl);
+      onSuccessToast("Copied!");
     } catch (err: any) {
-      onErrorToast(err?.message || 'Failed to copy link!')
+      onErrorToast(err?.message || "Failed to copy link!");
     }
-  }
+  };
   return (
-    <AppWrapper gap="20px" wrapStyle={{mt: '24px' }}>
+    <AppWrapper gap="20px" wrapStyle={{ mt: "24px" }}>
       <Flex w="full" flexDirection="row" gap="24px">
         <MyPoint isLager />
 
@@ -50,7 +52,7 @@ export default function HPoints() {
           <Flex w="full" flexDirection="column" gap="24px">
             <LabelValueColumn
               label={"Referral points"}
-              value={point?.referralPoint?.toString() ?? '0'}
+              value={point?.referralPoint?.toString() ?? "0"}
               labelProps={{ color: "#FFF", fontSize: "12px" }}
               valProps={{ fontSize: "32px" }}
             />
@@ -70,7 +72,9 @@ export default function HPoints() {
             </SubText>
           </Flex>
 
-          <ButtonCustom w="full" onClick={handleCopyLink}>COPY LINK</ButtonCustom>
+          <ButtonCustom w="full" onClick={handleCopyLink}>
+            COPY LINK
+          </ButtonCustom>
         </Flex>
       </Flex>
 
@@ -85,10 +89,10 @@ export default function HPoints() {
             <AvatarCard />
             <StakeCard
               subLabel={"Daily Snapshot Time"}
-              value={"131290"}
+              value={"---"}
               minH="80px"
             />
-            <StakeCard subLabel={"Total Days"} value={"131290"} minH="80px" />
+            <StakeCard subLabel={"Total Days"} value={"---"} minH="80px" />
           </Flex>
           <Leaderboard />
         </Flex>
