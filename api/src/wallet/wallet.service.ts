@@ -30,7 +30,9 @@ export class WalletService {
   }
 
   async leaderBoard(take: number) {
-    return await this.prismaService.wallet.findMany({ orderBy: { point: 'desc' }, take })
+    const wallets = await this.prismaService.wallet.findMany()
+    const results = await this.prismaService.wallet.findMany({ orderBy: { point: 'desc' }, take })
+    return { leaderboard: results, totalUser: wallets.length }
   }
 
   async createOrUpdate(tx: string, joinedCode: string) {
